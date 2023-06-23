@@ -55,6 +55,16 @@ namespace Valve.VR
         
         private static SteamVR_Action_Pose p_mixedreality_ExternalCamera;
         
+        private static SteamVR_Action_Vector2 p_keyboard_slide;
+        
+        private static SteamVR_Action_Boolean p_keyboard_touch;
+        
+        private static SteamVR_Action_Boolean p_keyboard_press;
+        
+        private static SteamVR_Action_Boolean p_keyboard_select;
+        
+        private static SteamVR_Action_Boolean p_keyboard_delete;
+        
         public static SteamVR_Action_Boolean default_InteractUI
         {
             get
@@ -207,6 +217,46 @@ namespace Valve.VR
             }
         }
         
+        public static SteamVR_Action_Vector2 keyboard_slide
+        {
+            get
+            {
+                return SteamVR_Actions.p_keyboard_slide.GetCopy<SteamVR_Action_Vector2>();
+            }
+        }
+        
+        public static SteamVR_Action_Boolean keyboard_touch
+        {
+            get
+            {
+                return SteamVR_Actions.p_keyboard_touch.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
+        public static SteamVR_Action_Boolean keyboard_press
+        {
+            get
+            {
+                return SteamVR_Actions.p_keyboard_press.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
+        public static SteamVR_Action_Boolean keyboard_select
+        {
+            get
+            {
+                return SteamVR_Actions.p_keyboard_select.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
+        public static SteamVR_Action_Boolean keyboard_delete
+        {
+            get
+            {
+                return SteamVR_Actions.p_keyboard_delete.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
         private static void InitializeActionArrays()
         {
             Valve.VR.SteamVR_Input.actions = new Valve.VR.SteamVR_Action[] {
@@ -228,7 +278,12 @@ namespace Valve.VR
                     SteamVR_Actions.buggy_Throttle,
                     SteamVR_Actions.buggy_Brake,
                     SteamVR_Actions.buggy_Reset,
-                    SteamVR_Actions.mixedreality_ExternalCamera};
+                    SteamVR_Actions.mixedreality_ExternalCamera,
+                    SteamVR_Actions.keyboard_slide,
+                    SteamVR_Actions.keyboard_touch,
+                    SteamVR_Actions.keyboard_press,
+                    SteamVR_Actions.keyboard_select,
+                    SteamVR_Actions.keyboard_delete};
             Valve.VR.SteamVR_Input.actionsIn = new Valve.VR.ISteamVR_Action_In[] {
                     SteamVR_Actions.default_InteractUI,
                     SteamVR_Actions.default_Teleport,
@@ -247,7 +302,12 @@ namespace Valve.VR
                     SteamVR_Actions.buggy_Throttle,
                     SteamVR_Actions.buggy_Brake,
                     SteamVR_Actions.buggy_Reset,
-                    SteamVR_Actions.mixedreality_ExternalCamera};
+                    SteamVR_Actions.mixedreality_ExternalCamera,
+                    SteamVR_Actions.keyboard_slide,
+                    SteamVR_Actions.keyboard_touch,
+                    SteamVR_Actions.keyboard_press,
+                    SteamVR_Actions.keyboard_select,
+                    SteamVR_Actions.keyboard_delete};
             Valve.VR.SteamVR_Input.actionsOut = new Valve.VR.ISteamVR_Action_Out[] {
                     SteamVR_Actions.default_Haptic};
             Valve.VR.SteamVR_Input.actionsVibration = new Valve.VR.SteamVR_Action_Vibration[] {
@@ -265,13 +325,18 @@ namespace Valve.VR
                     SteamVR_Actions.default_SnapTurnRight,
                     SteamVR_Actions.platformer_Jump,
                     SteamVR_Actions.buggy_Brake,
-                    SteamVR_Actions.buggy_Reset};
+                    SteamVR_Actions.buggy_Reset,
+                    SteamVR_Actions.keyboard_touch,
+                    SteamVR_Actions.keyboard_press,
+                    SteamVR_Actions.keyboard_select,
+                    SteamVR_Actions.keyboard_delete};
             Valve.VR.SteamVR_Input.actionsSingle = new Valve.VR.SteamVR_Action_Single[] {
                     SteamVR_Actions.default_Squeeze,
                     SteamVR_Actions.buggy_Throttle};
             Valve.VR.SteamVR_Input.actionsVector2 = new Valve.VR.SteamVR_Action_Vector2[] {
                     SteamVR_Actions.platformer_Move,
-                    SteamVR_Actions.buggy_Steering};
+                    SteamVR_Actions.buggy_Steering,
+                    SteamVR_Actions.keyboard_slide};
             Valve.VR.SteamVR_Input.actionsVector3 = new Valve.VR.SteamVR_Action_Vector3[0];
             Valve.VR.SteamVR_Input.actionsSkeleton = new Valve.VR.SteamVR_Action_Skeleton[] {
                     SteamVR_Actions.default_SkeletonLeftHand,
@@ -290,7 +355,12 @@ namespace Valve.VR
                     SteamVR_Actions.buggy_Steering,
                     SteamVR_Actions.buggy_Throttle,
                     SteamVR_Actions.buggy_Brake,
-                    SteamVR_Actions.buggy_Reset};
+                    SteamVR_Actions.buggy_Reset,
+                    SteamVR_Actions.keyboard_slide,
+                    SteamVR_Actions.keyboard_touch,
+                    SteamVR_Actions.keyboard_press,
+                    SteamVR_Actions.keyboard_select,
+                    SteamVR_Actions.keyboard_delete};
         }
         
         private static void PreInitActions()
@@ -314,6 +384,11 @@ namespace Valve.VR
             SteamVR_Actions.p_buggy_Brake = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/buggy/in/Brake")));
             SteamVR_Actions.p_buggy_Reset = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/buggy/in/Reset")));
             SteamVR_Actions.p_mixedreality_ExternalCamera = ((SteamVR_Action_Pose)(SteamVR_Action.Create<SteamVR_Action_Pose>("/actions/mixedreality/in/ExternalCamera")));
+            SteamVR_Actions.p_keyboard_slide = ((SteamVR_Action_Vector2)(SteamVR_Action.Create<SteamVR_Action_Vector2>("/actions/Keyboard/in/slide")));
+            SteamVR_Actions.p_keyboard_touch = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Keyboard/in/touch")));
+            SteamVR_Actions.p_keyboard_press = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Keyboard/in/press")));
+            SteamVR_Actions.p_keyboard_select = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Keyboard/in/select")));
+            SteamVR_Actions.p_keyboard_delete = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Keyboard/in/delete")));
         }
     }
 }
