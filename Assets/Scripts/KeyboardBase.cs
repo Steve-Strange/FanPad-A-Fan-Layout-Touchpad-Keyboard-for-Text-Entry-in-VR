@@ -3,12 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
-<<<<<<< Updated upstream
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 using TMPro;
-=======
->>>>>>> Stashed changes
 
 public enum Keybd_Flags
 {
@@ -17,70 +14,47 @@ public enum Keybd_Flags
     KeyUp,
 }
 
-<<<<<<< Updated upstream
-/* ¼üÅÌµÄ»ùÀà£¬Ëü²»Ó¦¸Ã±»ÊµÀý»¯£¬²»Ó¦¸Ã±»Ö±½ÓÊ¹ÓÃ£¬Ö»ÓÃÓÚ¼Ì³Ð */
-/* ¹ØÓÚtouchpadµÄ¼¸¸ö»Øµ÷º¯Êý£¬ÕâÀïÐ´µÄ»ù±¾Ã»Ì«´óÒâÒå£¬Ó¦ÔÚ×ÓÀàÖÐÍêÈ«ÖØÐ´.²»Òªµ÷ÓÃ¸¸ÀàµÄ */
-=======
->>>>>>> Stashed changes
 public class KeyboardBase : MonoBehaviour
 {
     // Start is called before the first frame update
     [DllImport("User32.dll", EntryPoint = "keybd_event")]
     static extern void keybd_event(byte bVK, byte bScan, int dwFlags, int dwExtraInfo);
 
-<<<<<<< Updated upstream
     //Keyboard action set
     public SteamVR_ActionSet keyboardActionSet;
 
     // fetch actions.
-    public SteamVR_Action_Boolean DeleteKey = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "delete");//°´²Ëµ¥¼ü£¬ÕâÀïÊÇÒªÉ¾³ý.
-    public SteamVR_Action_Boolean SelectKey = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "select");//°´°â»úÑ¡Ôñ£¬ÕâÀïÓÃ×÷ÒÆ¶¯¹â±ê
-    public SteamVR_Action_Boolean PadTouch = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "touch");  //touchpad´¥Ãþ
-    public SteamVR_Action_Boolean PadPress = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "press");  //touchpad°´ÏÂÈ¥
-    public SteamVR_Action_Vector2 PadSlide = SteamVR_Input.GetAction<SteamVR_Action_Vector2>("keyboard", "slide");  //ÔÚtouchpadÉÏ»¬¶¯.
+    public SteamVR_Action_Boolean DeleteKey = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "delete");//ï¿½ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÉ¾ï¿½ï¿½.
+    public SteamVR_Action_Boolean SelectKey = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "select");//ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½
+    public SteamVR_Action_Boolean PadTouch = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "touch");  //touchpadï¿½ï¿½ï¿½ï¿½
+    public SteamVR_Action_Boolean PadPress = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "press");  //touchpadï¿½ï¿½ï¿½ï¿½È¥
+    public SteamVR_Action_Vector2 PadSlide = SteamVR_Input.GetAction<SteamVR_Action_Vector2>("keyboard", "slide");  //ï¿½ï¿½touchpadï¿½Ï»ï¿½ï¿½ï¿½.
 
-    // text input field. ¹Ì¶¨µÄÎÄ×ÖÊäÈë¿ò¡£  
+    // text input field. ï¿½Ì¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
     public TextMeshProUGUI inputField;
 
-    // Ò»Ð©Ò»¶¨»á¹²ÓÃµÄ×´Ì¬±äÁ¿£ºselected, deleted, touched. longHolding: ±ê¼ÇÊÇ·ñ³¤Ê±¼ä°´×ÅÕâ¸ö°¸¼þ£¬µ¯³öÌØÊâ×Ö·ûÑ¡Ôñ.
+    // Ò»Ð©Ò»ï¿½ï¿½ï¿½á¹²ï¿½Ãµï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½selected, deleted, touched. longHolding: ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ê±ï¿½ä°´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½Ñ¡ï¿½ï¿½.
     protected bool selected = false, deleted = false, touched = false, longHolding = false;
-    protected float last_delete_time, hold_time_start;   //ÕâÊÇÓÃÀ´ÅÐ¶ÏÉ¾³ý×Ö·ûµÄÊ±¼ä¼ä¸ôµÄ£¬³¤°´delete·´¸´É¾³ý£¬µ«²»Ó¦Ì«¿ì.
+    protected float last_delete_time, hold_time_start;   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½É¾ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½deleteï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦Ì«ï¿½ï¿½.
 
     /*
-     * È·¶¨£¬ÔÚ¼Ì³ÐKeyboardBaseÖ®ºó£¬Ö»¹ÒÔØÕâ¸ö¼Ì³ÐµÄÀà£¬ÓÉÓÚÊÇÖ±½ÓÔÚÕâ¸ö¼Ì³ÐµÄÀàÉÏµ÷ÓÃº¯Êý£¬ËùÒÔÊ¹ÓÃµÄº¯Êý¶¼È·¶¨ÊÇ¼Ì³ÐÀàÖÐÖØÐ´µÄº¯Êý.
-     * ±ÈÈç£¬ÕâÀïOnEnable×¢²á»Øµ÷º¯Êý£¬ÔÚ×ÓÀàÖÐÃ»¸Ä¶¯£¬¶øUnityÖÐ¹ÒÔØµÄÊÇ×ÓÀà£¬ËùÒÔµ÷ÓÃÊÇÔÚ×ÓÀàÖÐµ÷ÓÃ£¬Ã»ÓÃÓÃ¸¸ÀàÐÍµ÷ÓÃ×ÓÀàº¯ÊýµÄµ£ÓÇ.
+     * È·ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼Ì³ï¿½KeyboardBaseÖ®ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³Ðµï¿½ï¿½à£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³Ðµï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ÃµÄºï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½Ç¼Ì³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½Äºï¿½ï¿½ï¿½.
+     * ï¿½ï¿½ï¿½ç£¬ï¿½ï¿½ï¿½ï¿½OnEnable×¢ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½Unityï¿½Ð¹ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à£¬ï¿½ï¿½ï¿½Ôµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½Ã£ï¿½Ã»ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½àº¯ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½.
      */
 
-=======
-    /*
-     * TODO:
-     * »ñÈ¡ÊÖ±ú¸÷¸ö°´¼ü¡¢´¥Ãþ°åµÄaction.²¢ÇÒÄÜ¹»×¢²á.
-     * °´ÏÂ¡¢»¬¶¯µÈ»Øµ÷º¯ÊýµÄÐéº¯Êý£¨½Ó¿Ú£©£¬²¢ÇÒÔÚÒ»¿ªÊ¼¾ÍÔÚBaseÖÐ×¢²áÕâÐ©»Øµ÷º¯Êý.
-     * ÕâÑùÔÚ¾ßÌåµÄ¼üÅÌÀàÖÐ¾ÍÖ»ÐèÒªÊµÏÖÕâÐ©»Øµ÷º¯Êý¼°Ïà¹ØÂß¼­.
-     * ¿¼ÂÇµ½¿ÉÄÜ½«ÒªÓÃtriggerÊµÏÖ£¬Ò²ÐíÕâÀï¿ÉÒÔ¼Ó¸ömap£¿»òÕß´æ´¢µ±Ç°Î»ÓÚÄÄÀïµÄ±äÁ¿¡£È»ºóonTriggerEnterÊÇ·ñÒ²Ó¦¸ÃÔÚÕâÀï?
-     * µ«ÊÇÈç¹ûÖ»ÊÇÒ»ÏÂ×ÓtouchÂíÉÏÓÖËÉ¿ª£¬triggerÊÇ·ñ¿ÉÄÜÓÐ·´Ó¦²»¹ýÀ´µÄÇé¿ö£¿ÕâÊ±ºòÒªÖ÷¶¯ÓÃÒ»¸öAxis2Key°ÑActionµÄ×ø±êÓ³ÉäÎª·ûºÅ£¬ÊÇ·ñÒ²ÐèÒªÔÚÕâÀïÊµÏÖ?
-     * 
-     */
-
-
->>>>>>> Stashed changes
     void Start()
     {
 
     }
-<<<<<<< Updated upstream
-=======
 
     // Update is called once per frame
->>>>>>> Stashed changes
     void Update()
     {
 
     }
-<<<<<<< Updated upstream
     private void OnEnable()
     {
-        // ×¢²á»Øµ÷º¯Êý
+        // ×¢ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½
         Debug.Log("Enable keyboard action set and relative callback functions!");
         keyboardActionSet.Activate();
         DeleteKey.onStateDown += OnDeleteKeyDown;
@@ -111,30 +85,30 @@ public class KeyboardBase : MonoBehaviour
         PadSlide.onChange -= OnPadSlide;
     }
 
-    // °´ÏÂÑ¡Ôñ¡ª¡ªÒÆ¶¯¹â±êµÄ¹¦ÄÜËùÓÐ¼üÅÌÊÇÒ»ÑùµÄ£¬²»ÓÃvirtual. ²¢ÇÒÕâÐ©¶¼ÊÇÎÞËùÎ½×óÓÒÊÖµÄ.
-    // ÒÆ¶¯¹â±êÊ¹ÓÃtouchpad£¬¾Í²»ÐèÒªÓÃpose actionÁË£»
+    // ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ñ¡ª¡ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½virtual. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½.
+    // ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½touchpadï¿½ï¿½ï¿½Í²ï¿½ï¿½ï¿½Òªï¿½ï¿½pose actionï¿½Ë£ï¿½
     public void OnSelectKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* ËÉ¿ªSelect¼üµÄ»Øµ÷º¯Êý£¨Òª·Å¿ª¹â±ê£© */
+        /* ï¿½É¿ï¿½Selectï¿½ï¿½ï¿½Ä»Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Å¿ï¿½ï¿½ï¿½ê£© */
         selected = false;
-        //TODO: ·ÅÏÂ¹â±ê£¨»òÐíÊ²Ã´Ò²²»ÓÃ×ö¼´¿É£©.
+        //TODO: ï¿½ï¿½ï¿½Â¹ï¿½ê£¨ï¿½ï¿½ï¿½ï¿½Ê²Ã´Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½.
     }
 
     public void OnSelectKeyDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* °´ÏÂSelect¼ü¿ªÊ¼ÒÆ¶¯¹â±êµÄ»Øµ÷º¯Êý. */
+        /* ï¿½ï¿½ï¿½ï¿½Selectï¿½ï¿½ï¿½ï¿½Ê¼ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Ä»Øµï¿½ï¿½ï¿½ï¿½ï¿½. */
         selected = true;
     }
 
     public void OnDeleteKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* ËÉ¿ªÉ¾³ý¼ü. */
+        /* ï¿½É¿ï¿½É¾ï¿½ï¿½ï¿½ï¿½. */
         deleted = false;
     }
 
     public void OnDeleteKeyDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* °´ÏÂÉ¾³ý¼ü.¿ªÊ¼É¾³ý. */
+        /* ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½.ï¿½ï¿½Ê¼É¾ï¿½ï¿½. */
         deleted = true;
         last_delete_time = Time.time;
         do_delete_char();
@@ -142,8 +116,8 @@ public class KeyboardBase : MonoBehaviour
 
     public void OnDeleteKeyHolding(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* Ò»Ö±°´×¡DeleteKey, ÒªÒ»Ö±É¾³ý£¬²»ÄÜÌ«¿ì£¬¿ÉÄÜ0.2sÒ»¸ö? onStateµÄ»Øµ÷º¯Êý */
-        // ÒòÎªonStateµÄÇ°Ìá¾ÍÊÇ°´¼þ×´Ì¬ÊÇ true£¬ËùÒÔÆäÊµÕâÀïÓÃ²»ÉÏdeleted.
+        /* Ò»Ö±ï¿½ï¿½×¡DeleteKey, ÒªÒ»Ö±É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ì£¬ï¿½ï¿½ï¿½ï¿½0.2sÒ»ï¿½ï¿½? onStateï¿½Ä»Øµï¿½ï¿½ï¿½ï¿½ï¿½ */
+        // ï¿½ï¿½ÎªonStateï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ trueï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½Ã²ï¿½ï¿½ï¿½deleted.
         if(Time.time - last_delete_time > 0.2f)
         {
             last_delete_time = Time.time;
@@ -151,73 +125,71 @@ public class KeyboardBase : MonoBehaviour
         }
     }
 
-    // ÏÂÃæÊÇºÍtouchpadÓÐ¹ØµÄÁË£¬²»Í¬¼üÅÌµÄÐÐÎª¿ÉÄÜ²»Ò»Ñù£¬ÐèÒªvirtual.
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Çºï¿½touchpadï¿½Ð¹Øµï¿½ï¿½Ë£ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½Ìµï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½Ü²ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªvirtual.
     virtual public void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* ´¥Ãþµ½´¥Ãþ°å! */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½! */
         touched = true;
     }
 
     virtual public void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* ËÉ¿ª´¥Ãþ°å£¬Õâ¸öÂß¼­²»Ò»ÑùÁË£¬click¼üÅÌËÉ¿ª´¥Ãþ°å»áÊä³ö£»¶øslide¼üÅÌ²»»á */
+        /* ï¿½É¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å£¬ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ë£ï¿½clickï¿½ï¿½ï¿½ï¿½ï¿½É¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½slideï¿½ï¿½ï¿½Ì²ï¿½ï¿½ï¿½ */
         touched = false;
     }
 
     virtual public void OnPressDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* °´ÏÂ´¥Ãþ°åµÄ·½·¨, Õâ¸öÓ¦¸ÃÖ»ÓÐ SlideKeyboard ÐèÒª. */
+        /* ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Ö»ï¿½ï¿½ SlideKeyboard ï¿½ï¿½Òª. */
     }
 
     virtual public void OnPressUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* °´ÏÂ´¥Ãþ°åÖ®ºóÓÖËÉ¿ª£¬ÕâÒ»¶¨ÊÇÒªÊä³ö×Ö·ûÁË
-         * µ«ÊÇÓÉÓÚ´óÐ¡Ð´µÈmodeµÄ´æÔÚ£¬ÈÔ¾ÉÊÇÐèÒªÔÚ×ÓÀàÖÐÖØÔØ! */        
+        /* ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½É¿ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
+         * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ð¡Ð´ï¿½ï¿½modeï¿½Ä´ï¿½ï¿½Ú£ï¿½ï¿½Ô¾ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½! */        
     }
 
     virtual public void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
     {
         /* 
-         * ±È½Ï¸´ÔÓµÄÂß¼­£¬µ±ÊÖÖ¸ÔÚtouchpadÉÏ»¬¶¯µÄÊ±ºò¡£×¢ÒâÐèÒª**¼æ¹ËÒÆ¶¯¹â±êºÍ´¦Àí¼üÅÌ**! 
-         * ¿ÉÄÜÒªÐ¡ÐÄ£¬Á½Ö»ÊÖ¶¼Ö»»áÍ¨¹ýÕâÒ»¸öµ÷ÓÃº¯Êý£¬ËùÒÔÓ¦¸ÃÇø·Ö.
+         * ï¿½È½Ï¸ï¿½ï¿½Óµï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½touchpadï¿½Ï»ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½×¢ï¿½ï¿½ï¿½ï¿½Òª**ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½**! 
+         * ï¿½ï¿½ï¿½ï¿½ÒªÐ¡ï¿½Ä£ï¿½ï¿½ï¿½Ö»ï¿½Ö¶ï¿½Ö»ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
          */
 
     }
 
-    // Êä³ö²¿·Ö.
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
     virtual public int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode)
     {
-        // ´ÓaxisÓëÊÖÅÐ¶ÏÒªÕâÊÇÄÄÒ»¸ö ·µ»ØAsciiÂë! ÕâÊÇ×îÖÕÒªÊä³öµÄÊý×Ö
-        // mode: Ä£Ê½£¬0-ÆÕÍ¨Ð¡Ð´£»1-´óÐ´£»ÆäËû±àºÅ¸ù¾Ý¾ßÌåÂß¼­Ê¹ÓÃ£¬±ÈÈçÓÐ³¤°´Í¬Ò»¸ö×ÖÄ¸µ¯³ö·ûºÅºÍÊý×ÖµÈÑ¡Ôñ¿òµÄÑ¡Ïî!
-        // ´óÐ´µÈÊäÈëÓÃÐéÄâ¼üÅÌ×éºÏ¼üÊµÏÖ.
-        // ±ØÐëÒªÔÚ×ÓÀàÖÐÊµÏÖ.
+        // ï¿½ï¿½axisï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Asciiï¿½ï¿½! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // mode: Ä£Ê½ï¿½ï¿½0-ï¿½ï¿½Í¨Ð¡Ð´ï¿½ï¿½1-ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¸ï¿½ï¿½Ý¾ï¿½ï¿½ï¿½ï¿½ß¼ï¿½Ê¹ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð³ï¿½ï¿½ï¿½Í¬Ò»ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åºï¿½ï¿½ï¿½ï¿½Öµï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½!
+        // ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¼ï¿½Êµï¿½ï¿½.
+        // ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½.
         return 0;
     }
 
     public void OutputLetter(int ascii)
     {
-        // Êä³öasciiÂë¶ÔÓ¦µÄ×Ö·û£¬×¢ÒâÒª½«×Ö·û·­Òë³É¼üÅÌÊä³ö£¬±ÈÈç´óÐ´ÐèÒª×éºÏ¼ü.
-        // TODO: Êä³öascii×Ö·û£»Õâ¿ÉÄÜÐèÒª¶¨ÒåWindowsÐéÄâ¼üÂë.
+        // ï¿½ï¿½ï¿½asciiï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½×¢ï¿½ï¿½Òªï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½Òªï¿½ï¿½Ï¼ï¿½.
+        // TODO: ï¿½ï¿½ï¿½asciiï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Windowsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
     }
     
     void do_delete_char()
     {
-        // ´ÓinputFieldÖÐ£¨ÔÚµ±Ç°¹â±êÎ»ÖÃ£©É¾³ý1¸ö×Ö·û.
-        // TODO. É¾³ýÒ»¸ö×Ö·û.
+        // ï¿½ï¿½inputFieldï¿½Ð£ï¿½ï¿½Úµï¿½Ç°ï¿½ï¿½ï¿½Î»ï¿½Ã£ï¿½É¾ï¿½ï¿½1ï¿½ï¿½ï¿½Ö·ï¿½.
+        // TODO. É¾ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½.
     }
-=======
->>>>>>> Stashed changes
 
     void PushKey(byte bVK)
     {
-        // °´ÏÂ°´¼ü
+        // ï¿½ï¿½ï¿½Â°ï¿½ï¿½ï¿½
         keybd_event(bVK, 0, (int)Keybd_Flags.KeyDown, 0);
     }
 
     void ReleaseKey(byte bVK)
     {
-        // ËÉ¿ª°´¼ü
-        // Ò»¶¨²»ÒªÍü¼Ç°´ÏÂÁËÒªËÉ¿ª.
+        // ï¿½É¿ï¿½ï¿½ï¿½ï¿½ï¿½
+        // Ò»ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½É¿ï¿½.
         keybd_event(bVK, 0, (int)Keybd_Flags.KeyUp, 0);
     }
 }
