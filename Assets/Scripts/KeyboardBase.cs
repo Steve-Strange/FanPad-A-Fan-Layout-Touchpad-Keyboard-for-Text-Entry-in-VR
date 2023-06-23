@@ -3,9 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
+<<<<<<< Updated upstream
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 using TMPro;
+=======
+>>>>>>> Stashed changes
 
 public enum Keybd_Flags
 {
@@ -14,14 +17,18 @@ public enum Keybd_Flags
     KeyUp,
 }
 
+<<<<<<< Updated upstream
 /* 键盘的基类，它不应该被实例化，不应该被直接使用，只用于继承 */
 /* 关于touchpad的几个回调函数，这里写的基本没太大意义，应在子类中完全重写.不要调用父类的 */
+=======
+>>>>>>> Stashed changes
 public class KeyboardBase : MonoBehaviour
 {
     // Start is called before the first frame update
     [DllImport("User32.dll", EntryPoint = "keybd_event")]
     static extern void keybd_event(byte bVK, byte bScan, int dwFlags, int dwExtraInfo);
 
+<<<<<<< Updated upstream
     //Keyboard action set
     public SteamVR_ActionSet keyboardActionSet;
 
@@ -44,14 +51,33 @@ public class KeyboardBase : MonoBehaviour
      * 比如，这里OnEnable注册回调函数，在子类中没改动，而Unity中挂载的是子类，所以调用是在子类中调用，没用用父类型调用子类函数的担忧.
      */
 
+=======
+    /*
+     * TODO:
+     * 获取手柄各个按键、触摸板的action.并且能够注册.
+     * 按下、滑动等回调函数的虚函数（接口），并且在一开始就在Base中注册这些回调函数.
+     * 这样在具体的键盘类中就只需要实现这些回调函数及相关逻辑.
+     * 考虑到可能将要用trigger实现，也许这里可以加个map？或者存储当前位于哪里的变量。然后onTriggerEnter是否也应该在这里?
+     * 但是如果只是一下子touch马上又松开，trigger是否可能有反应不过来的情况？这时候要主动用一个Axis2Key把Action的坐标映射为符号，是否也需要在这里实现?
+     * 
+     */
+
+
+>>>>>>> Stashed changes
     void Start()
     {
 
     }
+<<<<<<< Updated upstream
+=======
+
+    // Update is called once per frame
+>>>>>>> Stashed changes
     void Update()
     {
 
     }
+<<<<<<< Updated upstream
     private void OnEnable()
     {
         // 注册回调函数
@@ -179,6 +205,8 @@ public class KeyboardBase : MonoBehaviour
         // 从inputField中（在当前光标位置）删除1个字符.
         // TODO. 删除一个字符.
     }
+=======
+>>>>>>> Stashed changes
 
     void PushKey(byte bVK)
     {
