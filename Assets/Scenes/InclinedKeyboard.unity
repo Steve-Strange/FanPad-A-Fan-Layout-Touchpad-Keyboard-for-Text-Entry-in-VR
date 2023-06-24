@@ -1443,7 +1443,7 @@ MonoBehaviour:
   inputText: {fileID: 779593279}
   inputField: {fileID: 1908527610}
   thumbTheta: 0
-  thumbLength: 3
+  thumbLength: 3.5
 --- !u!4 &547564213
 Transform:
   m_ObjectHideFlags: 0
