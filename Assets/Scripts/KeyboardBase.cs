@@ -117,7 +117,7 @@ public class KeyboardBase : MonoBehaviour
         /* 长按删除键。是onState的回调函数，因为onState本身要在true才触发，所以不用判断是否true. */
         // 不能删的太快，比如相隔0.2s再删.
         // TODO
-        if(Time.time - last_delete_time > 0.2f)
+        if (Time.time - last_delete_time > 0.2f)
         {
             last_delete_time = Time.time;
             do_delete_char();
@@ -142,7 +142,7 @@ public class KeyboardBase : MonoBehaviour
 
     virtual public void OnPressUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* 不管是什么键盘，这里都需要输出字符了! */        
+        /* 不管是什么键盘，这里都需要输出字符了! */
     }
 
     virtual public void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
@@ -156,6 +156,7 @@ public class KeyboardBase : MonoBehaviour
     // Core
     virtual public int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, ref GameObject key)
     {
+        // 应该叫Axis2Char更好..
         // 将当前位置触摸板的位置转化为要输出的Ascii字符. 并且把当前所处的键盘位置的按件的GameObject
         // mode: 特殊状态，比如大写的状态，特殊符号的状态. 0- 小写， 1-大写， 2-特殊符号.
         return 0;
@@ -164,7 +165,112 @@ public class KeyboardBase : MonoBehaviour
     public void OutputLetter(int ascii)
     {
         // 把Ascii符号翻译为键盘.
-        // TODO
+        // 更聪明的办法，应该是用一个ascii->VKcode的数组!
+        // 注意，Shift, Enter等控制键不使用ascii，传入就直接用VKCode
+        // 1. 字母
+        if ('a' <= ascii && ascii <= 'z')
+        {
+            PutChar((byte)(ascii - 'a' + VKCode.Letters));
+        }
+        else if('A' <= ascii && ascii <= 'Z')
+        {
+            PushKey((byte)VKCode.Shift);
+            PutChar((byte)(ascii - 'A' + VKCode.Letters));
+            ReleaseKey((byte)VKCode.Shift);
+        }
+        // 2. 数字
+        else if('0' <= ascii && ascii <= '9')
+        {
+            PutChar((byte)(ascii - '0' + VKCode.Numbers));
+        }
+        // 3. 其它符号, 枚举..
+        else
+        {
+            bool needShift = false;
+            switch (ascii)
+            {
+                case '<': case '>': case '?': case ':': case '\"': case '|': case '{': case '}':
+                case '~': case '!': case '@': case '#': case '$': case '%': case '^': case '&':
+                case '*': case '(': case ')': case '_': case '+':
+                    PushKey((byte)VKCode.Shift);
+                    needShift = true;
+                    break;
+            }
+            switch (ascii)
+            {
+                case ',': case '<':
+                    PutChar((byte)VKCode.Comma);
+                    break;
+                case '.': case '>':
+                    PutChar((byte)VKCode.Period);
+                    break;
+                case '/': case '?':
+                    PutChar((byte)VKCode.Slash);
+                    break;
+                case ';': case ':':
+                    PutChar((byte)VKCode.Semicolon);
+                    break;
+                case '\"': case '\'':
+                    PutChar((byte)VKCode.Quote);
+                    break;
+                case '\\': case '|':
+                    PutChar((byte)VKCode.Backslash);
+                    break;
+                case '[': case '{':
+                    PutChar((byte)VKCode.L_Mid_Bracket);
+                    break;
+                case ']': case '}':
+                    PutChar((byte)VKCode.R_Mid_Bracket);
+                    break;
+                case '`': case '~':
+                    PutChar((byte)VKCode.Backquote);
+                    break;
+                case '!':
+                    PutChar((byte)VKCode.Numbers+1);
+                    break;
+                case '@':
+                    PutChar((byte)VKCode.Numbers + 2);
+                    break;
+                case '#':
+                    PutChar((byte)VKCode.Numbers + 3);
+                    break;
+                case '$':
+                    PutChar((byte)VKCode.Numbers + 4);
+                    break;
+                case '%':
+                    PutChar((byte)VKCode.Numbers + 5);
+                    break;
+                case '^':
+                    PutChar((byte)VKCode.Numbers + 6);
+                    break;
+                case '&':
+                    PutChar((byte)VKCode.Numbers + 7);
+                    break;
+                case '*':
+                    PutChar((byte)VKCode.Numbers + 8);
+                    break;
+                case '(':
+                    PutChar((byte)VKCode.Numbers + 9);
+                    break;
+                case ')':
+                    PutChar((byte)VKCode.Numbers);
+                    break;
+                case '-': case '_':
+                    PutChar((byte)VKCode.Minus);
+                    break;
+                case '=': case '+':
+                    PutChar((byte)VKCode.Minus);
+                    break;
+                case ' ':
+                    PutChar((byte)VKCode.Space);
+                    break;
+                default:
+                    PutChar((byte)ascii);   //shift, enter等控制键，直接按照VKCode输出.
+                    break;
+            }
+            if (needShift)
+                ReleaseKey((byte)VKCode.Shift);
+        }
     }
     
     void do_delete_char()
@@ -201,6 +307,12 @@ public class KeyboardBase : MonoBehaviour
 
     void ReleaseKey(byte bVK)
     {
+        keybd_event(bVK, 0, (int)Keybd_Flags.KeyUp, 0);
+    }
+
+    void PutChar(byte bVK)
+    {
+        keybd_event(bVK, 0, (int)Keybd_Flags.KeyDown, 0);
         keybd_event(bVK, 0, (int)Keybd_Flags.KeyUp, 0);
     }
 }

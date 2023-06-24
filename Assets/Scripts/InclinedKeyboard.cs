@@ -29,18 +29,17 @@ public class InclinedKeyboard : ClickKeyboard
     private void Update()
     {
         GameObject key = new GameObject();
-        int ascii = 0;
         if (touched)
         {
             if(PadSlide[SteamVR_Input_Sources.LeftHand].axis != new Vector2(0, 0))
             {
-                ascii = Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, ref key);
-                Debug.Log("Key: " + ascii);
+                Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, ref key);
+                //Debug.Log("Key: " + ascii);
             }
             if (PadSlide[SteamVR_Input_Sources.RightHand].axis != new Vector2(0, 0))
             {
-                ascii = Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.LeftHand, 0, ref key);
-                Debug.Log("Key: " + ascii);
+                Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.LeftHand, 0, ref key);
+                //Debug.Log("Key: " + ascii);
             }
         }
         GameObject.Destroy(key);
@@ -70,6 +69,7 @@ public class InclinedKeyboard : ClickKeyboard
 
         row = (int)frow;
 
+        Debug.Log("( " + column + ' ' + row + " )");
 
         return keys[column, row, mode];
     }

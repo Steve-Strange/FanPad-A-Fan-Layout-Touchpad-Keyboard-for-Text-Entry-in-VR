@@ -6935,7 +6935,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6595329431576816878}
   m_Layer: 0
-  m_Name: keyboard2
+  m_Name: SlideKeyboard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
