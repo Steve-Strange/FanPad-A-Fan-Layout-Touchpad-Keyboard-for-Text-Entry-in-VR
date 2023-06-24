@@ -25,8 +25,29 @@ public class InclinedKeyboard : ClickKeyboard
         }
     }
 
+    // 作为测试，在Update里面轮询.
+    private void Update()
+    {
+        GameObject key = new GameObject();
+        if (touched)
+        {
+            if(PadSlide[SteamVR_Input_Sources.LeftHand].axis != new Vector2(0, 0))
+            {
+                Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, ref key);
+                //Debug.Log("Key: " + ascii);
+            }
+            if (PadSlide[SteamVR_Input_Sources.RightHand].axis != new Vector2(0, 0))
+            {
+                Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.LeftHand, 0, ref key);
+                //Debug.Log("Key: " + ascii);
+            }
+        }
+        GameObject.Destroy(key);
+    }
+
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, ref GameObject key)
     {
+        // TODO: 获取相应位置的按件对象并赋值给key
         int row;
         int column = 0;
         for (int i = 0; i < 6; i++)
@@ -48,6 +69,7 @@ public class InclinedKeyboard : ClickKeyboard
 
         row = (int)frow;
 
+        Debug.Log("( " + column + ' ' + row + " )");
 
         return keys[column, row, mode];
     }
