@@ -28,24 +28,23 @@ public class InclinedKeyboard : ClickKeyboard
     // 作为测试，在Update里面轮询.
     private void Update()
     {
-        GameObject key = new GameObject();
+        GameObject key;
         if (touched)
         {
             if(PadSlide[SteamVR_Input_Sources.LeftHand].axis != new Vector2(0, 0))
             {
-                Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, ref key);
+                Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, out key);
                 //Debug.Log("Key: " + ascii);
             }
             if (PadSlide[SteamVR_Input_Sources.RightHand].axis != new Vector2(0, 0))
             {
-                Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.LeftHand, 0, ref key);
+                Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.LeftHand, 0, out key);
                 //Debug.Log("Key: " + ascii);
             }
         }
-        GameObject.Destroy(key);
     }
 
-    public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, ref GameObject key)
+    public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
         // TODO: 获取相应位置的按件对象并赋值给key
         int row;
@@ -70,6 +69,8 @@ public class InclinedKeyboard : ClickKeyboard
         row = (int)frow;
 
         Debug.Log("( " + column + ' ' + row + " )");
+
+        key = this.gameObject;  //只是占位.
 
         return keys[column, row, mode];
     }

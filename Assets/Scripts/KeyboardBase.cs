@@ -21,6 +21,7 @@ public enum SEEK_MOD
     End = 2
 }
 
+/* 键盘脚本，应该直接挂载到键盘最上层! */
 public class KeyboardBase : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -43,7 +44,6 @@ public class KeyboardBase : MonoBehaviour
 
     protected bool selected = false, deleted = false, touched = false, longHolding = false;
     protected float last_delete_time, hold_time_start;
-
 
     void Start()
     {
@@ -116,7 +116,6 @@ public class KeyboardBase : MonoBehaviour
     {
         /* 长按删除键。是onState的回调函数，因为onState本身要在true才触发，所以不用判断是否true. */
         // 不能删的太快，比如相隔0.2s再删.
-        // TODO
         if (Time.time - last_delete_time > 0.2f)
         {
             last_delete_time = Time.time;
@@ -154,11 +153,14 @@ public class KeyboardBase : MonoBehaviour
     }
 
     // Core
-    virtual public int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, ref GameObject key)
+    virtual public int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
         // 应该叫Axis2Char更好..
         // 将当前位置触摸板的位置转化为要输出的Ascii字符. 并且把当前所处的键盘位置的按件的GameObject
         // mode: 特殊状态，比如大写的状态，特殊符号的状态. 0- 小写， 1-大写， 2-特殊符号.
+        // key: 要把当前所处的按键的GameObject(引用)赋值给key. 注意，如果mode==2，有特殊符号的选择框，则应该把相应的选择框内的三个按键之一赋值给key.
+        // Axis2Letter要能处理长按后、弹出了三个选择框时候的特殊情况；这时候只看左右水平移动的分量. 相对左移，返回ascii为最左边那个按键的值；相对右移，返回最右边那个按键的值.
+        key = this.gameObject;  //meaningless, 只是占位试图通过编译.
         return 0;
     }
 
@@ -273,7 +275,7 @@ public class KeyboardBase : MonoBehaviour
         }
     }
     
-    void do_delete_char()
+    protected void do_delete_char()
     {
         // 在inputField的当前位置删除一个字符.
         // 直接用输入一个backspace实现删除.
@@ -281,7 +283,7 @@ public class KeyboardBase : MonoBehaviour
         ReleaseKey((byte)VKCode.Back);
     }
 
-    void Seek(SEEK_MOD mode, int offset)
+    protected void Seek(SEEK_MOD mode, int offset)
     {
         // 移动 inputField 的光标.
         // 永远对offset做加号，如果是移动到末尾，offset则应该是负数!
@@ -300,17 +302,36 @@ public class KeyboardBase : MonoBehaviour
         }
     }
 
-    void PushKey(byte bVK)
+    protected void do_caret_move(Vector2 axis)
+    {
+        // 移动光标可以用这个.
+        // 根据手指所在的位置，向上/下/左/右方向移动**1格**.
+        float slope = axis.y / (axis.x + 1e-6f);  //防止除以0.
+        if(-1 < slope && slope < 1)   //是左右移动.
+            Seek(SEEK_MOD.Current, axis.x >= 0 ? 1 : -1);
+        else
+        {
+            // 是上下移动. 先获取一行有多少字符，然后再移动一行的字符数.
+            // 由于使用等宽字体，并且只有英文，不用考虑一行字数不同.
+            var linesinfo = inputText.GetTextInfo(inputText.text);   //用这个方法获取文字文本信息!
+            int chars_per_line = linesinfo.characterCount / linesinfo.lineCount;
+            int plus1 = linesinfo.characterCount % linesinfo.lineCount == 0 ? 0 : 1;
+            chars_per_line += plus1;    //由于每行字符数相等，恰好填满最后一行的时候平均是对的；没有填满最后一行的时候平均比真正的值少1.
+            Seek(SEEK_MOD.Current, axis.y >= 0 ? -chars_per_line : chars_per_line);
+        }
+    }
+
+    protected void PushKey(byte bVK)
     {
         keybd_event(bVK, 0, (int)Keybd_Flags.KeyDown, 0);
     }
 
-    void ReleaseKey(byte bVK)
+    protected void ReleaseKey(byte bVK)
     {
         keybd_event(bVK, 0, (int)Keybd_Flags.KeyUp, 0);
     }
 
-    void PutChar(byte bVK)
+    protected void PutChar(byte bVK)
     {
         keybd_event(bVK, 0, (int)Keybd_Flags.KeyDown, 0);
         keybd_event(bVK, 0, (int)Keybd_Flags.KeyUp, 0);
