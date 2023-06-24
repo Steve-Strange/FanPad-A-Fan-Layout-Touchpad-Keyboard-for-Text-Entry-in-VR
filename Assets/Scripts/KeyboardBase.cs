@@ -154,11 +154,12 @@ public class KeyboardBase : MonoBehaviour
     }
 
     // Core
-    virtual public int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, ref GameObject key)
+    virtual public int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
         // 应该叫Axis2Char更好..
         // 将当前位置触摸板的位置转化为要输出的Ascii字符. 并且把当前所处的键盘位置的按件的GameObject
         // mode: 特殊状态，比如大写的状态，特殊符号的状态. 0- 小写， 1-大写， 2-特殊符号.
+        key = this.gameObject;
         return 0;
     }
 
