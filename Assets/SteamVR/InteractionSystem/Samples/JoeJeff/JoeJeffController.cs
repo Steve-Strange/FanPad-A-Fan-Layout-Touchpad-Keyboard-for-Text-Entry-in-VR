@@ -35,6 +35,7 @@ namespace Valve.VR.InteractionSystem.Sample
                 hand = interactable.attachedToHand.handType;
                 Vector2 m = moveAction[hand].axis;
                 movement = new Vector3(m.x, 0, m.y);
+                print(hand);
 
                 jump = jumpAction[hand].stateDown;
                 glow = Mathf.Lerp(glow, jumpAction[hand].state ? 1.5f : 1.0f, Time.deltaTime * 20);

@@ -81,6 +81,26 @@
       "name": "/actions/mixedreality/in/ExternalCamera",
       "type": "pose",
       "requirement": "optional"
+    },
+    {
+      "name": "/actions/Keyboard/in/slide",
+      "type": "vector2"
+    },
+    {
+      "name": "/actions/Keyboard/in/touch",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/Keyboard/in/press",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/Keyboard/in/select",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/Keyboard/in/delete",
+      "type": "boolean"
     }
   ],
   "action_sets": [
@@ -98,6 +118,10 @@
     },
     {
       "name": "/actions/mixedreality",
+      "usage": "single"
+    },
+    {
+      "name": "/actions/Keyboard",
       "usage": "single"
     }
   ],
