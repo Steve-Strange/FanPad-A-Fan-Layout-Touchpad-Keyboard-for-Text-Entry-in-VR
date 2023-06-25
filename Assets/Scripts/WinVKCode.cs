@@ -1,5 +1,6 @@
 public enum VKCode
 {
+    Switch  =   0x00,
     Back    =   0x08,
     Enter   =   0x0D,
     Shift   =   0x10,

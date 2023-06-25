@@ -14,40 +14,55 @@ public class InclinedKeyboard : ClickKeyboard
 
     private int[] keyColumn = new int[6] { 1, 2, 3, 5, 4, 3};
 
-    private char[,,] keys = new char[6, 6, 2];      //Fill in the keys
+    private int[,,] keys = new int[6, 6, 5]     { { { 0, 0, 0, 0, 0 }, {'q', 0x20,  0, 0, 0 }, {'w', 's','a' , 0, 0, }, { 'e', 'd', 'x', 'z', '.'}, {'r', 'f', 'c', ',', 0, }, { 't', 'g', 'v' , 0, 0 } },
+                                                  { { 0, 0, 0, 0, 0 }, {'Q', 0x20,  0, 0, 0 }, {'W', 'S','A' , 0, 0, }, { 'E', 'D', 'X', 'Z', '.'}, {'R', 'F', 'C', ',', 0, }, { 'T', 'G', 'V' , 0, 0 } },
+                                                  { { 0, 0, 0, 0, 0 }, {'1', 0x20,  0, 0, 0 }, {'2', '!','~' , 0, 0, }, { '3', '@', ')', '(', '.'}, {'4', '#', '-', ',', 0, }, { '5', '%', '_' , 0, 0 } },
+                                                  { { 0x10, 0, 0, 0, 0 }, {',', 'p', 0, 0, 0 }, {'l' , 'k','o',  0, 0, }, { '?', 'm', 'n', 'g', 'i'}, {'!', 'b', 'h', 'u', 0, }, { 'v', 'g', 'y' , 0, 0 } },
+                                                  { { 0x10, 0, 0, 0, 0 }, {',', 'P', 0, 0, 0 }, {'L' , 'K','O',  0, 0, }, { '?', 'M', 'N', 'G', 'I'}, {'!', 'B', 'H', 'U', 0, }, { 'V', 'G', 'Y' , 0, 0 } },
+                                                  { { 0x10, 0, 0, 0, 0 }, {',', '0', 0, 0, 0 }, {'~' , '!','2',  0, 0, }, { '?', '(', ')', '@', '3'}, {'!', '-', '#', '4', 0, }, { '_', '%', '6' , 0, 0 } }};
 
     private void Start()
     {
-        for (int i = 0; i < 7; i++)
-        {
-            d[i] = thumbLength + (float) (i - 3) * 1 / 3f;
-            thumbCenter[i] = new Vector2((d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
-            print(d[i]);
-            print(thumbCenter[i]);
-        }
     }
 
     //作为测试，在Update里面轮询.
     private void Update()
     {
-        GameObject key;
-        if (touched)
-        {
-            if (PadSlide[SteamVR_Input_Sources.LeftHand].axis != new Vector2(0, 0))
-            {
-                Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, out key);
-                //Debug.Log("Key: " + ascii);
-            }
-            if (PadSlide[SteamVR_Input_Sources.RightHand].axis != new Vector2(0, 0))
-            {
-                Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.RightHand, 0, out key);
-                //Debug.Log("Key: " + ascii);
-            }
-        }
+        //GameObject key;
+        //if (touched)
+        //{
+        //    if (PadSlide[SteamVR_Input_Sources.LeftHand].axis != new Vector2(0, 0))
+        //    {
+        //        Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, out key);
+        //        //Debug.Log("Key: " + ascii);
+        //    }
+        //    if (PadSlide[SteamVR_Input_Sources.RightHand].axis != new Vector2(0, 0))
+        //    {
+        //        Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.RightHand, 0, out key);
+        //        //Debug.Log("Key: " + ascii);
+        //    }
+        //}
     }
 
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
+        if(hand == SteamVR_Input_Sources.LeftHand)
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                d[i] = thumbLength + (float)(i - 3) * 1 / 3f;
+                thumbCenter[i] = new Vector2((d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                d[i] = thumbLength + (float)(i - 3) * 1 / 3f;
+                thumbCenter[i] = new Vector2(-(d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
+            }
+        }
+
         // TODO: 获取相应位置的按件对象并赋值给key
         int column;
         int row = 0;
@@ -89,6 +104,12 @@ public class InclinedKeyboard : ClickKeyboard
         Debug.Log("( " + column + ' ' + row + " )");
 
         key = this.gameObject;
-        return keys[column, row, mode];
+
+        int handmode = (hand == SteamVR_Input_Sources.LeftHand) ? mode : mode + 3;
+
+        char output = (char)keys[handmode, row, column];
+        print(handmode);
+        print(output);
+        return keys[handmode, row, column];
     }
 }
