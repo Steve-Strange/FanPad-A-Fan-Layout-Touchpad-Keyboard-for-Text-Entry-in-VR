@@ -6,6 +6,7 @@ using Valve.VR;
 /* 普通键盘，继承自ClickKeyboard，应当只用实现自己的Axis2Letter方法. */
 public class NormalKeyboard : ClickKeyboard
 {
+
     private void Update()
     {
         GameObject key;
@@ -24,7 +25,12 @@ public class NormalKeyboard : ClickKeyboard
         }
     }
 
-    private char[,,] keys = new char[5, 4, 2];
+    private int[,,] keys = new int[6, 4, 5] { { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { 0x10, 'z', 'x', 'c', 'v' }, { 'a', 's', 'd', 'f', 'g' } ,{ 'q', 'w', 'e', 'r', 't' }},
+                                              { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { 0x10, 'Z', 'X', 'C', 'V' }, { 'A', 'S', 'D', 'F', 'G' } ,{ 'Q', 'W', 'E', 'R', 'T' }},
+                                              { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { 0x10, '(', ')', '-', '_' }, { '~', '!', '@', '#', '%' } ,{ '1', '2', '3', '4', '5' }},
+                                              { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { 'v', 'b', 'n', 'm', 0x08 }, { 'g', 'h', 'j', 'k', 'l' } ,{ 'y', 'u', 'i', 'o', 'p' }},
+                                              { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { 'V', 'B', 'N', 'M', 0x08 }, { 'G', 'H', 'J', 'K', 'L' } ,{ 'Y', 'U', 'I', 'O', 'P' }},
+                                              { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { '_', ':', ';', '/', 0x08 }, { '%', '\'', '&', '*', '?' } ,{ '6', '7', '8', '9', '0' }} };
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
         int row, column;
@@ -43,6 +49,12 @@ public class NormalKeyboard : ClickKeyboard
         print(columnRatio);
         Debug.Log("( " + column + ' ' + row + " )");
         key = this.gameObject;
-        return 0;
+
+        int handmode = (hand == SteamVR_Input_Sources.LeftHand) ? mode : mode + 3;
+
+        char output = (char)keys[handmode, row, column];
+        print(handmode);
+        print(output);
+        return keys[handmode, row, column];
     }
 }
