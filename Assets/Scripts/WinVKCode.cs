@@ -1,5 +1,6 @@
 public enum VKCode
 {
+    Switch  =   0x00,   // 这个不是VK的编码，是用来标识切换字母/符号键盘的
     Back    =   0x08,
     Enter   =   0x0D,
     Shift   =   0x10,

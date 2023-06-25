@@ -42,11 +42,15 @@ public class KeyboardBase : MonoBehaviour
     public TextMeshProUGUI inputText;
     public TMP_InputField inputField;
 
+    // 键盘上的文字.
+    protected TextMeshProUGUI[,] keyStrings;
     protected bool selected = false, deleted = false, touched = false, longHolding = false;
     protected float last_delete_time, hold_time_start;
 
     void Start()
     {
+        inputField.ActivateInputField();
+        keyStrings = fetchKeyStrings();
     }
 
     // Update is called once per frame
@@ -84,6 +88,45 @@ public class KeyboardBase : MonoBehaviour
         PadPress.onStateUp -= OnPressUp;
         PadPress.onStateDown -= OnPressDown;
         PadSlide.onChange -= OnPadSlide;
+    }
+
+    // 键盘上的文字显示相关
+    protected virtual TextMeshProUGUI[,] fetchKeyStrings()
+    {
+        // 最开始的时候获取 keyStrings.
+        return new TextMeshProUGUI[1, 1];
+    }
+
+    protected void switchCapital()
+    {
+        bool upper;
+        if ((keyStrings[0, 0].text[0] >= 'a' && keyStrings[0, 0].text[0] <= 'z'))  // 原本是小写，变大写.
+            upper = false;
+        else if (keyStrings[0, 0].text[0] >= 'A' && keyStrings[0, 0].text[0] <= 'Z')  //原本是大写，变小写.
+            upper = true;
+        else         // 当前middle不是字母，说明在符号键盘状态中，不切换大小写.
+            return;
+        // 切换字符大小写.
+        int length = keyStrings.GetLength(1);
+        for(int i=0; i<length; ++i)
+        {
+            if (upper)
+                keyStrings[0, i].text.ToLower();
+            else
+                keyStrings[0, i].text.ToUpper();
+        }
+    }
+
+    protected void switchSymbol()
+    {
+        // 符号键盘/普通键盘互换.，把keyStrings的第一二行互换.
+        int length = keyStrings.GetLength(1);
+        for(int i=0; i<length; ++i)
+        {
+            string tmp = keyStrings[0, i].text;
+            keyStrings[0, i].text = keyStrings[1, i].text;
+            keyStrings[1, i].text = tmp;
+        }
     }
 
     // 移动光标和删除逻辑，这些在所有键盘中都是一样的.
@@ -156,7 +199,7 @@ public class KeyboardBase : MonoBehaviour
     {
         // 应该叫Axis2Char更好..
         // 将当前位置触摸板的位置转化为要输出的Ascii字符. 并且把当前所处的键盘位置的按件的GameObject
-        // mode: 特殊状态，比如大写的状态，特殊符号的状态. 0- 小写， 1-大写， 2-特殊符号.
+        // mode: 特殊状态，比如大写的状态，特殊符号的状态. 0- 小写， 1-大写， 2-符号键盘模式, 3-长按.
         // key: 要把当前所处的按键的GameObject(引用)赋值给key. 注意，如果mode==2，有特殊符号的选择框，则应该把相应的选择框内的三个按键之一赋值给key.
         // Axis2Letter要能处理长按后、弹出了三个选择框时候的特殊情况；这时候只看左右水平移动的分量. 相对左移，返回ascii为最左边那个按键的值；相对右移，返回最右边那个按键的值.
         key = this.gameObject;  //meaningless, 只是占位试图通过编译.
