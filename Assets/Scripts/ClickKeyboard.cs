@@ -15,7 +15,7 @@ public class ClickKeyboard : KeyboardBase
     public Transform keyboardRoot;          // ����1, 2 ClickKeyboard�ĸ���Ϸ����.
 
     GameObject hoveringKey, checkKey = null;   // hoveringKey�ǵ�ǰ�����ڵİ�����checkKey�������жϳ�����
-    Color oldColor, hoveringColor = new Color(255, 255, 0, 60);
+    Color oldColor, hoveringColor = new Color(255, 255, 0, 30);  //TODO: 调整颜色.
     int _mode = 0;   //���ģʽ״̬��0-Сд��1-��д(����һ��Shift), 2-�����ַ�(�л�)
     bool isCapitalDisplay = false;   // �Ǵ�дչʾ�ļ���.
     Vector2 longHoldingAxis;
@@ -25,7 +25,7 @@ public class ClickKeyboard : KeyboardBase
     // Update is called once per frame
     void Update()
     {
-        if (touched)
+        if (!selected && !deleted && touched)
         {
             if (checkKey == null)
             {
@@ -45,33 +45,21 @@ public class ClickKeyboard : KeyboardBase
                     hold_time_start = Time.time;
                     checkKey = hoveringKey;
                 }
-                else if(Time.time - hold_time_start > 10)
+                else if(Time.time - hold_time_start > 0.7)  // 多久算长按, 调参
                 {
                     // ����1s, ��������ſ�.
                     longHolding = true;
-                    
+
                     // TODO: ��symbolBox��λ�ø�ֵ.
-                    symbolBox.position = hoveringKey.transform.position;  //��ûд�꣬Ҫ�����������ڳ�������ô�����޸�.
+                    symbolBox.transform.position = hoveringKey.transform.position;
+                    symbolBox.transform.Translate(new Vector3(0, 0, 0.1f), Space.Self);
                     symbolBox.gameObject.SetActive(true);
 
                     // ��hoveringKey�������������ַ�����ֵ��.
-                    string[] str = new string[3];
-                    int i = 0;
-                    foreach(var text in hoveringKey.transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>())
-                    {
-                        if ((text.text[0] >= 'a' && text.text[1] <= 'z') || (text.text[0] >= 'A' && text.text[0] <= 'Z'))
-                        {
-                            str[0] = text.text.ToUpper();
-                            str[2] = text.text.ToLower();
-                        }
-                        else
-                            str[1] = text.text;
-                    }
-                    foreach(var text in symbolBox.GetComponentsInChildren<TextMeshProUGUI>())
-                    {
-                        // �� �� �� ��д-����-Сд.
-                        text.text = str[i++];
-                    }
+                    char[] c = new char[2];
+                    c[0] = hoveringKey.name[0];
+                    c[1] = hoveringKey.name[1] == '\\' ? '/' : hoveringKey.name[1];
+                    symbolBox.GetComponent<PrepareLongholding>().init_chars(c[0], c[1]);
 
                     // ��ɫ.
                     hoveringKey.GetComponent<MeshRenderer>().material.color = oldColor;
@@ -113,12 +101,14 @@ public class ClickKeyboard : KeyboardBase
     // OnTouchDown
     public override void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
+        if (selected || deleted)
+            return;
         base.OnTouchDown(fromAction, fromSource);  //touched = true.
         // ��Ҫ��¼����!.
         hold_time_start = Time.time;
         // �ʼ��¼��ǰ���ĸ�������.
         Axis2Letter(PadSlide[fromSource].axis, fromSource, _mode, out hoveringKey);
-        Debug.LogWarning("TouchDown - hoveringKey: " + hoveringKey.name);
+        //Debug.LogWarning("TouchDown - hoveringKey: " + hoveringKey.name);
         Material material = hoveringKey.GetComponent<MeshRenderer>().material;
         oldColor = material.color;
         material.color = hoveringColor;  //�ı䵱ǰ����������ɫ!
@@ -127,11 +117,11 @@ public class ClickKeyboard : KeyboardBase
     // OnTouchUp, �ɿ������壬����Ҫ�����!
     public override void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        base.OnTouchUp(fromAction, fromSource);  // touched = false.
-        if (selected || deleted)  //��������ƶ�������ɾ���ַ����͵�����Ч!
+        if (selected || deleted || !touched)  //��������ƶ�������ɾ���ַ����͵�����Ч!
             return;
-        GameObject tmp;
-        int ascii = longHolding ? longHoldingLogic(new Vector2(1,1)) : Axis2Letter(lastSlideAxis - lastSlideDelta, fromSource, _mode, out tmp);
+        base.OnTouchUp(fromAction, fromSource);  // touched = false.
+        GameObject tmp = hoveringKey;
+        int ascii = longHolding ? longHoldingLogic(new Vector2(1,1), ref tmp) : Axis2Letter(lastSlideAxis - lastSlideDelta, fromSource, _mode, out tmp);
         hoveringKey.GetComponent<MeshRenderer>().material.color = oldColor;
         // ������Ƽ���Ŀǰֻ��VKCode.Shift.
         if(ascii == (int)VKCode.Shift)  //Shift, mode��0��1����1��0. �������Ƽ���ʱ��_mode��Ӧ���ܱ�Ϊ2.
@@ -165,6 +155,8 @@ public class ClickKeyboard : KeyboardBase
     {
         lastSlideAxis = axis;
         lastSlideDelta = delta;
+        if (Mathf.Sqrt(delta.x * delta.x + delta.y * delta.y) > 0.2)
+            return;
         // ��������������ǿյģ�����.
         if (deleted)  // ����ɾ��������!
             return;
@@ -175,27 +167,20 @@ public class ClickKeyboard : KeyboardBase
         }
         else if(touched)
         {
-            if (longHolding)
-            {
-                // TODO �Ѿ�������.
-                longHoldingLogic(delta);
-            }
             // ���Ҫ��С��ָʾ�Ļ���Ҳ�������С���λ��
             // ���������Ϊ�����ڼ������ƶ�.
-            else
+            GameObject oldkey = hoveringKey;
+            int useless = longHolding ? longHoldingLogic(delta,ref hoveringKey) : Axis2Letter(axis, fromSource, _mode, out hoveringKey);  //useless无用.
+            //Debug.LogWarning("OnPadSlide - delta = " + delta + " hoveringKey: " + hoveringKey.name);
+            if (hoveringKey != null && oldkey != hoveringKey)  //这个hoveringKey很可能是null.
             {
-                GameObject oldkey = hoveringKey;
-                Axis2Letter(axis, fromSource, _mode, out hoveringKey);
-                Debug.LogWarning("OnPadSlide - delta = " + delta + " hoveringKey: " + hoveringKey.name);
-                if (oldkey != hoveringKey)
-                {
-                    // ��ɫ.
-                    oldkey.GetComponent<MeshRenderer>().material.color = oldColor;
-                    Material mat = hoveringKey.GetComponent<MeshRenderer>().material;
-                    oldColor = mat.color;
-                    mat.color = hoveringColor;
-                }
+                // ��ɫ.
+                oldkey.GetComponent<MeshRenderer>().material.color = oldColor;
+                Material mat = hoveringKey.GetComponent<MeshRenderer>().material;
+                oldColor = mat.color;
+                mat.color = hoveringColor;
             }
+            
         }
     }
 
@@ -205,7 +190,7 @@ public class ClickKeyboard : KeyboardBase
         return key.transform.GetChild(0).transform.childCount == 2;
     }
 
-    int longHoldingLogic(Vector2 delta)
+    int longHoldingLogic(Vector2 delta, ref GameObject key)
     {
         //(0,0), ��ʼ���� ��1��1��������.
         if (delta.x == 0 && delta.y == 0)
@@ -215,10 +200,18 @@ public class ClickKeyboard : KeyboardBase
         }
         if(delta.x != 1 || delta.y != 1)
             longHoldingAxis += delta;
-        if (longHoldingAxis.x >= 0.03)   //0.03 magic number ����.
-            return symbolBox.GetChild(2).GetChild(0).GetComponentInChildren<TextMeshProUGUI>().text[0];
-        else if(longHoldingAxis.x <= -0.03)
-            return symbolBox.GetChild(0).GetChild(0).GetComponentInChildren<TextMeshProUGUI>().text[0];
-        return symbolBox.GetChild(1).GetChild(0).GetComponentInChildren<TextMeshProUGUI>().text[0];
+        PrepareLongholding plh = symbolBox.GetComponent<PrepareLongholding>();
+        if (longHoldingAxis.x >= 0.15)
+        {   //0.03 magic number ����.
+            key = plh.rects[2];
+            return plh.texts[2].text[0];
+        }
+        else if (longHoldingAxis.x <= -0.15)
+        {
+            key = plh.rects[0];
+            return plh.texts[0].text[0];
+        }
+        key = plh.rects[1];
+        return plh.texts[1].text[0];
     }
 }

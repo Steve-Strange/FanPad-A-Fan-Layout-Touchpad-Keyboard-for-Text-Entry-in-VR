@@ -36,17 +36,18 @@ public class NormalKeyboard : ClickKeyboard
         Debug.Log("Source: " + hand);
         int row, column;
         // TODO!! ÆÕÍ¨¼üÅÌµÄÓ³Éä.
-        if (axis.y <= -0.45) row = 0;
-        else if (axis.y < 0 && axis.y > -0.45) row = 1;
-        else if (axis.y > 0 && axis.y < 0.45) row = 2;
+        if (axis.y <= -0.4) row = 0;
+        else if (axis.y < 0 && axis.y > -0.4) row = 1;
+        else if (axis.y > 0 && axis.y < 0.4) row = 2;
         else row = 3;
 
         float width = Mathf.Sqrt(1 - axis.y * axis.y);
-        float columnRatio = (axis.x + width / 2) / (2 * width / 5);
-        column = (int)columnRatio + 1;
+        float columnRatio = (axis.x + width) / (2 * width / 5);
+        column = Mathf.FloorToInt(columnRatio);
+        if (column > 4) column = 4;
+        else if (column < 0) column = 0;
 
         int handmode = (hand == SteamVR_Input_Sources.LeftHand) ? mode : mode + 3;
-
         char output = (char)keys[handmode, row, column];
         print(handmode);
         print(output);
@@ -67,6 +68,10 @@ public class NormalKeyboard : ClickKeyboard
         else if (output == 0x0D)
         {
             key = keyboardRoot.Find("enter").gameObject;
+        }
+        else if (output == 0x08)
+        {
+            key = keyboardRoot.Find("back").gameObject;
         }
         else if (output == ',')
         {
@@ -90,9 +95,12 @@ public class NormalKeyboard : ClickKeyboard
         }
         else
         {
-            key = keyboardRoot.Find(((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString()).gameObject;
+            string name = ((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString();
+            if (name[1] == '/')
+                name = "m\\";
+            key = keyboardRoot.Find(name).gameObject;
         }
-        print(key.name);
+
         return keys[handmode, row, column];
     }
 }

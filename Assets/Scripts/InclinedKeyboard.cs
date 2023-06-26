@@ -124,6 +124,10 @@ public class InclinedKeyboard : ClickKeyboard
         {
             key = keyboardRoot.Find("enter").gameObject;
         }
+        else if (output == 0x08)
+        {
+            key = keyboardRoot.Find("back").gameObject;
+        }
         else if (output == ',')
         {
             key = keyboardRoot.Find("comma").gameObject;
@@ -146,9 +150,11 @@ public class InclinedKeyboard : ClickKeyboard
         }
         else
         {
-            key = keyboardRoot.Find(((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString()).gameObject;
+            string name = ((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString();
+            if (name[1] == '/')
+                name = "m\\";
+            key = keyboardRoot.Find(name).gameObject;
         }
-        print(key.name);
 
         return keys[handmode, row, column];
     }
