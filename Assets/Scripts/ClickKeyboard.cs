@@ -12,7 +12,7 @@ public class ClickKeyboard : KeyboardBase
 {
     public Transform symbolBox;
 
-    Transform keyboardRoot;          // 方案1, 2 ClickKeyboard的根游戏物体.
+    protected Transform keyboardRoot;          // 方案1, 2 ClickKeyboard的根游戏物体.
 
     GameObject hoveringKey, checkKey = null;   // hoveringKey是当前正处于的按键；checkKey是用来判断长按的
     Color oldColor, hoveringColor = new Color(255, 255, 0, 60);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using Valve.VR;
 
@@ -21,9 +22,9 @@ public class InclinedKeyboard : ClickKeyboard
                                                   { { 0x10, 0, 0, 0, 0 }, {',', 'P', 0, 0, 0 }, {'L' , 'K','O',  0, 0, }, { '?', 'M', 'N', 'J', 'I'}, {'!', 'B', 'H', 'U', 0, }, { 'V', 'G', 'Y' , 0, 0 } },
                                                   { { 0x10, 0, 0, 0, 0 }, {',', '0', 0, 0, 0 }, {'?' , '*','9',  0, 0, }, { '?', '/', ';', '&', '8'}, {'!', ':', '\'', '7', 0, }, { '_', '%', '6' , 0, 0 } }};
 
-    private void Start()
-    {
-    }
+    //private void Start()
+    //{
+    //}
 
     //作为测试，在Update里面轮询.
     private void Update()
@@ -111,5 +112,32 @@ public class InclinedKeyboard : ClickKeyboard
         print(handmode);
         print(output);
         return keys[handmode, row, column];
+    }
+
+    protected override TextMeshProUGUI[,] fetchKeyStrings()
+    {
+        TextMeshProUGUI[,] ret = new TextMeshProUGUI[2, 28];
+        int i = 0;
+        Transform[] children = new Transform[2] { keyboardRoot.GetChild(0), keyboardRoot.GetChild(1) };
+        foreach(Transform LR in children)
+        {
+            foreach(var keys in LR.GetComponentsInChildren<MeshRenderer>())
+            {
+                Transform canvas = keys.transform.GetChild(0);
+                if(canvas.childCount == 2)
+                {
+                    // 有两个儿子，有用.  有字母有符号.
+                    foreach(var text in canvas.GetComponentsInChildren<TextMeshProUGUI>())
+                    {
+                        if (text.text[0] >= 'a' && text.text[0] <= 'z')  //初始必定小写.
+                            ret[0, i] = text;
+                        else
+                            ret[1, i] = text;
+                    }
+                    ++i;
+                }
+            }
+        }
+        return ret;
     }
 }
