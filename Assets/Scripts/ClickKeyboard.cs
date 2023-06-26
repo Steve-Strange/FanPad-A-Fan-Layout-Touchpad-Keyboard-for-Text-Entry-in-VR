@@ -22,6 +22,8 @@ public class ClickKeyboard : KeyboardBase
 
     Vector2 lastSlideAxis, lastSlideDelta;
 
+    SteamVR_Input_Sources mutex;   // exclude left hand and right hand.
+
     // Update is called once per frame
     void Update()
     {
@@ -101,8 +103,17 @@ public class ClickKeyboard : KeyboardBase
     // OnTouchDown
     public override void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        if (selected || deleted)
+        Debug.Log("Touch down!");
+        if (mutex != SteamVR_Input_Sources.Any)
+            return;    // conduct TouchDown only when mutex is free.
+        if (selected)
+        {
+            last_caret_time = Time.time;
             return;
+        }
+        if (deleted)
+            return;
+        mutex = fromSource;   // seize the mutex "lock".
         base.OnTouchDown(fromAction, fromSource);  //touched = true.
         // ��Ҫ��¼����!.
         hold_time_start = Time.time;
@@ -117,7 +128,14 @@ public class ClickKeyboard : KeyboardBase
     // OnTouchUp, �ɿ������壬����Ҫ�����!
     public override void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        if (selected || deleted || !touched)  //��������ƶ�������ɾ���ַ����͵�����Ч!
+        if (selected)
+        {
+            do_caret_move(lastSlideAxis - lastSlideDelta);
+            return;
+        }
+        if (deleted || !touched)  //��������ƶ�������ɾ���ַ����͵�����Ч!
+            return;
+        if (mutex != fromSource)  // only when the mutex was seized by the fromSource's "touchDown" should OnTouchUp be conducted.
             return;
         base.OnTouchUp(fromAction, fromSource);  // touched = false.
         GameObject tmp = hoveringKey;
@@ -146,6 +164,7 @@ public class ClickKeyboard : KeyboardBase
             }
         }
         checkKey = null;   //checkKey�ÿգ�Ϊ�´δ�����׼��.
+        mutex = SteamVR_Input_Sources.Any;
     }
 
     // ClickKeyboard�еİ��´�����û���ر�����壬�������������Ű�. PressUpһ������TouchUp�������ٵ���һ��.
@@ -160,12 +179,19 @@ public class ClickKeyboard : KeyboardBase
         // ��������������ǿյģ�����.
         if (deleted)  // ����ɾ��������!
             return;
-        if (selected)
+        if (selected && Time.time - last_caret_time > 0.2f)
         {
-            //���˰�������ƶ���ֻ꣬������꣬��������.
+            // require an interval time!
             do_caret_move(axis);
+            last_caret_time = Time.time;
+            return;
         }
-        else if(touched)
+        
+        if (mutex != fromSource)  //only when the mutex was seized by the fromSource's "touchDown" should OnTouchUp be conducted.
+            return;    
+        
+        
+        if(touched)
         {
             // ���Ҫ��С��ָʾ�Ļ���Ҳ�������С���λ��
             // ���������Ϊ�����ڼ������ƶ�.

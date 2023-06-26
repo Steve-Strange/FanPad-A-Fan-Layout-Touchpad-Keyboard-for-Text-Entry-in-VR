@@ -45,7 +45,7 @@ public class KeyboardBase : MonoBehaviour
     // 键盘上的文字.
     protected TextMeshProUGUI[,] keyStrings;
     protected bool selected = false, deleted = false, touched = false, longHolding = false;
-    protected float last_delete_time, hold_time_start;
+    protected float last_delete_time, hold_time_start, last_caret_time;
 
     void Start()
     {
@@ -148,6 +148,7 @@ public class KeyboardBase : MonoBehaviour
     public void OnSelectKeyDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         selected = true;
+        last_caret_time = Time.time;
     }
 
     public void OnDeleteKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -168,7 +169,7 @@ public class KeyboardBase : MonoBehaviour
     {
         /* 长按删除键。是onState的回调函数，因为onState本身要在true才触发，所以不用判断是否true. */
         // 不能删的太快，比如相隔0.2s再删.
-        if (Time.time - last_delete_time > 0.2f)
+        if (Time.time - last_delete_time > 0.1f)
         {
             last_delete_time = Time.time;
             do_delete_char();
@@ -358,6 +359,7 @@ public class KeyboardBase : MonoBehaviour
     {
         // 移动光标可以用这个.
         // 根据手指所在的位置，向上/下/左/右方向移动**1格**.
+        Debug.Log("do_caret_move");
         float slope = axis.y / (axis.x + 1e-6f);  //防止除以0.
         if(-1 < slope && slope < 1)   //是左右移动.
             Seek(SEEK_MOD.Current, axis.x >= 0 ? 1 : -1);
