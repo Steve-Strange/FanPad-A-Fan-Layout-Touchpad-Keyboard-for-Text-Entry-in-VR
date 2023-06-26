@@ -25,12 +25,12 @@ public class NormalKeyboard : ClickKeyboard
     //    }
     //}
 
-    private int[,,] keys = new int[6, 4, 5] { { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { 0x10, 'z', 'x', 'c', 'v' }, { 'a', 's', 'd', 'f', 'g' } ,{ 'q', 'w', 'e', 'r', 't' }},
-                                              { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { 0x10, 'Z', 'X', 'C', 'V' }, { 'A', 'S', 'D', 'F', 'G' } ,{ 'Q', 'W', 'E', 'R', 'T' }},
-                                              { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { 0x10, '(', ')', '-', '_' }, { '~', '!', '@', '#', '%' } ,{ '1', '2', '3', '4', '5' }},
-                                              { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { 'v', 'b', 'n', 'm', 0x08 }, { 'g', 'h', 'j', 'k', 'l' } ,{ 'y', 'u', 'i', 'o', 'p' }},
-                                              { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { 'V', 'B', 'N', 'M', 0x08 }, { 'G', 'H', 'J', 'K', 'L' } ,{ 'Y', 'U', 'I', 'O', 'P' }},
-                                              { { 0x20, 0x20, 0x20, 0x20, 0x20 }, { '_', ':', ';', '/', 0x08 }, { '%', '\'', '&', '*', '?' } ,{ '6', '7', '8', '9', '0' }} };
+    private int[,,] keys = new int[6, 4, 5] { { { 0, ',', 0x20, 0x20, 0x20 }, { 0x10, 'z', 'x', 'c', 'v' }, { 'a', 's', 'd', 'f', 'g' } ,{ 'q', 'w', 'e', 'r', 't' }},
+                                              { { 0, ',', 0x20, 0x20, 0x20 }, { 0x10, 'Z', 'X', 'C', 'V' }, { 'A', 'S', 'D', 'F', 'G' } ,{ 'Q', 'W', 'E', 'R', 'T' }},
+                                              { { 0, ',', 0x20, 0x20, 0x20 }, { 0x10, '(', ')', '-', '_' }, { '~', '!', '@', '#', '%' } ,{ '1', '2', '3', '4', '5' }},
+                                              { { 0x20, 0x20, 0x20, '.', 0x0D }, { 'v', 'b', 'n', 'm', 0x08 }, { 'g', 'h', 'j', 'k', 'l' } ,{ 'y', 'u', 'i', 'o', 'p' }},
+                                              { { 0x20, 0x20, 0x20, '.', 0x0D }, { 'V', 'B', 'N', 'M', 0x08 }, { 'G', 'H', 'J', 'K', 'L' } ,{ 'Y', 'U', 'I', 'O', 'P' }},
+                                              { { 0x20, 0x20, 0x20, '.', 0x0D }, { '_', ':', ';', '/', 0x08 }, { '%', '\'', '&', '*', '?' } ,{ '6', '7', '8', '9', '0' }} };
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
         Debug.Log("Source: " + hand);
@@ -51,7 +51,7 @@ public class NormalKeyboard : ClickKeyboard
         print(handmode);
         print(output);
 
-        
+
         if (output == 0x20)
         {
             key = keyboardRoot.Find("space").gameObject;
@@ -60,9 +60,33 @@ public class NormalKeyboard : ClickKeyboard
         {
             key = keyboardRoot.Find("shift").gameObject;
         }
-        else if (output == 0x08)
+        else if (output == 0x0)
         {
-            key = keyboardRoot.Find("back").gameObject;
+            key = keyboardRoot.Find("sym").gameObject;
+        }
+        else if (output == 0x0D)
+        {
+            key = keyboardRoot.Find("enter").gameObject;
+        }
+        else if (output == ',')
+        {
+            key = keyboardRoot.Find("comma").gameObject;
+        }
+        else if (output == '.')
+        {
+            key = keyboardRoot.Find("period").gameObject;
+        }
+        else if (output == '£¡')
+        {
+            key = keyboardRoot.Find("exclamation").gameObject;
+        }
+        else if (output == '\'')
+        {
+            key = keyboardRoot.Find("quotation").gameObject;
+        }
+        else if (output == '?')
+        {
+            key = keyboardRoot.Find("question").gameObject;
         }
         else
         {
