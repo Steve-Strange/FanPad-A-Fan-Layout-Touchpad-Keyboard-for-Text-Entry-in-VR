@@ -138,9 +138,6 @@ public class InclinedKeyboard : ClickKeyboard
                 if (hand == SteamVR_Input_Sources.LeftHand) goto default;
                 key = LR.Find("exclamation").gameObject;
                 break;
-            case '\'':
-                key = LR.Find("quotation").gameObject;
-                break;
             case '?':
                 if (row == 2) goto default;
                 key = LR.Find("question").gameObject;
