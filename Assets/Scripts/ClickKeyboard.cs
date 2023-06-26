@@ -45,7 +45,7 @@ public class ClickKeyboard : KeyboardBase
                     hold_time_start = Time.time;
                     checkKey = hoveringKey;
                 }
-                else if(Time.time - hold_time_start > 0.5)
+                else if(Time.time - hold_time_start > 10)
                 {
                     // ����1s, ��������ſ�.
                     longHolding = true;
@@ -118,6 +118,7 @@ public class ClickKeyboard : KeyboardBase
         hold_time_start = Time.time;
         // �ʼ��¼��ǰ���ĸ�������.
         Axis2Letter(PadSlide[fromSource].axis, fromSource, _mode, out hoveringKey);
+        Debug.LogWarning("TouchDown - hoveringKey: " + hoveringKey.name);
         Material material = hoveringKey.GetComponent<MeshRenderer>().material;
         oldColor = material.color;
         material.color = hoveringColor;  //�ı䵱ǰ����������ɫ!
@@ -132,7 +133,6 @@ public class ClickKeyboard : KeyboardBase
         GameObject tmp;
         int ascii = longHolding ? longHoldingLogic(new Vector2(1,1)) : Axis2Letter(lastSlideAxis - lastSlideDelta, fromSource, _mode, out tmp);
         hoveringKey.GetComponent<MeshRenderer>().material.color = oldColor;
-        Debug.Log("TouchUp: " + (char)ascii);
         // ������Ƽ���Ŀǰֻ��VKCode.Shift.
         if(ascii == (int)VKCode.Shift)  //Shift, mode��0��1����1��0. �������Ƽ���ʱ��_mode��Ӧ���ܱ�Ϊ2.
         {
@@ -173,7 +173,7 @@ public class ClickKeyboard : KeyboardBase
             //���˰�������ƶ���ֻ꣬������꣬��������.
             do_caret_move(axis);
         }
-        else
+        else if(touched)
         {
             if (longHolding)
             {
@@ -186,6 +186,7 @@ public class ClickKeyboard : KeyboardBase
             {
                 GameObject oldkey = hoveringKey;
                 Axis2Letter(axis, fromSource, _mode, out hoveringKey);
+                Debug.LogWarning("OnPadSlide - delta = " + delta + " hoveringKey: " + hoveringKey.name);
                 if (oldkey != hoveringKey)
                 {
                     // ��ɫ.

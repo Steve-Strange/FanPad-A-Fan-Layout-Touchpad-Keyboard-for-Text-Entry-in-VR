@@ -27,23 +27,23 @@ public class InclinedKeyboard : ClickKeyboard
     //}
 
     //作为测试，在Update里面轮询.
-    private void Update()
-    {
-        //GameObject key;
-        //if (touched)
-        //{
-        //    if (PadSlide[SteamVR_Input_Sources.LeftHand].axis != new Vector2(0, 0))
-        //    {
-        //        Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, out key);
-        //        //Debug.Log("Key: " + ascii);
-        //    }
-        //    if (PadSlide[SteamVR_Input_Sources.RightHand].axis != new Vector2(0, 0))
-        //    {
-        //        Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.RightHand, 0, out key);
-        //        //Debug.Log("Key: " + ascii);
-        //    }
-        //}
-    }
+    //private void Update()
+    //{
+    //    //GameObject key;
+    //    //if (touched)
+    //    //{
+    //    //    if (PadSlide[SteamVR_Input_Sources.LeftHand].axis != new Vector2(0, 0))
+    //    //    {
+    //    //        Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, out key);
+    //    //        //Debug.Log("Key: " + ascii);
+    //    //    }
+    //    //    if (PadSlide[SteamVR_Input_Sources.RightHand].axis != new Vector2(0, 0))
+    //    //    {
+    //    //        Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.RightHand, 0, out key);
+    //    //        //Debug.Log("Key: " + ascii);
+    //    //    }
+    //    //}
+    //}
 
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {

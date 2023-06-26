@@ -121,9 +121,9 @@ public class KeyboardBase : MonoBehaviour
         for(int i=0; i<length; ++i)
         {
             if (upper)
-                keyStrings[0, i].text.ToLower();
+                keyStrings[0, i].text = keyStrings[0, i].text.ToLower();
             else
-                keyStrings[0, i].text.ToUpper();
+                keyStrings[0, i].text = keyStrings[0, i].text.ToUpper();
         }
     }
 
