@@ -5,20 +5,22 @@ using Valve.VR;
 using TMPro;
 
 /* 
- * Ô­Ê¼¼üÅÌ¡¢ÇãÐ±¼üÅÌÁ½¸öµÄ»ùÀà¡£ÕâÁ½¸ö¼üÅÌµÄÂß¼­¼¸ºõÍêÈ«Ò»Ñù£¬Ö»ÓÐÓ³Éä·½Ê½²»Í¬.
- * Õâ¸ö½Å±¾Ó¦¸ÃÊµÏÖClickKeyboardµÄËùÓÐÂß¼­£¬Ö»ÁôÏÂAxis2LetterÈÃÁ½¸ö×ÓÀàÖØÐ´!
+ * Ô­Ê¼ï¿½ï¿½ï¿½Ì¡ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½à¡£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È«Ò»ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ó³ï¿½ä·½Ê½ï¿½ï¿½Í¬.
+ * ï¿½ï¿½ï¿½ï¿½Å±ï¿½Ó¦ï¿½ï¿½Êµï¿½ï¿½ClickKeyboardï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½Axis2Letterï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´!
  */
 public class ClickKeyboard : KeyboardBase
 {
     public Transform symbolBox;
 
-    protected Transform keyboardRoot;          // ·½°¸1, 2 ClickKeyboardµÄ¸ùÓÎÏ·ÎïÌå.
+    public Transform keyboardRoot;          // ï¿½ï¿½ï¿½ï¿½1, 2 ClickKeyboardï¿½Ä¸ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½.
 
-    GameObject hoveringKey, checkKey = null;   // hoveringKeyÊÇµ±Ç°Õý´¦ÓÚµÄ°´¼ü£»checkKeyÊÇÓÃÀ´ÅÐ¶Ï³¤°´µÄ
+    GameObject hoveringKey, checkKey = null;   // hoveringKeyï¿½Çµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ÚµÄ°ï¿½ï¿½ï¿½ï¿½ï¿½checkKeyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶Ï³ï¿½ï¿½ï¿½ï¿½ï¿½
     Color oldColor, hoveringColor = new Color(255, 255, 0, 60);
-    int _mode = 0;   //Êä³öÄ£Ê½×´Ì¬£¬0-Ð¡Ð´£¬1-´óÐ´(°´ÁËÒ»´ÎShift), 2-ÌØÊâ×Ö·û(ÇÐ»»)
-    bool isCapitalDisplay = false;   // ÊÇ´óÐ´Õ¹Ê¾µÄ¼üÅÌ.
-    Vector2 longHoldingAxis; // Nullable
+    int _mode = 0;   //ï¿½ï¿½ï¿½Ä£Ê½×´Ì¬ï¿½ï¿½0-Ð¡Ð´ï¿½ï¿½1-ï¿½ï¿½Ð´(ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Shift), 2-ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½(ï¿½Ð»ï¿½)
+    bool isCapitalDisplay = false;   // ï¿½Ç´ï¿½Ð´Õ¹Ê¾ï¿½Ä¼ï¿½ï¿½ï¿½.
+    Vector2 longHoldingAxis;
+
+    Vector2 lastSlideAxis, lastSlideDelta;
 
     // Update is called once per frame
     void Update()
@@ -30,7 +32,7 @@ public class ClickKeyboard : KeyboardBase
                 checkKey = hoveringKey;
                 return;
             }
-            if (!longHolding)  //»¹Ã»ÓÐ³¤°´.
+            if (!longHolding)  //ï¿½ï¿½Ã»ï¿½Ð³ï¿½ï¿½ï¿½.
             {
                 if (!canBeLongHeld(hoveringKey))
                 {
@@ -39,20 +41,20 @@ public class ClickKeyboard : KeyboardBase
                 }
                 if (checkKey != hoveringKey)
                 {
-                    // hoveringKey¸Ä±äÁË.ÖØÐÂ¼ÆÊ±.
+                    // hoveringKeyï¿½Ä±ï¿½ï¿½ï¿½.ï¿½ï¿½ï¿½Â¼ï¿½Ê±.
                     hold_time_start = Time.time;
                     checkKey = hoveringKey;
                 }
                 else if(Time.time - hold_time_start > 0.5)
                 {
-                    // ´óÓÚ1s, ´ò¿ªÌØÊâ·ûºÅ¿ò.
+                    // ï¿½ï¿½ï¿½ï¿½1s, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿ï¿½.
                     longHolding = true;
                     
-                    // TODO: ¸øsymbolBoxµÄÎ»ÖÃ¸³Öµ.
-                    symbolBox.position = hoveringKey.transform.position;  //ÕâÃ»Ð´Íê£¬Òª¸ù¾Ý×îºó¼üÅÌÔÚ³¡¾°ÀïÔõÃ´·ÅÀ´ÐÞ¸Ä.
+                    // TODO: ï¿½ï¿½symbolBoxï¿½ï¿½Î»ï¿½Ã¸ï¿½Öµ.
+                    symbolBox.position = hoveringKey.transform.position;  //ï¿½ï¿½Ã»Ð´ï¿½ê£¬Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½.
                     symbolBox.gameObject.SetActive(true);
 
-                    // °ÑhoveringKeyµÄÈý¸ö°´¼üµÄ×Ö·û´®¸³ÖµÁË.
+                    // ï¿½ï¿½hoveringKeyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½.
                     string[] str = new string[3];
                     int i = 0;
                     foreach(var text in hoveringKey.transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>())
@@ -67,16 +69,16 @@ public class ClickKeyboard : KeyboardBase
                     }
                     foreach(var text in symbolBox.GetComponentsInChildren<TextMeshProUGUI>())
                     {
-                        // ×ó ÖÐ ÓÒ ´óÐ´-·ûºÅ-Ð¡Ð´.
+                        // ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ð´-ï¿½ï¿½ï¿½ï¿½-Ð¡Ð´.
                         text.text = str[i++];
                     }
 
-                    // ±äÉ«.
+                    // ï¿½ï¿½É«.
                     hoveringKey.GetComponent<MeshRenderer>().material.color = oldColor;
                     hoveringKey = symbolBox.Find("Rectangle002").gameObject;
                     Material mat = hoveringKey.GetComponent<MeshRenderer>().material;
                     oldColor = mat.color;
-                    mat.color = hoveringColor;  //±äÉ«.
+                    mat.color = hoveringColor;  //ï¿½ï¿½É«.
                 }
             }
         }
@@ -86,21 +88,23 @@ public class ClickKeyboard : KeyboardBase
     {
         TextMeshProUGUI[,] keychar = new TextMeshProUGUI[2, 26];
         int i = 0;
-        foreach (var key in keyboardRoot.GetComponentsInChildren<Transform>())
+        foreach (var key in keyboardRoot.GetComponentsInChildren<MeshRenderer>())
         {
-            Transform canvas = key.GetChild(0);    // °´¼üÏÂÖ»ÓÐÒ»¸öÖ±½Ó¶ù×ÓÊÇCanvas.
+            Transform canvas = key.transform.GetChild(0);    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ò»ï¿½ï¿½Ö±ï¿½Ó¶ï¿½ï¿½ï¿½ï¿½ï¿½Canvas.
             if(canvas.childCount == 2)
             {
-                // ÓÐÁ½¸ö¶ù×Ó£¬È·¶¨ÊÇÓÐÉÏÏÂµÄ.
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½.
                 foreach (var text in canvas.GetComponentsInChildren<TextMeshProUGUI>())
                 {
-                    // ³õÊ¼µÄ×ÖÄ¸Ò»¶¨ÊÇÐ¡Ð´µÄ.
+                    // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ä¸Ò»ï¿½ï¿½ï¿½ï¿½Ð¡Ð´ï¿½ï¿½.
                     if (text.text[0] >= 'a' && text.text[0] <= 'z')
-                        keychar[0, i] = text;   //ÊÇ×ÖÄ¸£¬ÖÐ¼äÄÇ¸ötext.
+                    {
+                        keychar[0, i] = text;   //ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½Ç¸ï¿½text.
+                    }
                     else
                         keychar[1, i] = text;
-                    ++i;
                 }
+                ++i;
             }
         }
         return keychar;
@@ -110,77 +114,81 @@ public class ClickKeyboard : KeyboardBase
     public override void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         base.OnTouchDown(fromAction, fromSource);  //touched = true.
-        // ÐèÒª¼ÇÂ¼³¤°´!.
+        // ï¿½ï¿½Òªï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½!.
         hold_time_start = Time.time;
-        // ×î¿ªÊ¼¼ÇÂ¼µ±Ç°ÔÚÄÄ¸ö°´¼üÉÏ.
+        // ï¿½î¿ªÊ¼ï¿½ï¿½Â¼ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
         Axis2Letter(PadSlide[fromSource].axis, fromSource, _mode, out hoveringKey);
         Material material = hoveringKey.GetComponent<MeshRenderer>().material;
         oldColor = material.color;
-        material.color = hoveringColor;  //¸Ä±äµ±Ç°Ëù´¦¼üµÄÑÕÉ«!
+        material.color = hoveringColor;  //ï¿½Ä±äµ±Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«!
     }
 
-    // OnTouchUp, ËÉ¿ª´¥Ãþ°å£¬ÕâÊÇÒªÊä³öÁË!
+    // OnTouchUp, ï¿½É¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½å£¬ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½!
     public override void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         base.OnTouchUp(fromAction, fromSource);  // touched = false.
-        if (selected || deleted)  //Èç¹ûÕýÔÚÒÆ¶¯¹â±ê»òÕßÉ¾³ý×Ö·û£¬¾Íµ±×÷ÎÞÐ§!
+        if (selected || deleted)  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½ï¿½Ð§!
             return;
         GameObject tmp;
-        int ascii = longHolding ? longHoldingLogic(new Vector2(1,1)) : Axis2Letter(PadSlide[fromSource].axis, fromSource, _mode, out tmp);
-        // ÌØÊâ¿ØÖÆ¼ü£ºÄ¿Ç°Ö»ÓÐVKCode.Shift.
-        if(ascii == (int)VKCode.Shift)  //Shift, mode´Ó0±ä1¡¢´Ó1±ä0. °´µ½¿ØÖÆ¼üµÄÊ±ºò_mode²»Ó¦¸ÃÄÜ±äÎª2.
+        int ascii = longHolding ? longHoldingLogic(new Vector2(1,1)) : Axis2Letter(lastSlideAxis - lastSlideDelta, fromSource, _mode, out tmp);
+        hoveringKey.GetComponent<MeshRenderer>().material.color = oldColor;
+        Debug.Log("TouchUp: " + (char)ascii);
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½Ä¿Ç°Ö»ï¿½ï¿½VKCode.Shift.
+        if(ascii == (int)VKCode.Shift)  //Shift, modeï¿½ï¿½0ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½0. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½Ê±ï¿½ï¿½_modeï¿½ï¿½Ó¦ï¿½ï¿½ï¿½Ü±ï¿½Îª2.
         {
             _mode = _mode == 1 ? 0 : 1;
             isCapitalDisplay = !isCapitalDisplay;
             switchCapital();
         }
-        else if(ascii == (int)VKCode.Switch)   //ÇÐ»»Îª·ûºÅ¼üÅÌ£»»òÕß´Ó·ûºÅ¼üÅÌÇÐ»»»ØÆÕÍ¨¼üÅÌ.
+        else if(ascii == (int)VKCode.Switch)   //ï¿½Ð»ï¿½Îªï¿½ï¿½ï¿½Å¼ï¿½ï¿½Ì£ï¿½ï¿½ï¿½ï¿½ß´Ó·ï¿½ï¿½Å¼ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½.
         {
             _mode = _mode == 2 ? (isCapitalDisplay ? 1 : 0) : 2;
             switchSymbol();
         }
-        // ²»ÊÇÌØÊâ¿ØÖÆ¼ü£¬È·ÊµÒªÊä³ö×Ö·û.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½È·ÊµÒªï¿½ï¿½ï¿½ï¿½Ö·ï¿½.
         else
         {
             OutputLetter(ascii);
             if(longHolding)
             {
-                symbolBox.gameObject.SetActive(false); // ÌØÊâ·ûºÅ¿ò
+                symbolBox.gameObject.SetActive(false); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿ï¿½
                 longHolding = false;
             }
         }
-        checkKey = null;   //checkKeyÖÃ¿Õ£¬ÎªÏÂ´Î´ò×Ö×ö×¼±¸.
+        checkKey = null;   //checkKeyï¿½Ã¿Õ£ï¿½Îªï¿½Â´Î´ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½.
     }
 
-    // ClickKeyboardÖÐµÄ°´ÏÂ´¥Ãþ°åÃ»ÓÐÌØ±ðµÄÒâÒå£¬¾ÍÏñ¸¸ÀàÄÇÑù¿Õ×Å°É. PressUpÒ»¶¨»áÓÐTouchUp£¬²»±ØÔÙµ÷ÓÃÒ»±é.
+    // ClickKeyboardï¿½ÐµÄ°ï¿½ï¿½Â´ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½å£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å°ï¿½. PressUpÒ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½TouchUpï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ùµï¿½ï¿½ï¿½Ò»ï¿½ï¿½.
 
     // Core: OnPadSlide.
     public override void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
     {
-        // ¸¸ÀàÖÐÕâ¸öº¯ÊýÊÇ¿ÕµÄ£¬²»¹Ü.
-        if (deleted)  // ÕýÔÚÉ¾³ý£¬²»¹Ü!
+        lastSlideAxis = axis;
+        lastSlideDelta = delta;
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ÕµÄ£ï¿½ï¿½ï¿½ï¿½ï¿½.
+        if (deleted)  // ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!
             return;
         if (selected)
         {
-            //°´ÁË°â»ú£¬ÔÚÒÆ¶¯¹â±ê£¬Ö»´¦Àí¹â±ê£¬²»¹ÜÆäËü.
+            //ï¿½ï¿½ï¿½Ë°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ê£¬Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
             do_caret_move(axis);
         }
         else
         {
             if (longHolding)
             {
-                // TODO ÒÑ¾­³¤°´ÁË.
+                // TODO ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
                 longHoldingLogic(delta);
             }
-            // Èç¹ûÒªÓÃÐ¡ÇòÖ¸Ê¾µÄ»°£¬Ò²ÔÚÕâÀï¸ÄÐ¡ÇòµÄÎ»ÖÃ
-            // Õý³£Êä³öÐÐÎª£¬ÕýÔÚ¼üÅÌÉÏÒÆ¶¯.
+            // ï¿½ï¿½ï¿½Òªï¿½ï¿½Ð¡ï¿½ï¿½Ö¸Ê¾ï¿½Ä»ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½Î»ï¿½ï¿½
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½.
             else
             {
                 GameObject oldkey = hoveringKey;
                 Axis2Letter(axis, fromSource, _mode, out hoveringKey);
                 if (oldkey != hoveringKey)
                 {
-                    // ±äÉ«.
+                    // ï¿½ï¿½É«.
                     oldkey.GetComponent<MeshRenderer>().material.color = oldColor;
                     Material mat = hoveringKey.GetComponent<MeshRenderer>().material;
                     oldColor = mat.color;
@@ -192,21 +200,21 @@ public class ClickKeyboard : KeyboardBase
 
     bool canBeLongHeld(GameObject key)
     {
-        // ÓÃÓÚÅÐ¶ÏkeyÊÇ·ñÓÐÌØÊâ·ûºÅ£¬¿ÉÒÔ³¤°´.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½keyï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å£ï¿½ï¿½ï¿½ï¿½Ô³ï¿½ï¿½ï¿½.
         return key.transform.GetChild(0).transform.childCount == 2;
     }
 
     int longHoldingLogic(Vector2 delta)
     {
-        //(0,0), ³õÊ¼»¯£¬ £¨1£¬1£©£¬½áËã.
+        //(0,0), ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½1ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
         if (delta.x == 0 && delta.y == 0)
         {
-            longHoldingAxis.x = longHoldingAxis.y = 0;  //³õÊ¼»¯.
+            longHoldingAxis.x = longHoldingAxis.y = 0;  //ï¿½ï¿½Ê¼ï¿½ï¿½.
             return 0;
         }
         if(delta.x != 1 || delta.y != 1)
             longHoldingAxis += delta;
-        if (longHoldingAxis.x >= 0.03)   //0.03 magic number µ÷²Î.
+        if (longHoldingAxis.x >= 0.03)   //0.03 magic number ï¿½ï¿½ï¿½ï¿½.
             return symbolBox.GetChild(2).GetChild(0).GetComponentInChildren<TextMeshProUGUI>().text[0];
         else if(longHoldingAxis.x <= -0.03)
             return symbolBox.GetChild(0).GetChild(0).GetComponentInChildren<TextMeshProUGUI>().text[0];
