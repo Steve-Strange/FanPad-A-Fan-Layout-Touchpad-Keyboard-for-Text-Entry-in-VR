@@ -18,32 +18,32 @@ public class InclinedKeyboard : ClickKeyboard
     private int[,,] keys = new int[6, 6, 5]     { { { 0, 0, 0, 0, 0 }, {'q', 0x20,  0, 0, 0 }, {'w', 's','a' , 0, 0, }, { 'e', 'd', 'x', 'z', '.'}, {'r', 'f', 'c', ',', 0, }, { 't', 'g', 'v' , 0, 0 } },
                                                   { { 0, 0, 0, 0, 0 }, {'Q', 0x20,  0, 0, 0 }, {'W', 'S','A' , 0, 0, }, { 'E', 'D', 'X', 'Z', '.'}, {'R', 'F', 'C', ',', 0, }, { 'T', 'G', 'V' , 0, 0 } },
                                                   { { 0, 0, 0, 0, 0 }, {'1', 0x20,  0, 0, 0 }, {'2', '!','~' , 0, 0, }, { '3', '@', ')', '(', '.'}, {'4', '#', '-', ',', 0, }, { '5', '%', '_' , 0, 0 } },
-                                                  { { 0x10, 0, 0, 0, 0 }, {',', 'p', 0, 0, 0 }, {'l' , 'k','o',  0, 0, }, { '?', 'm', 'n', 'j', 'i'}, {'!', 'b', 'h', 'u', 0, }, { 'v', 'g', 'y' , 0, 0 } },
-                                                  { { 0x10, 0, 0, 0, 0 }, {',', 'P', 0, 0, 0 }, {'L' , 'K','O',  0, 0, }, { '?', 'M', 'N', 'J', 'I'}, {'!', 'B', 'H', 'U', 0, }, { 'V', 'G', 'Y' , 0, 0 } },
-                                                  { { 0x10, 0, 0, 0, 0 }, {',', '0', 0, 0, 0 }, {'?' , '*','9',  0, 0, }, { '?', '/', ';', '&', '8'}, {'!', ':', '\'', '7', 0, }, { '_', '%', '6' , 0, 0 } }};
+                                                  { { 0x10, 0, 0, 0, 0 }, {0x0D, 'p', 0, 0, 0 }, {'l' , 'k','o',  0, 0, }, { '?', 'm', 'n', 'j', 'i'}, {'!', 'b', 'h', 'u', 0, }, { 'v', 'g', 'y' , 0, 0 } },
+                                                  { { 0x10, 0, 0, 0, 0 }, {0x0D, 'P', 0, 0, 0 }, {'L' , 'K','O',  0, 0, }, { '?', 'M', 'N', 'J', 'I'}, {'!', 'B', 'H', 'U', 0, }, { 'V', 'G', 'Y' , 0, 0 } },
+                                                  { { 0x10, 0, 0, 0, 0 }, {0x0D, '0', 0, 0, 0 }, {'?' , '*','9',  0, 0, }, { '?', '/', ';', '&', '8'}, {'!', ':', '\'', '7', 0, }, { '_', '%', '6' , 0, 0 } }};
 
     //private void Start()
     //{
     //}
 
     //作为测试，在Update里面轮询.
-    private void Update()
-    {
-        //GameObject key;
-        //if (touched)
-        //{
-        //    if (PadSlide[SteamVR_Input_Sources.LeftHand].axis != new Vector2(0, 0))
-        //    {
-        //        Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, out key);
-        //        //Debug.Log("Key: " + ascii);
-        //    }
-        //    if (PadSlide[SteamVR_Input_Sources.RightHand].axis != new Vector2(0, 0))
-        //    {
-        //        Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.RightHand, 0, out key);
-        //        //Debug.Log("Key: " + ascii);
-        //    }
-        //}
-    }
+    //private void Update()
+    //{
+    //    GameObject key;
+    //    if (touched)
+    //    {
+    //        if (PadSlide[SteamVR_Input_Sources.LeftHand].axis != new Vector2(0, 0))
+    //        {
+    //            Axis2Letter(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand, 0, out key);
+    //            //Debug.Log("Key: " + ascii);
+    //        }
+    //        if (PadSlide[SteamVR_Input_Sources.RightHand].axis != new Vector2(0, 0))
+    //        {
+    //            Axis2Letter(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.RightHand, 0, out key);
+    //            //Debug.Log("Key: " + ascii);
+    //        }
+    //    }
+    //}
 
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
@@ -104,13 +104,52 @@ public class InclinedKeyboard : ClickKeyboard
 
         Debug.Log("( " + column + ' ' + row + " )");
 
-        key = this.gameObject;
-
         int handmode = (hand == SteamVR_Input_Sources.LeftHand) ? mode : mode + 3;
 
         char output = (char)keys[handmode, row, column];
-        print(handmode);
-        print(output);
+
+        if (output == 0x20)
+        {
+            key = keyboardRoot.Find("space").gameObject;
+        }
+        else if (output == 0x10)
+        {
+            key = keyboardRoot.Find("shift").gameObject;
+        }
+        else if (output == 0x0)
+        {
+            key = keyboardRoot.Find("sym").gameObject;
+        }
+        else if (output == 0x0D)
+        {
+            key = keyboardRoot.Find("enter").gameObject;
+        }
+        else if (output == ',')
+        {
+            key = keyboardRoot.Find("comma").gameObject;
+        }
+        else if (output == '.')
+        {
+            key = keyboardRoot.Find("period").gameObject;
+        }
+        else if (output == '！')
+        {
+            key = keyboardRoot.Find("exclamation").gameObject;
+        }
+        else if (output == '\'')
+        {
+            key = keyboardRoot.Find("quotation").gameObject;
+        }
+        else if (output == '?')
+        {
+            key = keyboardRoot.Find("question").gameObject;
+        }
+        else
+        {
+            key = keyboardRoot.Find(((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString()).gameObject;
+        }
+        print(key.name);
+
         return keys[handmode, row, column];
     }
 
