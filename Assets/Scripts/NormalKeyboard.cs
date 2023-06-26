@@ -52,53 +52,35 @@ public class NormalKeyboard : ClickKeyboard
         print(handmode);
         print(output);
 
-
-        if (output == 0x20)
+        switch (output)
         {
-            key = keyboardRoot.Find("space").gameObject;
-        }
-        else if (output == 0x10)
-        {
-            key = keyboardRoot.Find("shift").gameObject;
-        }
-        else if (output == 0x0)
-        {
-            key = keyboardRoot.Find("sym").gameObject;
-        }
-        else if (output == 0x0D)
-        {
-            key = keyboardRoot.Find("enter").gameObject;
-        }
-        else if (output == 0x08)
-        {
-            key = keyboardRoot.Find("back").gameObject;
-        }
-        else if (output == ',')
-        {
-            key = keyboardRoot.Find("comma").gameObject;
-        }
-        else if (output == '.')
-        {
-            key = keyboardRoot.Find("period").gameObject;
-        }
-        else if (output == '£¡')
-        {
-            key = keyboardRoot.Find("exclamation").gameObject;
-        }
-        else if (output == '\'')
-        {
-            key = keyboardRoot.Find("quotation").gameObject;
-        }
-        else if (output == '?')
-        {
-            key = keyboardRoot.Find("question").gameObject;
-        }
-        else
-        {
-            string name = ((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString();
-            if (name[1] == '/')
-                name = "m\\";
-            key = keyboardRoot.Find(name).gameObject;
+            case (char)VKCode.Space:
+                key = keyboardRoot.Find("space").gameObject;
+                break;
+            case (char)VKCode.Shift:
+                key = keyboardRoot.Find("shift").gameObject;
+                break;
+            case (char)VKCode.Switch:
+                key = keyboardRoot.Find("sym").gameObject;
+                break;
+            case (char)VKCode.Enter:
+                key = keyboardRoot.Find("enter").gameObject;
+                break;
+            case (char)VKCode.Back:
+                key = keyboardRoot.Find("back").gameObject;
+                break;
+            case ',':
+                key = keyboardRoot.Find("comma").gameObject;
+                break;
+            case '.':
+                key = keyboardRoot.Find("period").gameObject;
+                break;
+            default:
+                string name = ((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString();
+                if (name[1] == '/')
+                    name = "m\\";
+                key = keyboardRoot.Find(name).gameObject;
+                break;
         }
 
         return keys[handmode, row, column];

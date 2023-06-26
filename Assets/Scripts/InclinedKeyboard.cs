@@ -92,13 +92,13 @@ public class InclinedKeyboard : ClickKeyboard
         float currentTheta = (thumbTheta == 0) ? Mathf.Atan((axis.x - thumbCenter[maxThetaRow].x) / (axis.y - thumbCenter[maxThetaRow].y)) : 
                                                  Mathf.Abs(Mathf.Atan((axis.x - thumbCenter[maxThetaRow].x) / (axis.y - thumbCenter[maxThetaRow].y))) - thumbTheta;
 
-        float frow = (currentTheta + thetaMax) / (2 * thetaMax / keyColumn[maxThetaRow]);
+        float fcolumn = (currentTheta + thetaMax) / (2 * thetaMax / keyColumn[maxThetaRow]);
 
         //print("thetaMax" + thetaMax);
         //print("currentTheta" + currentTheta);
-        //print("frow" + frow);
+        //print("fcolumn" + fcolumn);
 
-        column = (int)frow;
+        column = (int)fcolumn;
         if (column < 0) column = 0;
         if (column > keyColumn[row] - 1) column = keyColumn[row] - 1;
 
@@ -107,53 +107,50 @@ public class InclinedKeyboard : ClickKeyboard
         int handmode = (hand == SteamVR_Input_Sources.LeftHand) ? mode : mode + 3;
 
         char output = (char)keys[handmode, row, column];
+        Transform LR = hand == SteamVR_Input_Sources.LeftHand ? keyboardRoot.GetChild(0) : keyboardRoot.GetChild(1);
 
-        if (output == 0x20)
+
+
+        switch (output)
         {
-            key = keyboardRoot.Find("space").gameObject;
-        }
-        else if (output == 0x10)
-        {
-            key = keyboardRoot.Find("shift").gameObject;
-        }
-        else if (output == 0x0)
-        {
-            key = keyboardRoot.Find("sym").gameObject;
-        }
-        else if (output == 0x0D)
-        {
-            key = keyboardRoot.Find("enter").gameObject;
-        }
-        else if (output == 0x08)
-        {
-            key = keyboardRoot.Find("back").gameObject;
-        }
-        else if (output == ',')
-        {
-            key = keyboardRoot.Find("comma").gameObject;
-        }
-        else if (output == '.')
-        {
-            key = keyboardRoot.Find("period").gameObject;
-        }
-        else if (output == '£¡')
-        {
-            key = keyboardRoot.Find("exclamation").gameObject;
-        }
-        else if (output == '\'')
-        {
-            key = keyboardRoot.Find("quotation").gameObject;
-        }
-        else if (output == '?')
-        {
-            key = keyboardRoot.Find("question").gameObject;
-        }
-        else
-        {
-            string name = ((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString();
-            if (name[1] == '/')
-                name = "m\\";
-            key = keyboardRoot.Find(name).gameObject;
+            case (char)VKCode.Space:
+                key = LR.Find("space").gameObject;
+                break;
+            case (char)VKCode.Shift:
+                key = LR.Find("shift").gameObject;
+                break;
+            case (char)VKCode.Switch:
+                key = LR.Find("sym").gameObject;
+                break;
+            case (char)VKCode.Enter:
+                key = LR.Find("enter").gameObject;
+                break;
+            case (char)VKCode.Back:
+                key = LR.Find("back").gameObject;
+                break;
+            case ',':
+                key = LR.Find("comma").gameObject;
+                break;
+            case '.':
+                key = LR.Find("period").gameObject;
+                break;
+            case '!':
+                if (hand == SteamVR_Input_Sources.LeftHand) goto default;
+                key = LR.Find("exclamation").gameObject;
+                break;
+            case '\'':
+                key = LR.Find("quotation").gameObject;
+                break;
+            case '?':
+                if (row == 2) goto default;
+                key = LR.Find("question").gameObject;
+                break;
+            default:
+                string name = ((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString();
+                if (name[1] == '/')
+                    name = "m\\";
+                key = LR.Find(name).gameObject;
+                break;
         }
 
         return keys[handmode, row, column];
