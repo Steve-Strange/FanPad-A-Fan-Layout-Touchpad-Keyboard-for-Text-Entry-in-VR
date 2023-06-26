@@ -145,31 +145,34 @@ public class SlideKeyboard : KeyboardBase
         else
         {
 
-        if(target.name == "shift")
-        {
+            if(target.name == "shift")
+            {
 
-            switchCapital();
-            if (mode == 0) mode = 1;
-            else if(mode == 1) mode = 0;
+                switchCapital();
+                if (mode == 0) mode = 1;
+                else if(mode == 1) mode = 0;
 
-        }
-        else if(target.name =="Symbol")
-        {
-            switchSymbol();
-            if (mode == 0)
-                mode = 2;
-            else if (mode == 2)
-                mode = 0;
-        }
-        else if(target.name == "back")
-        {
-            OutputLetter((int )VKCode.Back);
-        }
-        else if(target.name =="sp")
-        {
-            OutputLetter(' ');
-        }
-
+            }
+            else if(target.name =="Symbol")
+            {
+                switchSymbol();
+                if (mode == 0)
+                    mode = 2;
+                else if (mode == 2)
+                    mode = 0;
+            }
+            else if(target.name == "back")
+            {
+                OutputLetter((int )VKCode.Back);
+            }
+            else if(target.name =="sp")
+            {
+                OutputLetter(' ');
+            }
+            else if(target.name == "Enter")
+            {
+                OutputLetter((int)VKCode.Enter);
+            }
 
             if(target.name.Length == 3)
             {
