@@ -61,33 +61,43 @@ public class KeyboardBase : MonoBehaviour
     private void OnEnable()
     {
         Debug.Log("Enable keyboard action set and relative callback functions!");
+        SteamVR_Input_Sources[] tmp = new SteamVR_Input_Sources[] { SteamVR_Input_Sources.LeftHand, SteamVR_Input_Sources.RightHand };
         keyboardActionSet.Activate();
-        DeleteKey.onStateDown += OnDeleteKeyDown;
-        DeleteKey.onStateUp += OnDeleteKeyUp;
-        DeleteKey.onState += OnDeleteKeyHolding;
-        SelectKey.onStateDown += OnSelectKeyDown;
-        SelectKey.onStateUp += OnSelectKeyUp;
-        PadTouch.onStateDown += OnTouchDown;
-        PadTouch.onStateUp += OnTouchUp;
-        PadPress.onStateUp += OnPressUp;
-        PadPress.onStateDown += OnPressDown;
-        PadSlide.onChange += OnPadSlide;
+        foreach (var hand in tmp)
+        {
+            
+            DeleteKey[hand].onStateDown += OnDeleteKeyDown;
+            DeleteKey[hand].onStateUp += OnDeleteKeyUp;
+            DeleteKey[hand].onState += OnDeleteKeyHolding;
+            SelectKey[hand].onStateDown += OnSelectKeyDown;
+            SelectKey[hand].onStateUp += OnSelectKeyUp;
+            PadTouch[hand].onStateDown += OnTouchDown;
+            PadTouch[hand].onStateUp += OnTouchUp;
+            PadPress[hand].onStateUp += OnPressUp;
+            PadPress[hand].onStateDown += OnPressDown;
+            PadSlide[hand].onChange += OnPadSlide;
+        }
     }
 
     private void OnDisable()
     {
         Debug.Log("Disable keyboard action set and relative callback functions!");
+        SteamVR_Input_Sources[] tmp = new SteamVR_Input_Sources[] { SteamVR_Input_Sources.LeftHand, SteamVR_Input_Sources.RightHand };
         keyboardActionSet.Deactivate();
-        DeleteKey.onStateDown -= OnDeleteKeyDown;
-        DeleteKey.onStateUp -= OnDeleteKeyUp;
-        DeleteKey.onState -= OnDeleteKeyHolding;
-        SelectKey.onStateDown -= OnSelectKeyDown;
-        SelectKey.onStateUp -= OnSelectKeyUp;
-        PadTouch.onStateDown -= OnTouchDown;
-        PadTouch.onStateUp -= OnTouchUp;
-        PadPress.onStateUp -= OnPressUp;
-        PadPress.onStateDown -= OnPressDown;
-        PadSlide.onChange -= OnPadSlide;
+        foreach (var hand in tmp)
+        {
+            
+            DeleteKey[hand].onStateDown -= OnDeleteKeyDown;
+            DeleteKey[hand].onStateUp -= OnDeleteKeyUp;
+            DeleteKey[hand].onState -= OnDeleteKeyHolding;
+            SelectKey[hand].onStateDown -= OnSelectKeyDown;
+            SelectKey[hand].onStateUp -= OnSelectKeyUp;
+            PadTouch[hand].onStateDown -= OnTouchDown;
+            PadTouch[hand].onStateUp -= OnTouchUp;
+            PadPress[hand].onStateUp -= OnPressUp;
+            PadPress[hand].onStateDown -= OnPressDown;
+            PadSlide[hand].onChange -= OnPadSlide;
+        }
     }
 
     // 键盘上的文字显示相关
