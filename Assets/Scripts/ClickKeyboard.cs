@@ -12,13 +12,15 @@ public class ClickKeyboard : KeyboardBase
 {
     public Transform symbolBox;
 
-    Transform keyboardRoot;          // 方案1, 2 ClickKeyboard的根游戏物体.
+    public Transform keyboardRoot;          // 方案1, 2 ClickKeyboard的根游戏物体.
 
     GameObject hoveringKey, checkKey = null;   // hoveringKey是当前正处于的按键；checkKey是用来判断长按的
     Color oldColor, hoveringColor = new Color(255, 255, 0, 60);
     int _mode = 0;   //输出模式状态，0-小写，1-大写(按了一次Shift), 2-特殊字符(切换)
     bool isCapitalDisplay = false;   // 是大写展示的键盘.
-    Vector2 longHoldingAxis; // Nullable
+    Vector2 longHoldingAxis;
+
+    Vector2 lastSlideAxis, lastSlideDelta;
 
     // Update is called once per frame
     void Update()
@@ -86,9 +88,9 @@ public class ClickKeyboard : KeyboardBase
     {
         TextMeshProUGUI[,] keychar = new TextMeshProUGUI[2, 26];
         int i = 0;
-        foreach (var key in keyboardRoot.GetComponentsInChildren<Transform>())
+        foreach (var key in keyboardRoot.GetComponentsInChildren<MeshRenderer>())
         {
-            Transform canvas = key.GetChild(0);    // 按键下只有一个直接儿子是Canvas.
+            Transform canvas = key.transform.GetChild(0);    // 按键下只有一个直接儿子是Canvas.
             if(canvas.childCount == 2)
             {
                 // 有两个儿子，确定是有上下的.
@@ -96,11 +98,13 @@ public class ClickKeyboard : KeyboardBase
                 {
                     // 初始的字母一定是小写的.
                     if (text.text[0] >= 'a' && text.text[0] <= 'z')
+                    {
                         keychar[0, i] = text;   //是字母，中间那个text.
+                    }
                     else
                         keychar[1, i] = text;
-                    ++i;
                 }
+                ++i;
             }
         }
         return keychar;
@@ -126,7 +130,9 @@ public class ClickKeyboard : KeyboardBase
         if (selected || deleted)  //如果正在移动光标或者删除字符，就当作无效!
             return;
         GameObject tmp;
-        int ascii = longHolding ? longHoldingLogic(new Vector2(1,1)) : Axis2Letter(PadSlide[fromSource].axis, fromSource, _mode, out tmp);
+        int ascii = longHolding ? longHoldingLogic(new Vector2(1,1)) : Axis2Letter(lastSlideAxis - lastSlideDelta, fromSource, _mode, out tmp);
+        hoveringKey.GetComponent<MeshRenderer>().material.color = oldColor;
+        Debug.Log("TouchUp: " + (char)ascii);
         // 特殊控制键：目前只有VKCode.Shift.
         if(ascii == (int)VKCode.Shift)  //Shift, mode从0变1、从1变0. 按到控制键的时候_mode不应该能变为2.
         {
@@ -157,6 +163,8 @@ public class ClickKeyboard : KeyboardBase
     // Core: OnPadSlide.
     public override void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
     {
+        lastSlideAxis = axis;
+        lastSlideDelta = delta;
         // 父类中这个函数是空的，不管.
         if (deleted)  // 正在删除，不管!
             return;
