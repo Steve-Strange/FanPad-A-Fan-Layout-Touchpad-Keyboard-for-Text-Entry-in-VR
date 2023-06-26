@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
+using TMPro;
 using UnityEngine;
 using Valve.VR;
 
@@ -11,142 +12,64 @@ public class SlideKeyboard : KeyboardBase
     Dictionary<string,char> ALT2 = new Dictionary<string, char>();
 
     bool have_slide = false;
-    Vector3 last_move;
-    // Start is called before the first frame update
-    void Start()
-    {
-        /*  ALT1.Add("a",97);
-           ALT1.Add("b", 98);
-           ALT1.Add("c", 99);
-           ALT1.Add("d", 100);
-   .        ALT1.Add("a", 97);
-           ALT1.Add("b", 98);
-           ALT1.Add("c", 99);
-         ALT1.Add("a",97);
-           ALT1.Add("b", 98);
-           ALT1.Add("c", 99);
-           ALT1.Add("d", 100);
-   .        ALT1.Add("a", 97);
-           ALT1.Add("b", 98);
-           ALT1.Add("c", 99);
-         ALT1.Add("a",97);
-        ALT1.Add("b", 98);
-        ALT1.Add("c", 99);
-        ALT1.Add("d", 100);
-.        ALT1.Add("a", 97);
-        ALT1.Add("b", 98);
-         ALT1.Add("a",97);
-        ALT1.Add("b", 98);
-        ALT1.Add("c", 99);
-        ALT1.Add("d", 100);
-.        ALT1.Add("a", 97);
-        ALT1.Add("b", 98);
-         ALT1.Add("a",97);
-        ALT1.Add("b", 98);
-        ALT1.Add("c", 99);
-        ALT1.Add("d", 100);
-.        ALT1.Add("a", 97);
-        ALT1.Add("b", 98);
-         ALT1.Add("a",97);
-        ALT1.Add("b", 98);
-        ALT1.Add("c", 99);
-        ALT1.Add("d", 100);
-.        ALT1.Add("a", 97);
-        ALT1.Add("b", 98);
-         ALT1.Add("a",97);
-        ALT1.Add("b", 98);
-        ALT1.Add("c", 99);
-        ALT1.Add("d", 100);
-.        ALT1.Add("a", 97);
-        ALT1.Add("b", 98);
-        ALT1.Add("c", 99); 
-        ALT1.Add("a",97);
-        ALT1.Add("b", 98);
-        ALT1.Add("c", 99);
-        ALT1.Add("d", 100);
-.        ALT1.Add("a", 97);
-        ALT1.Add("b", 98);
-
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-        ALT2.Add("c", 99);
-          */
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(press == true && Time.time-begintime > deltatime)
-        {
-            Alt.SetActive(true);
-            longHolding = true;
-
-        }
-        else
-        {
-            longHolding = false;
-            Alt.SetActive(false);
-        }
-
-
-
-    }
-    
+    Vector3 last_move;    
     public GameObject controller;
     private Collider target;
     
-    private float deltatime = 0.3f;
+    private int mode = 0;
+
+    private float deltatime = 1.5f;
     private float begintime;
   
     private bool press = false;
     public GameObject Alt;
-    private string choose = "";
+
     private Vector3 EndPos;
+    private Vector3 PressPos;
+   
+
+    public TextMeshProUGUI[] Up;
+    public TextMeshProUGUI[] Mid;
+    protected TextMeshProUGUI[,] Key = new TextMeshProUGUI[2,36];
+    public TextMeshProUGUI left;
+    public TextMeshProUGUI mid;
+    public TextMeshProUGUI right;
+    private bool first = true;
+    // Start is called before the first frame update
+    //void Start()
+    //{
+        
+    //    fetchKeyStrings();
+    //}
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (press == true && Time.time - begintime > deltatime && target != null && target.name.Length == 3)
+        {
+            Alt.SetActive(true);
+            right.text = target.name[0].ToString();
+            left.text = target.name[1].ToString();
+            mid.text = target.name[2].ToString();
+            longHolding = true;
+
+        }
+        else longHolding = false;
+        Debug.Log(longHolding);
+    }
+    
+    protected override TextMeshProUGUI[,] fetchKeyStrings()
+    {
+        for (int i = 0; i <= Up.Length-1; i++)
+        {
+            Key[1, i] = Up[i];
+            Key[0, i] = Mid[i];
+         }
+        return Key;
+    }
     override public void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-
         touched = true;
-        //控制物体移动
-     
     }
 
     override public void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -162,6 +85,8 @@ public class SlideKeyboard : KeyboardBase
     {
         /* 在SlideKeyboard中，要用这个开始判断长按. */
         press = true;
+        PressPos = PadSlide[fromSource].axis;
+
         if (target != null)
            target.GetComponent<MeshRenderer>().material.color = Color.yellow;
         begintime = Time.time;
@@ -169,38 +94,103 @@ public class SlideKeyboard : KeyboardBase
     }
     private void OnTriggerEnter(Collider other)
     { 
-        Debug.Log("enter the"+other.name);
+        
+        if(longHolding == false)
+        { 
+        Debug.LogWarning("enter the"+other.name);
         target = other;
         other.GetComponent<MeshRenderer>().material.color = Color.yellow;
-
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (!longHolding)
+        {
+            target = other;
+            other.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        }
     }
     void OnTriggerExit(Collider other)      //  触发结束被调用  
     {
        
+        if(!longHolding)
+        {
         other.GetComponent<MeshRenderer>().material.color = Color.white;
         target = null;
-        Debug.Log("Exit");//同等于print("")输出
+        Debug.LogWarning("Exit");//同等于print("")输出
+
+        }
+
         
     }
 
     override public void OnPressUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         /* 不管是什么键盘，这里都需要输出字符了! */
-       
-
-        if(longHolding)
+        //区分实词键和功能键
+       // Debug.LogWarning("PRESS UP ONE");
+        if (target == null) return;
+       // 
+        if(longHolding && target.name.Length == 3)
         {
-            if(choose ==  "Right")
-            OutputLetter(ALT1[target.name]);
-            else if (choose == "Left")
-            OutputLetter(ALT2[target.name]);
+             Debug.Log(PadSlide[fromSource].axis[0]+" "+ PressPos[0]);
+            if (PadSlide[fromSource].axis[0]-PressPos[0]>0.05)
+                OutputLetter(target.name[0]);
+            else if (PadSlide[fromSource].axis[0] - PressPos[0] < - 0.05)
+                OutputLetter(target.name[1]);
+            else 
+                OutputLetter(target.name[2]);
+            
         }
         else
         {
-            OutputLetter(target.name[0]);
+
+        if(target.name == "shift")
+        {
+
+            switchCapital();
+            if (mode == 0) mode = 1;
+            else if(mode == 1) mode = 0;
+
         }
+        else if(target.name =="Symbol")
+        {
+            switchSymbol();
+            if (mode == 0)
+                mode = 2;
+            else if (mode == 2)
+                mode = 0;
+        }
+        else if(target.name == "back")
+        {
+            OutputLetter((int )VKCode.Back);
+        }
+        else if(target.name =="sp")
+        {
+            OutputLetter(' ');
+        }
+
+
+            if(target.name.Length == 3)
+            {
+                //Debug.Log("Should print "+mode.ToString()+" "+ target.name[0]);
+            if (mode == 0)
+                OutputLetter(target.name[0]);
+            if (mode == 1)
+                OutputLetter(target.name[1]);
+            if (mode == 2)
+                OutputLetter(target.name[2]); 
+            }
+            else if(target.name.Length == 1)
+            {
+                OutputLetter(target.name[0]);
+            }
+        }
+        
+        longHolding = false;
         if(target!=null)
         target.GetComponent<MeshRenderer>().material.color = Color.white;
+        Alt.SetActive(false);
         press = false;
     }
 
@@ -221,28 +211,16 @@ public class SlideKeyboard : KeyboardBase
         
         else if(selected == false)
         {
-            Vector3  move = new Vector3(delta.x*3, 0,delta.y*3);
+            Vector3  move = new Vector3(-delta.x*2.5f, 0,-delta.y*2.5f);
             //映射逻辑
-            Debug.Log(move);
-            controller.transform.localPosition = controller.transform.localPosition + move;
-            last_move = move;
+            Debug.Log(move.magnitude);
+            if (move.magnitude < 1)
+            {
+                controller.transform.localPosition = controller.transform.localPosition + move;
+                last_move = move;
+            }
           // EndPos
-            if(longHolding)
-            {
-
-                if (delta[0]>0)
-                {
-                    choose = "Right";
-                }
-                else if (delta[0]<0)
-                {
-                    choose = "Left";
-                }
-            }
-            else
-            {
-                choose = "s";
-            }
+    
         }
         else
         {   //int move = 0;
