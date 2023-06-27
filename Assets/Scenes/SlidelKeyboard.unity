@@ -1844,6 +1844,10 @@ MonoBehaviour:
   inputField: {fileID: 764538779}
   controller: {fileID: 642904123911131222}
   Alt: {fileID: 301006929246014057}
+  l: {fileID: 3098645501052749414}
+  m: {fileID: 4768160556945133639}
+  r: {fileID: 3217592446380859337}
+  material: {fileID: -3661639628750336703, guid: e72e0b6da5532f1418bfdfb762b6d83f, type: 3}
   Up:
   - {fileID: 642904122220383141}
   - {fileID: 642904122792819956}
@@ -11447,7 +11451,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: h
+  m_text: d
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13742,7 +13746,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: k
+  m_text: s
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -20925,7 +20929,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5839867928094822073}
   m_LocalRotation: {x: -0, y: -0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: -2.83, y: -3.34, z: 8.08}
+  m_LocalPosition: {x: -2.83, y: -3.34, z: 8.764}
   m_LocalScale: {x: 0.8, y: 0.1, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -22606,7 +22610,7 @@ GameObject:
   - component: {fileID: 2635579500869616919}
   - component: {fileID: 642904123305097937}
   m_Layer: 0
-  m_Name: kK!
+  m_Name: sS!
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22865,7 +22869,7 @@ GameObject:
   - component: {fileID: 4996389087266879646}
   - component: {fileID: 642904122347545654}
   m_Layer: 0
-  m_Name: hH@
+  m_Name: dD@
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

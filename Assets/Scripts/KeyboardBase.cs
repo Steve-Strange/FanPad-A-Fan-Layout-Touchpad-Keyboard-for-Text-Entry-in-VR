@@ -142,18 +142,18 @@ public class KeyboardBase : MonoBehaviour
     }
 
     // 移动光标和删除逻辑，这些在所有键盘中都是一样的.
-    public void OnSelectKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    virtual public void OnSelectKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         selected = false;
     }
 
-    public void OnSelectKeyDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    virtual public void OnSelectKeyDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         selected = true;
         last_caret_time = Time.time;
     }
 
-    public void OnDeleteKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    virtual public void OnDeleteKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         /* 松开删除键 */
         deleted = false;
@@ -171,7 +171,7 @@ public class KeyboardBase : MonoBehaviour
     {
         /* 长按删除键。是onState的回调函数，因为onState本身要在true才触发，所以不用判断是否true. */
         // 不能删的太快，比如相隔0.2s再删.
-        if (Time.time - last_delete_time > 0.1f)
+        if (Time.time - last_delete_time > 0.15f)
         {
             last_delete_time = Time.time;
             do_delete_char();
