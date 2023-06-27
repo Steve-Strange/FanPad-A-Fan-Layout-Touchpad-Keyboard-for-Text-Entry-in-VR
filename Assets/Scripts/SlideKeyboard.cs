@@ -241,12 +241,5 @@ public class SlideKeyboard : KeyboardBase
         }
 
     }
-
-
-
-  
-
-
-
 }
 
