@@ -326,7 +326,8 @@ public class KeyboardBase : MonoBehaviour
                     PutChar((byte)ascii);   //shift, enter等控制键，直接按照VKCode输出.
                     if (ascii == (int)VKCode.Back)
                         statistics.deleteTtimes++;
-                    addChars = 0;
+                    if(ascii != (int)VKCode.Enter)
+                        addChars = 0;
                     break;
             }
             if (needShift)

@@ -37,8 +37,8 @@ public class NormalKeyboard : ClickKeyboard
         int row, column;
         // TODO!! ÆÕÍ¨¼üÅÌµÄÓ³Éä.
         if (axis.y <= -0.4) row = 0;
-        else if (axis.y < 0 && axis.y > -0.4) row = 1;
-        else if (axis.y > 0 && axis.y < 0.4) row = 2;
+        else if (axis.y < -0.025 && axis.y > -0.4) row = 1;
+        else if (axis.y > -0.025 && axis.y < 0.35) row = 2;
         else row = 3;
 
         float width = Mathf.Sqrt(1 - axis.y * axis.y);

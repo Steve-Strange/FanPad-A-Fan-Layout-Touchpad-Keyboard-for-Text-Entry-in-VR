@@ -1710,6 +1710,7 @@ GameObject:
   - component: {fileID: 1615019613}
   - component: {fileID: 1615019612}
   - component: {fileID: 1615019611}
+  - component: {fileID: 1615019615}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1795,6 +1796,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1615019615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615019610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73137ea3ca5a682468059bd87c0250c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outputCchars: 0
+  deleteTtimes: 0
 --- !u!114 &1643335329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1807,6 +1822,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29b876726b6f95d4e987c974a4ad103d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statistics: {fileID: 1615019615}
   keyboardActionSet:
     actionSetPath: /actions/Keyboard
   DeleteKey:
