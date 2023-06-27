@@ -8525,6 +8525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff1342b028754264894366d510898417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statistics: {fileID: 0}
   keyboardActionSet:
     actionSetPath: /actions/Keyboard
   DeleteKey:

@@ -28,6 +28,8 @@ public class KeyboardBase : MonoBehaviour
     [DllImport("User32.dll", EntryPoint = "keybd_event")]
     static extern void keybd_event(byte bVK, byte bScan, int dwFlags, int dwExtraInfo);
 
+    public Statistics statistics;
+
     //Keyboard action set
     public SteamVR_ActionSet keyboardActionSet;
 
@@ -219,6 +221,7 @@ public class KeyboardBase : MonoBehaviour
 
     public void OutputLetter(int ascii)
     {
+        int addChars = 1;   // 是否统计算入一个字符.
         // 把Ascii符号翻译为键盘.
         // 更聪明的办法，应该是用一个ascii->VKcode的数组!
         // 注意，Shift, Enter等控制键不使用ascii，传入就直接用VKCode
@@ -321,17 +324,22 @@ public class KeyboardBase : MonoBehaviour
                     break;
                 default:
                     PutChar((byte)ascii);   //shift, enter等控制键，直接按照VKCode输出.
+                    if (ascii == (int)VKCode.Back)
+                        statistics.deleteTtimes++;
+                    addChars = 0;
                     break;
             }
             if (needShift)
                 ReleaseKey((byte)VKCode.Shift);
         }
+        statistics.outputCchars += addChars;
     }
     
     protected void do_delete_char()
     {
         // 在inputField的当前位置删除一个字符.
         // 直接用输入一个backspace实现删除.
+        statistics.deleteTtimes++;
         PushKey((byte)VKCode.Back);
         ReleaseKey((byte)VKCode.Back);
     }

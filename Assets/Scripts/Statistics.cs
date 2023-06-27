@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Statistics : MonoBehaviour
 {
-    static public int output_chars = 0;
-    static public int delete_times = 0;
+    public int outputCchars = 0;
+    public int deleteTtimes = 0;
 
     // Start is called before the first frame update
     void Start()
