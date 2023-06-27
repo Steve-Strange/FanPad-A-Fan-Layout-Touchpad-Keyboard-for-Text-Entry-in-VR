@@ -67,15 +67,19 @@ public class NormalKeyboard : ClickKeyboard
                 key = keyboardRoot.Find("enter").gameObject;
                 break;
             case (char)VKCode.Back:
+                Statistics.delete_times++;
                 key = keyboardRoot.Find("back").gameObject;
                 break;
             case ',':
+                Statistics.output_chars++;
                 key = keyboardRoot.Find("comma").gameObject;
                 break;
             case '.':
+                Statistics.output_chars++;
                 key = keyboardRoot.Find("period").gameObject;
                 break;
             default:
+                Statistics.output_chars++;
                 string name = ((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString();
                 if (name[1] == '/')
                     name = "m\\";

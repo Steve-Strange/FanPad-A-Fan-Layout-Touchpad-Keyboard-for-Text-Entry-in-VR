@@ -47,7 +47,7 @@ public class ClickKeyboard : KeyboardBase
                     hold_time_start = Time.time;
                     checkKey = hoveringKey;
                 }
-                else if(Time.time - hold_time_start > 0.7)  // 多久算长按, 调参
+                else if(Time.time - hold_time_start > 1)  // 多久算长按, 调参
                 {
                     // ����1s, ��������ſ�.
                     longHolding = true;
@@ -56,6 +56,7 @@ public class ClickKeyboard : KeyboardBase
                     symbolBox.transform.position = hoveringKey.transform.position;
                     symbolBox.transform.Translate(new Vector3(0, 0, 0.1f), Space.Self);
                     symbolBox.gameObject.SetActive(true);
+                    longHoldingLogic(new Vector2(0, 0), ref hoveringKey);  // hoveringKey would not be changed when giving (0,0)
 
                     // ��hoveringKey�������������ַ�����ֵ��.
                     char[] c = new char[2];
