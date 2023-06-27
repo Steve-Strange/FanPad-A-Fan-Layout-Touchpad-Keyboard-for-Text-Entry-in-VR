@@ -20,9 +20,14 @@ public class SlideKeyboard : KeyboardBase
 
     private float deltatime = 1f;
     private float begintime;
-  
+    private float loose;
+
     private bool press = false;
     public GameObject Alt;
+    public GameObject l;
+    public GameObject m;
+    public GameObject r;
+    public Material material;
 
     private Vector3 EndPos;
     private Vector3 PressPos;
@@ -35,6 +40,7 @@ public class SlideKeyboard : KeyboardBase
     public TextMeshProUGUI mid;
     public TextMeshProUGUI right;
     private bool first = true;
+    private char choose;
     // Start is called before the first frame update
     //void Start()
     //{
@@ -45,7 +51,7 @@ public class SlideKeyboard : KeyboardBase
     // Update is called once per frame
     void Update()
     {
-        if (press == true && Time.time - begintime > deltatime && target != null && target.name.Length == 3)
+        if (selected == true && Time.time - begintime > deltatime && target != null && target.name.Length == 3)
         {
             Alt.SetActive(true);
             right.text = target.name[0].ToString();
@@ -70,20 +76,24 @@ public class SlideKeyboard : KeyboardBase
     override public void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         touched = true;
+        if(selected == true)
+            PressPos = PadSlide[fromSource].axis;
     }
 
     override public void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         touched = false;
-        have_slide = false;
+        
         //Debug.Log("Touch Up");
         // 最后一次松开的瞬间因为触摸读取有误，应该把最后一次移动逆向返回去.
         controller.transform.localPosition = controller.transform.localPosition - last_move;
+        first = true;
+
     }
 
-    override public void OnPressDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+   /* override public void OnPressDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* 在SlideKeyboard中，要用这个开始判断长按. */
+       
         press = true;
         PressPos = PadSlide[fromSource].axis;
 
@@ -91,7 +101,7 @@ public class SlideKeyboard : KeyboardBase
            target.GetComponent<MeshRenderer>().material.color = Color.yellow;
         begintime = Time.time;
    
-    }
+    }*/
     private void OnTriggerEnter(Collider other)
     { 
         
@@ -124,14 +134,102 @@ public class SlideKeyboard : KeyboardBase
         
     }
 
-    override public void OnPressUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    override public void OnSelectKeyDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* 不管是什么键盘，这里都需要输出字符了! */
-        //区分实词键和功能键
-       // Debug.LogWarning("PRESS UP ONE");
+        selected = true;
+        last_caret_time = Time.time;
+
+        
+
+        if (target != null)
+            target.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        begintime = Time.time;
+    }
+
+    override public void OnSelectKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
+        /* 松开删除键 */
+        loose = Time.time;
+        selected = false;
+        r.GetComponent<MeshRenderer>().material = material;
+        m.GetComponent<MeshRenderer>().material = material;
+        l.GetComponent<MeshRenderer>().material = material;
+        if (target == null) return;
+        // 
+        if(longHolding && target.name.Length == 3)
+         {
+              Debug.Log(PadSlide[fromSource].axis[0]+" "+ PressPos[0]);
+             if (choose == 'r')
+                 OutputLetter(target.name[0]);
+             else if (choose == 'l')
+                 OutputLetter(target.name[1]);
+             else 
+                 OutputLetter(target.name[2]);
+
+         }
+         else
+         {
+
+             if(target.name == "shift")
+             {
+
+                 switchCapital();
+                 if (mode == 0) mode = 1;
+                 else if(mode == 1) mode = 0;
+
+             }
+             else if(target.name =="Symbol")
+             {
+                 switchSymbol();
+                 if (mode == 0)
+                     mode = 2;
+                 else if (mode == 2)
+                     mode = 0;
+             }
+             else if(target.name == "back")
+             {
+                 OutputLetter((int )VKCode.Back);
+             }
+             else if(target.name =="sp")
+             {
+                 OutputLetter(' ');
+             }
+             else if(target.name == "Enter")
+             {
+                 OutputLetter((int)VKCode.Enter);
+             }
+
+             if(target.name.Length == 3)
+             {
+                 //Debug.Log("Should print "+mode.ToString()+" "+ target.name[0]);
+             if (mode == 0)
+                 OutputLetter(target.name[0]);
+             if (mode == 1)
+                 OutputLetter(target.name[1]);
+             if (mode == 2)
+                 OutputLetter(target.name[2]); 
+             }
+             else if(target.name.Length == 1)
+             {
+                 OutputLetter(target.name[0]);
+             }
+         }
+
+         longHolding = false;
+         if(target!=null)
+         target.GetComponent<MeshRenderer>().material.color = Color.white;
+         Alt.SetActive(false);
+         press = false;
+     }
+
+
+    /*   override public void OnPressUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+     {
+        不管是什么键盘，这里都需要输出字符了! 
+        // Debug.LogWarning("PRESS UP ONE");
         if (target == null) return;
        // 
-        if(longHolding && target.name.Length == 3)
+       /* if(longHolding && target.name.Length == 3)
         {
              Debug.Log(PadSlide[fromSource].axis[0]+" "+ PressPos[0]);
             if (PadSlide[fromSource].axis[0]-PressPos[0]>0.05)
@@ -195,7 +293,8 @@ public class SlideKeyboard : KeyboardBase
         target.GetComponent<MeshRenderer>().material.color = Color.white;
         Alt.SetActive(false);
         press = false;
-    }
+    }*/
+        
 
     override public void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
     {
@@ -206,27 +305,62 @@ public class SlideKeyboard : KeyboardBase
         
         if (controller == null) return;
 
-        if (!have_slide)
+        if(first == true)
         {
-            have_slide = true;
+            first = false;
             return;
         }
         
-        else if(selected == false)
+        else if(selected == false || Time.time-loose<0.01)
         {
-            Vector3  move = new Vector3(-delta.x*2.5f, 0,-delta.y*2.5f);
+            if(target == false) { 
+            Vector3  move = new Vector3(-delta.x*2.8f, 0,-delta.y*2.8f);
             //映射逻辑
             Debug.Log(move.magnitude);
             if (move.magnitude < 1)
             {
                 controller.transform.localPosition = controller.transform.localPosition + move;
                 last_move = move;
+            }}
+            else
+            {
+                Vector3 move = new Vector3(-delta.x * 2.5f, 0, -delta.y * 2.5f);
+                //映射逻辑
+                Debug.Log(move.magnitude);
+                if (move.magnitude < 1)
+                {
+                    controller.transform.localPosition = controller.transform.localPosition + move;
+                    last_move = move;
+                }
             }
           // EndPos
     
         }
-        else
-        {   //int move = 0;
+        else if(selected == true)
+        {   
+            
+            if(axis[0]< PressPos[0]-0.05)
+            {   choose = 'l';
+                l.GetComponent<MeshRenderer>().material.color = Color.yellow;
+                r.GetComponent<MeshRenderer>().material = material;
+                m.GetComponent<MeshRenderer>().material = material;
+                
+            }
+            else if(axis[0]>PressPos[0]+0.05)
+            {    choose = 'r';
+                r.GetComponent<MeshRenderer>().material.color = Color.yellow;
+                l.GetComponent<MeshRenderer>().material = material;
+                m.GetComponent<MeshRenderer>().material = material;
+                
+            }
+            else
+            {   choose = 'm';
+                m.GetComponent<MeshRenderer>().material.color = Color.yellow;
+                r.GetComponent<MeshRenderer>().material = material;
+                l.GetComponent<MeshRenderer>().material = material;
+               
+            }
+            //int move = 0;
             //if (delta[0] > 0)
             //{
             //    move =(int) (delta[0] / 2 * 5);
@@ -237,7 +371,7 @@ public class SlideKeyboard : KeyboardBase
             //    move = (int)((-delta[0]) / 2 * 5);
             //    inputField.caretPosition = inputField.caretPosition - move;
             //}
-            do_caret_move(axis);
+            //do_caret_move(axis);
         }
 
     }
