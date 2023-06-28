@@ -74,3 +74,4 @@ crashlytics-build.properties
 .vsconfig
 Packages/
 *.max
+~$Test.xlsx
