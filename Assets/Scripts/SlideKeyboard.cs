@@ -18,7 +18,7 @@ public class SlideKeyboard : KeyboardBase
     
     private int mode = 0;
 
-    private float deltatime = 1f;
+    private float deltatime = 0.8f;
     private float begintime;
     private float loose;
 

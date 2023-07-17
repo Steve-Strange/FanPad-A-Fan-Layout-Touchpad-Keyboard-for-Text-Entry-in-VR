@@ -11,6 +11,7 @@ public class EnableWrap4Text : MonoBehaviour
         TextMeshProUGUI text = GetComponent<TextMeshProUGUI>();
         text.enableWordWrapping = true;
         text.overflowMode = TextOverflowModes.ScrollRect;
+        text.text = "";
     }
     /* TODO: ʹ�� Pageģʽ��������д���ʱ���Զ���ҳ!
      * ��Ӧ����Ҫ����InputField��һЩ״̬����ʵ�ֻص�����(�������Ӧ���¼��Ļ�).

@@ -1513,9 +1513,9 @@ MonoBehaviour:
   m_OnDeselect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: test, Assembly-CSharp
-        m_MethodName: pu4
+      - m_Target: {fileID: 1011396644}
+        m_TargetAssemblyTypeName: TMPro.TMP_InputField, Unity.TextMeshPro
+        m_MethodName: ActivateInputField
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1552,13 +1552,13 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: "This is a \n"
+  m_Text: 
   m_CaretBlinkRate: 1.5
   m_CaretWidth: 1
   m_ReadOnly: 0
   m_RichText: 1
   m_GlobalFontAsset: {fileID: 11400000, guid: a8eb98128ff3c1f4a871741c1768b055, type: 2}
-  m_OnFocusSelectAll: 1
+  m_OnFocusSelectAll: 0
   m_ResetOnDeActivation: 1
   m_RestoreOriginalTextOnEscape: 1
   m_isRichTextEditingAllowed: 1
@@ -1985,7 +1985,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "This is a \n\u200B"
+  m_text: "\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2328,7 +2328,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1781226049}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -3627,23 +3627,26 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'I am happy to join with you today in what will go down in history as the
-    greatest demonstration for freedom in the history of our nation.
+  m_text: 'I have a dream that one day this nation will rise up and live out the
+    true meaning of its creed: "We hold these truths to be self-evident, that all
+    men are created equal."
 
-    Five score
-    years ago, a great American, in whose symbolic shadow we stand today, signed
-    the Emancipation Proclamation. This momentous decree came as a great beacon light
-    of hope to millions of Negro slaves who had been seared in the flames of withering
-    injustice. It came as a joyous daybreak to end the long night of their captivity.
+    I have a dream that one day on the red hills of
+    Georgia, the sons of former slaves and the sons of former slave owners will be
+    able to sit down together at the table of brotherhood.
 
-    But
-    one hundred years later, the Negro still is not free. One hundred years later,
-    the life of the Negro is still sadly crippled by the manacles of segregation
-    and the chains of discrimination. One hundred years later, the Negro lives on
-    a lonely island of poverty in the midst of a vast ocean of material prosperity.
-    One hundred years later, the Negro is still languished in the corners of American
-    society and finds himself an exile in his own land. And so we''ve come here today
-    to dramatize a shameful condition.'
+    I have a dream that
+    one day even the state of Mississippi, a state sweltering with the heat of injustice,
+    sweltering with the heat of oppression, will be transformed into an oasis of
+    freedom and justice.
+
+    I have a dream that my four little children will one
+    day live in a nation where they will not be judged by the color of their skin
+    but by the content of their character.
+
+    I have a dream today!
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4218,7 +4221,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8180968717066861272, guid: f9ba7c2e14f275848ac1bbf2be8e3aab, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.659
+      value: -0.491
       objectReference: {fileID: 0}
     - target: {fileID: 8180968717066861272, guid: f9ba7c2e14f275848ac1bbf2be8e3aab, type: 3}
       propertyPath: m_LocalPosition.z

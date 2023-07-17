@@ -47,7 +47,7 @@ public class ClickKeyboard : KeyboardBase
                     hold_time_start = Time.time;
                     checkKey = hoveringKey;
                 }
-                else if(Time.time - hold_time_start > 1)  // 多久算长按, 调参
+                else if(Time.time - hold_time_start > 0.8)  // 多久算长按, 调参
                 {
                     // ����1s, ��������ſ�.
                     longHolding = true;

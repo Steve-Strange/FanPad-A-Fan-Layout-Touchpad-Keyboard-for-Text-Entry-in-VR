@@ -52,6 +52,7 @@ public class KeyboardBase : MonoBehaviour
     void Start()
     {
         inputField.ActivateInputField();
+        
         keyStrings = fetchKeyStrings();
     }
 
