@@ -8,8 +8,11 @@ using Valve.VR;
 /* 第三个方案基于滑动的方案和其他有不太一样的逻辑。这个类在KeyboardBase的基础上实现第三个方案. */
 public class SlideKeyboard : KeyboardBase
 {
-    Dictionary<string,char> ALT1 = new Dictionary<string,char>();
-    Dictionary<string,char> ALT2 = new Dictionary<string, char>();
+    int right;
+    int left;
+    public GameObject[] targets = new GameObject[36];
+  //  Dictionary<string,char> ALT1 = new Dictionary<string,char>();
+   // Dictionary<string,char> ALT2 = new Dictionary<string, char>();
 
     bool have_slide = false;
     Vector3 last_move;    
@@ -294,15 +297,62 @@ public class SlideKeyboard : KeyboardBase
         Alt.SetActive(false);
         press = false;
     }*/
-        
+    public float dis(float x, float y)//返回点到直线的距离
+    {
+        return Mathf.abs(2 * x + y) / Mathf.sqrt(5);
 
+    }
     override public void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
     {
         /* 
          手指在触摸板上滑动。一个是以一定的规则移动改变高亮，一个在按下扳机的时候移动光标.
          */
-        
-        
+        //得到当前触摸点坐标
+        float x = axis[0];
+        float y = axis[1];
+        float offset = Mathf.sqrt(5) / 75; 
+        Vector2 core1 = new Vector2(1 - 2 * offset, -2 + 4 * offset);
+        Vector2 core2 = new Vector2(1 - 1 * offset, -2 + 2 * offset);
+        Vector2 core3 = new Vector2(1 , -2 );
+        Vector2 core4 = new Vector2(1 + 1 * offset, -2 - 2 * offset);
+        Vector2 core5 = new Vector2(1 + 2 * offset, -2 - 4 * offset);
+        Vector2 cores[5] = { core1, core2, core3, core4, core5 };
+        float len = 100.0;
+        int i = 0;
+        while(len > 5 && i <= 4)
+        {
+            len = Mathf.pow(x - cores[4 - i][1], 2) + Mathf.pow(y - cores[4 - i][y], 2);
+            i = i + 1;
+        }//找到第一个使他小于半径的弧度
+        float dis_ = dis(x, y);
+        //再更细致的判定
+        if(i == 0)
+        {
+           
+        }
+        else if(i == 1)
+        {
+
+        }
+        else if (i == 2)
+        {
+
+        }
+        else if (i == 3)
+        {
+
+        }
+        else if (i == 4)
+        {
+
+        }
+        else if (i == 5)
+        {
+
+        }
+
+
+
         if (controller == null) return;
 
         if(first == true)
