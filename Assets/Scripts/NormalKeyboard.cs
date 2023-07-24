@@ -25,12 +25,12 @@ public class NormalKeyboard : ClickKeyboard
     //    }
     //}
 
-    private int[,,] keys = new int[6, 4, 5] { { { 0, ',', 0x20, 0x20, 0x20 }, { 0x10, 'z', 'x', 'c', 'v' }, { 'a', 's', 'd', 'f', 'g' } ,{ 'q', 'w', 'e', 'r', 't' }},
-                                              { { 0, ',', 0x20, 0x20, 0x20 }, { 0x10, 'Z', 'X', 'C', 'V' }, { 'A', 'S', 'D', 'F', 'G' } ,{ 'Q', 'W', 'E', 'R', 'T' }},
-                                              { { 0, ',', 0x20, 0x20, 0x20 }, { 0x10, '(', ')', '-', '_' }, { '~', '!', '@', '#', '%' } ,{ '1', '2', '3', '4', '5' }},
-                                              { { 0x20, 0x20, 0x20, '.', 0x0D }, { 'v', 'b', 'n', 'm', 0x08 }, { 'g', 'h', 'j', 'k', 'l' } ,{ 'y', 'u', 'i', 'o', 'p' }},
-                                              { { 0x20, 0x20, 0x20, '.', 0x0D }, { 'V', 'B', 'N', 'M', 0x08 }, { 'G', 'H', 'J', 'K', 'L' } ,{ 'Y', 'U', 'I', 'O', 'P' }},
-                                              { { 0x20, 0x20, 0x20, '.', 0x0D }, { '_', ':', ';', '/', 0x08 }, { '%', '\'', '&', '*', '?' } ,{ '6', '7', '8', '9', '0' }} };
+    private int[,,] keys = new int[6, 4, 6] { { { 0, ',', 0x20, 0x20, 0x20, 0 }, { 0x10, 'z', 'x', 'c', 'v', 0 }, { 'a', 's', 'd', 'f', 'g', 0 } ,{ 'q', 'w', 'e', 'r', 't', 'y'}},
+                                              { { 0, ',', 0x20, 0x20, 0x20, 0 }, { 0x10, 'Z', 'X', 'C', 'V', 0 }, { 'A', 'S', 'D', 'F', 'G', 0 } ,{ 'Q', 'W', 'E', 'R', 'T', 'Y'}},
+                                              { { 0, ',', 0x20, 0x20, 0x20, 0 }, { 0x10, '(', ')', '-', '_', 0 }, { '~', '!', '@', '#', '%', 0 } ,{ '1', '2', '3', '4', '5', '6'}},
+                                              { { 0x20, 0x20, 0x20, '.', 0x0D, 0 }, { 'v', 'b', 'n', 'm', 0x08, 0 }, { 'g', 'h', 'j', 'k', 'l' , 0} ,{'t', 'y', 'u', 'i', 'o', 'p'}},
+                                              { { 0x20, 0x20, 0x20, '.', 0x0D, 0 }, { 'V', 'B', 'N', 'M', 0x08, 0 }, { 'G', 'H', 'J', 'K', 'L' , 0} ,{'T', 'Y', 'U', 'I', 'O', 'P'}},
+                                              { { 0x20, 0x20, 0x20, '.', 0x0D, 0 }, { '_', ':', ';', '/', 0x08, 0 }, { '%', '\'', '&', '*', '?', 0} ,{'5', '6', '7', '8', '9', '0'}} };
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
         Debug.Log("Source: " + hand);
@@ -42,7 +42,7 @@ public class NormalKeyboard : ClickKeyboard
         else row = 3;
 
         float width = Mathf.Sqrt(1 - axis.y * axis.y);
-        float columnRatio = (axis.x + width) / (2 * width / 5);
+        float columnRatio = (row == 3) ? (axis.x + width) / (2 * width / 6) : (axis.x + width) / (2 * width / 5);
         column = Mathf.FloorToInt(columnRatio);
         if (column > 4) column = 4;
         else if (column < 0) column = 0;
