@@ -47,7 +47,7 @@ public class ClickKeyboard : KeyboardBase
                     hold_time_start = Time.time;
                     checkKey = hoveringKey;
                 }
-                else if(Time.time - hold_time_start > 0.8)  // 多久算长按, 调参
+                else if(Time.time - hold_time_start > 0.65)  // 多久算长按, 调参
                 {
                     // ����1s, ��������ſ�.
                     longHolding = true;
@@ -145,9 +145,13 @@ public class ClickKeyboard : KeyboardBase
         // ������Ƽ���Ŀǰֻ��VKCode.Shift.
         if(ascii == (int)VKCode.Shift)  //Shift, mode��0��1����1��0. �������Ƽ���ʱ��_mode��Ӧ���ܱ�Ϊ2.
         {
-            _mode = _mode == 1 ? 0 : 1;
-            isCapitalDisplay = !isCapitalDisplay;
-            switchCapital();
+            if(_mode != 2)
+            {
+                _mode = _mode == 1 ? 0 : 1;
+                isCapitalDisplay = !isCapitalDisplay;
+                switchCapital();
+            }
+
         }
         else if(ascii == (int)VKCode.Switch)   //�л�Ϊ���ż��̣����ߴӷ��ż����л�����ͨ����.
         {
