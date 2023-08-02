@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Valve.VR;
 
-/* 倾斜键盘，继承自ClickKeyboard，应当只用实现自己的Axis2Letter方法. */
+/* 鍊炬枩閿?鐩橈紝缁ф壙鑷狢lickKeyboard锛屽簲褰撳彧鐢ㄥ疄鐜拌嚜宸辩殑Axis2Letter鏂规硶. */
 public class InclinedKeyboard : ClickKeyboard
 {
     private float radius = 1;
@@ -13,22 +13,21 @@ public class InclinedKeyboard : ClickKeyboard
     private Vector2[] thumbCenter = new Vector2[7];
     private float[] d = new float[7];
 
-    private int[] keyColumn = new int[6] { 1, 2, 3, 5, 4, 3};
+    private int[] keyColumn = new int[5] {4, 5, 6, 6, 4};
 
-    private int[,,] keys = new int[6, 6, 5]     { { { 0x20, 0, 0, 0, 0 }, {0, 'q', 0, 0, 0 }, {'a', 's','w' , 0, 0, }, {'.' ,'z' , 'x', 'd' , 'e'}, {',', 'c' ,'f' ,'r' , 0, }, { 'v' , 'g', 't' , 0, 0 } },
-                                                  { { 0x20, 0, 0, 0, 0 }, {0, 'Q', 0, 0, 0 }, {'A', 'S','W' , 0, 0, }, {'.' ,'Z' , 'X', 'D' , 'E'}, {',', 'C' ,'F' ,'R' , 0, }, { 'V' , 'G', 'T' , 0, 0 } },
-                                                  { { 0x20, 0, 0, 0, 0 }, {0, '1', 0, 0, 0 }, {'~', '!','2' , 0, 0, }, {'.' ,'(' , ')', '@' , '3'}, {',', '-' ,'#' ,'4' , 0, }, { '_' , '%', '5' , 0, 0 } },
-                                                  { { 0x10, 0, 0, 0, 0 }, {0x0D, 'p', 0, 0, 0 }, {'l' , 'k','o',  0, 0, }, { '?', 'm', 'n', 'j', 'i'}, {'!', 'b', 'h', 'u', 0, }, { 'v', 'g', 'y' , 0, 0 } },
-                                                  { { 0x10, 0, 0, 0, 0 }, {0x0D, 'P', 0, 0, 0 }, {'L' , 'K','O',  0, 0, }, { '?', 'M', 'N', 'J', 'I'}, {'!', 'B', 'H', 'U', 0, }, { 'V', 'G', 'Y' , 0, 0 } },
-                                                  { { 0x10, 0, 0, 0, 0 }, {0x0D, '0', 0, 0, 0 }, {'?' , '*','9',  0, 0, }, { '?', '/', ';', '&', '8'}, {'!', ':', '\'', '7', 0, }, { '_', '%', '6' , 0, 0 } }};
+    private int[,,] keys = new int[6, 5, 6] { { { 0x20, 0x20, 0, 0, 0, 0 }, { 'v', 'c', 'x', 'z', 0X10, 0 }, {'g', 'f', 'd', 's', 'a' , 0X10}, { 'y', 't', 'r', 'e', 'w', 'q' }, { '.', '.', '!', '?', 0, 0 } },
+                                              { { 0x20, 0x20, 0, 0, 0, 0 }, { 'V', 'C', 'X', 'Z', 0X10, 0 }, {'G', 'F', 'D', 'S', 'A' , 0X10}, { 'Y', 'T', 'R', 'E', 'W', 'Q' }, { '.', '.', '!', '?', 0, 0 } },
+                                              { { 0x20, 0x20, 0, 0, 0, 0 }, { '_', '-', ')', '(', 0X10, 0 }, {'%', '#', '@', '!', '~' , 0X10}, { '6', '5', '4', '3', '2', '1' }, { '.', '.', '!', '?', 0, 0 } },
+                                              { { 0x20, 0x20, 0x0D, 0x0D, 0, 0 }, {'v', 'b', 'n', 'm', 0X08, 0}, {'g', 'h', 'j', 'k', 'l' ,0X08} ,{'t', 'y', 'u', 'i', 'o', 'p'}, {',', ',', ':', '\"', 0, 0}},
+                                              { { 0x20, 0x20, 0x0D, 0x0D, 0, 0 }, {'V', 'B', 'N', 'M', 0X08, 0}, {'G', 'H', 'J', 'K', 'L' ,0X08} ,{'T', 'Y', 'U', 'I', 'O', 'P'}, {',', ',', ':', '\"', 0, 0}},
+                                              { { 0x20, 0x20, 0x0D, 0x0D, 0, 0 }, {'_', ':', ';', '/', 0X08, 0}, {'%', '\'', '&', '*', '?',0X08} ,{'5', '6', '7', '8', '9', '0'}, {',', ',', ':', '\"', 0, 0}}};
 
-    //private void Start()
-    //{
-    //}
+    // private void Start()
+    // {
 
-    //作为测试，在Update里面轮询.
-    //private void Update()
-    //{
+    // }
+    // private void Update()
+    // {
     //    GameObject key;
     //    if (touched)
     //    {
@@ -43,31 +42,30 @@ public class InclinedKeyboard : ClickKeyboard
     //            //Debug.Log("Key: " + ascii);
     //        }
     //    }
-    //}
+    // }
 
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
         if(hand == SteamVR_Input_Sources.LeftHand)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
-                d[i] = thumbLength + (float)(i - 3) * 1 / 3f;
+                d[i] = thumbLength + (float)(i - 2.5) * 1 / 2.5f;
                 thumbCenter[i] = new Vector2((d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
             }
         }
         else
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
-                d[i] = thumbLength + (float)(i - 3) * 1 / 3f;
+                d[i] = thumbLength + (float)(i - 2.5) * 1 / 2.5f;
                 thumbCenter[i] = new Vector2(-(d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
             }
         }
 
-        // TODO: 获取相应位置的按件对象并赋值给key
         int column;
         int row = 0;
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 5; i++)
         {
             float distanceA = Mathf.Sqrt(Mathf.Pow((axis.x - thumbCenter[i].x), 2) + Mathf.Pow((axis.y - thumbCenter[i].y), 2));
             float distanceB = Mathf.Sqrt(Mathf.Pow((axis.x - thumbCenter[i+1].x), 2) + Mathf.Pow((axis.y - thumbCenter[i+1].y), 2));
@@ -107,9 +105,8 @@ public class InclinedKeyboard : ClickKeyboard
         int handmode = (hand == SteamVR_Input_Sources.LeftHand) ? mode : mode + 3;
 
         char output = (char)keys[handmode, row, column];
+        Debug.Log(output);
         Transform LR = hand == SteamVR_Input_Sources.LeftHand ? keyboardRoot.GetChild(0) : keyboardRoot.GetChild(1);
-
-
 
         switch (output)
         {
@@ -134,13 +131,20 @@ public class InclinedKeyboard : ClickKeyboard
             case '.':
                 key = LR.Find("period").gameObject;
                 break;
+            case '\"':
+                key = LR.Find("quotation").gameObject;
+                break;
             case '!':
-                if (hand == SteamVR_Input_Sources.LeftHand) goto default;
+                if (row != 4) goto default;
                 key = LR.Find("exclamation").gameObject;
                 break;
             case '?':
-                if (row == 2) goto default;
+                if (row != 4) goto default;
                 key = LR.Find("question").gameObject;
+                break;
+            case ':':
+                if (row != 4) goto default;
+                key = LR.Find("colon").gameObject;
                 break;
             default:
                 string name = ((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString();
@@ -155,7 +159,7 @@ public class InclinedKeyboard : ClickKeyboard
 
     protected override TextMeshProUGUI[,] fetchKeyStrings()
     {
-        TextMeshProUGUI[,] ret = new TextMeshProUGUI[2, 28];
+        TextMeshProUGUI[,] ret = new TextMeshProUGUI[2, 30];
         int i = 0;
         Transform[] children = new Transform[2] { keyboardRoot.GetChild(0), keyboardRoot.GetChild(1) };
         foreach(Transform LR in children)
@@ -165,10 +169,9 @@ public class InclinedKeyboard : ClickKeyboard
                 Transform canvas = keys.transform.GetChild(0);
                 if(canvas.childCount == 2)
                 {
-                    // 有两个儿子，有用.  有字母有符号.
                     foreach(var text in canvas.GetComponentsInChildren<TextMeshProUGUI>())
                     {
-                        if (text.text[0] >= 'a' && text.text[0] <= 'z')  //初始必定小写.
+                        if (text.text[0] >= 'a' && text.text[0] <= 'z')
                             ret[0, i] = text;
                         else
                             ret[1, i] = text;
