@@ -105,6 +105,7 @@ public class ClickKeyboard : KeyboardBase
     public override void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         Debug.Log("Touch down!");
+        print(fromSource);
         if (mutex != SteamVR_Input_Sources.Any)
             return;    // conduct TouchDown only when mutex is free.
         if (selected)
@@ -215,13 +216,13 @@ public class ClickKeyboard : KeyboardBase
         }
     }
 
-    bool canBeLongHeld(GameObject key)
+    public bool canBeLongHeld(GameObject key)
     {
         // �����ж�key�Ƿ���������ţ����Գ���.
         return key.transform.GetChild(0).transform.childCount == 2;
     }
 
-    int longHoldingLogic(Vector2 delta, ref GameObject key)
+    public int longHoldingLogic(Vector2 delta, ref GameObject key)
     {
         //(0,0), ��ʼ���� ��1��1��������.
         if (delta.x == 0 && delta.y == 0)
@@ -233,7 +234,7 @@ public class ClickKeyboard : KeyboardBase
             longHoldingAxis += delta;
         PrepareLongholding plh = symbolBox.GetComponent<PrepareLongholding>();
         if (longHoldingAxis.x >= 0.15)
-        {   //0.03 magic number ����.
+        {
             key = plh.rects[2];
             return plh.texts[2].text[0];
         }

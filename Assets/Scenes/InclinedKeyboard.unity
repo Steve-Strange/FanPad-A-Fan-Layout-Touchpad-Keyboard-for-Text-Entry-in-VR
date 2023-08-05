@@ -191,8 +191,8 @@ MonoBehaviour:
   inputField: {fileID: 1435210822}
   symbolBox: {fileID: 1507436430}
   keyboardRoot: {fileID: 6636364}
-  thumbTheta: 0.4
-  thumbLength: 3
+  thumbTheta: 0.3
+  thumbLength: 6
 --- !u!1 &11123031
 GameObject:
   m_ObjectHideFlags: 0
@@ -24751,7 +24751,6 @@ RectTransform:
   - {fileID: 1435210821}
   - {fileID: 1948859173}
   - {fileID: 1102444546}
-  - {fileID: 1885968683}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -27338,12 +27337,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1885968679}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.9678094, y: 208.59631, z: 11.272186}
-  m_LocalScale: {x: 966.1869, y: 474.6674, z: 1.1272186}
+  m_LocalPosition: {x: 0.352, y: 18.5054, z: 75}
+  m_LocalScale: {x: 85.71424, y: 42.10961, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1709282469}
-  m_RootOrder: 3
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1885968684
 MonoBehaviour:
@@ -34162,7 +34161,7 @@ GameObject:
   - component: {fileID: 7135036624791483837}
   - component: {fileID: 605498634964194064}
   m_Layer: 0
-  m_Name: shift
+  m_Name: shift2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34180,7 +34179,7 @@ GameObject:
   - component: {fileID: 7135036625253435270}
   - component: {fileID: 605498634321879339}
   m_Layer: 0
-  m_Name: back
+  m_Name: back2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

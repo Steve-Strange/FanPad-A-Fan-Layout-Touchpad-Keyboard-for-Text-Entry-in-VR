@@ -47,6 +47,7 @@ public class KeyboardBase : MonoBehaviour
     // 键盘上的文字.
     protected TextMeshProUGUI[,] keyStrings;
     protected bool selected = false, deleted = false, touched = false, longHolding = false;
+    protected bool left_touched = false, right_touched = false;
     protected float last_delete_time, hold_time_start, last_caret_time;
 
     void Start()
@@ -113,7 +114,7 @@ public class KeyboardBase : MonoBehaviour
     protected void switchCapital()
     {
         bool upper;
-        if ((keyStrings[0, 0].text[0] >= 'a' && keyStrings[0, 0].text[0] <= 'z'))  // 原本是小写，变大写.
+        if (keyStrings[0, 0].text[0] >= 'a' && keyStrings[0, 0].text[0] <= 'z')  // 原本是小写，变大写.
             upper = false;
         else if (keyStrings[0, 0].text[0] >= 'A' && keyStrings[0, 0].text[0] <= 'Z')  //原本是大写，变小写.
             upper = true;
@@ -123,6 +124,7 @@ public class KeyboardBase : MonoBehaviour
         int length = keyStrings.GetLength(1);
         for(int i=0; i<length; ++i)
         {
+            print(keyStrings[0, i].text);
             if (upper)
                 keyStrings[0, i].text = keyStrings[0, i].text.ToLower();
             else
@@ -134,8 +136,11 @@ public class KeyboardBase : MonoBehaviour
     {
         // 符号键盘/普通键盘互换.，把keyStrings的第一二行互换.
         int length = keyStrings.GetLength(1);
+        print(length);
         for(int i=0; i<length; ++i)
         {
+            print(keyStrings[0, i]);
+            print(keyStrings[1, i]);
             string tmp = keyStrings[0, i].text;
             keyStrings[0, i].text = keyStrings[1, i].text;
             keyStrings[1, i].text = tmp;
@@ -182,16 +187,25 @@ public class KeyboardBase : MonoBehaviour
     // 下面是触摸板相关的，每个键盘不太一样.必须在外面重载!
     virtual public void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
+        if(fromSource == SteamVR_Input_Sources.RightHand)
+            right_touched = true;
+        if(fromSource == SteamVR_Input_Sources.LeftHand)
+            left_touched = true;
         touched = true;
     }
 
     virtual public void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
+        if(fromSource == SteamVR_Input_Sources.RightHand)
+            right_touched = false;
+        if(fromSource == SteamVR_Input_Sources.LeftHand)
+            left_touched = false;
         touched = false;
     }
 
     virtual public void OnPressDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
+        
         /* 在SlideKeyboard中，要用这个开始判断长按. */
     }
 

@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Valve.VR;
 
-/* 倾斜�?盘，继承自ClickKeyboard，应当只用实现自己的Axis2Letter方法. */
+/* 倾斜�?盘，继承自ClickKeyboard，应当只用实现自己的Axis2Letter方法. */
 public class InclinedKeyboard : ClickKeyboard
 {
     private float radius = 1;
@@ -81,7 +81,7 @@ public class InclinedKeyboard : ClickKeyboard
         //print("d[row] " + d[row]);
         //print("thetaMax cos num " + Mathf.Min((Mathf.Pow(d[row], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row] * thumbLength),
         //                                      (Mathf.Pow(d[row + 1], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row + 1] * thumbLength)));
-
+    
         int maxThetaRow = (Mathf.Pow(d[row], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row] * thumbLength)
                             < (Mathf.Pow(d[row + 1], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row + 1] * thumbLength) ? row : row + 1;
 
@@ -94,7 +94,8 @@ public class InclinedKeyboard : ClickKeyboard
 
         //print("thetaMax" + thetaMax);
         //print("currentTheta" + currentTheta);
-        //print("fcolumn" + fcolumn);
+        print("row" + row);
+        print("fcolumn" + fcolumn);
 
         column = (int)fcolumn;
         if (column < 0) column = 0;
@@ -114,7 +115,8 @@ public class InclinedKeyboard : ClickKeyboard
                 key = LR.Find("space").gameObject;
                 break;
             case (char)VKCode.Shift:
-                key = LR.Find("shift").gameObject;
+                if(row==2) key = LR.Find("shift").gameObject;
+                else key = LR.Find("shift2").gameObject;
                 break;
             case (char)VKCode.Switch:
                 key = LR.Find("sym").gameObject;
@@ -123,7 +125,8 @@ public class InclinedKeyboard : ClickKeyboard
                 key = LR.Find("enter").gameObject;
                 break;
             case (char)VKCode.Back:
-                key = LR.Find("back").gameObject;
+                if(row==2) key = LR.Find("back").gameObject;
+                else key = LR.Find("back2").gameObject;
                 break;
             case ',':
                 key = LR.Find("comma").gameObject;
