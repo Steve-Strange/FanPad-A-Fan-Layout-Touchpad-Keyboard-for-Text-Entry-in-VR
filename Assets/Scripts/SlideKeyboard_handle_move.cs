@@ -5,8 +5,12 @@ using UnityEngine;
 using Valve.VR;
 
 /* ??�???�??�?????�?�??????ClickKeyboard????????????�?�?�?�?�??????�??Axis2Letter??�???. */
-public class SlideKeyboard : ClickKeyboard
+public class SlideKeyboard_handle_move : ClickKeyboard
 {
+    private Transform leftHandTransform;
+    private Transform rightHandTransform;
+    private Quaternion rightRot;
+    private Quaternion leftRot;
     private float radius = 1;
     public float thumbTheta;
     public float thumbLength;
@@ -38,81 +42,17 @@ public class SlideKeyboard : ClickKeyboard
 
     private void Update()
     {
-        if (left_touched)
-        {
-            left_column = getPosition(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand);
-        }
-        else {
-            left_column = -1;
-        }
-        if (right_touched)
-        {
-            right_column = getPosition(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.RightHand);
-        }
-        else {
-            right_column = -1;
-        }
+        leftHandTransform = GameObject.Find("LeftHand").transform;
+        rightHandTransform = GameObject.Find("RightHand").transform;
+        leftRot = leftHandTransform.rotation;
+        rightRot = rightHandTransform.rotation;
+        left_column = 5-(int)((leftRot[1]+0.15)/(0.65/6));
+        right_column = 5-(int)((-rightRot[1]+0.15)/(0.65/6));
+        if(left_column<0) left_column = 0;
+        if(left_column>5) left_column = 5;
+        if(right_column<0) right_column = 0;
+        if(right_column>5) right_column = 5;
         highlight(left_column, right_column);
-        
-    }
-
-    public int getPosition(Vector2 axis, SteamVR_Input_Sources hand)
-    {
-        if(hand == SteamVR_Input_Sources.LeftHand)
-        {
-            for (int i = 0; i < 11; i++)
-            {
-                d[i] = thumbLength + (float)(i - 5) * 1 / 5f;
-                thumbCenter[i] = new Vector2((d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
-            }
-        }
-        else
-        {
-            for (int i = 0; i < 11; i++)
-            {
-                d[i] = thumbLength + (float)(i - 5) * 1 / 5f;
-                thumbCenter[i] = new Vector2(-(d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
-            }
-        }
-
-        int column;
-        int row = 0;
-        for (int i = 0; i < 11; i++)
-        {
-            float distanceA = Mathf.Sqrt(Mathf.Pow((axis.x - thumbCenter[i].x), 2) + Mathf.Pow((axis.y - thumbCenter[i].y), 2));
-            float distanceB = Mathf.Sqrt(Mathf.Pow((axis.x - thumbCenter[i+1].x), 2) + Mathf.Pow((axis.y - thumbCenter[i+1].y), 2));
-
-            if (distanceA < thumbLength && distanceB > thumbLength)
-            {
-                row = i;
-                break;
-            }
-        }
-
-        //print("d: " + axis.y);
-        //print("d[row] " + d[row]);
-        //print("thetaMax cos num " + Mathf.Min((Mathf.Pow(d[row], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row] * thumbLength),
-        //                                      (Mathf.Pow(d[row + 1], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row + 1] * thumbLength)));
-
-        int maxThetaRow = (Mathf.Pow(d[row], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row] * thumbLength)
-                            < (Mathf.Pow(d[row + 1], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row + 1] * thumbLength) ? row : row + 1;
-
-        float thetaMax = Mathf.Acos((Mathf.Pow(d[maxThetaRow], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[maxThetaRow] * thumbLength));
-
-        float currentTheta = (thumbTheta == 0) ? Mathf.Atan((axis.x - thumbCenter[maxThetaRow].x) / (axis.y - thumbCenter[maxThetaRow].y)) : 
-                                                 Mathf.Abs(Mathf.Atan((axis.x - thumbCenter[maxThetaRow].x) / (axis.y - thumbCenter[maxThetaRow].y))) - thumbTheta;
-
-        float fcolumn = (currentTheta + thetaMax) / (2 * thetaMax / 6);
-
-        //print("thetaMax" + thetaMax);
-        //print("currentTheta" + currentTheta);
-        //print("fcolumn" + fcolumn);
-
-        column = (int)fcolumn;
-        if (column < 0) column = 0;
-        if (column > 5) column = 5;
-        
-        return column;
     }
 
     public void highlight(int left_column, int right_column){
@@ -120,7 +60,6 @@ public class SlideKeyboard : ClickKeyboard
             string str = i.ToString();
             GameObject highlight_key = GameObject.Find("Player/SteamVRObjects/VRCamera/SlideKeyboard_orimodel/Line0" + str);
             highlight_key.GetComponent<MeshRenderer>().material.color = Color.white;
-                
         }
         
         if(left_column != -1){
