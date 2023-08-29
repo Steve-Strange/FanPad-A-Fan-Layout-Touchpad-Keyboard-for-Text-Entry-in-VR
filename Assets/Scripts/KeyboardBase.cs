@@ -50,11 +50,13 @@ public class KeyboardBase : MonoBehaviour
     protected bool left_touched = false, right_touched = false;
     protected float last_delete_time, hold_time_start, last_caret_time;
 
+    WordPrediction predictor = new WordPrediction();
+
     void Start()
     {
         inputField.ActivateInputField();
         
-        keyStrings = fetchKeyStrings();
+        keyStrings = fetchKeyStrings();        
     }
 
     // Update is called once per frame
@@ -348,16 +350,33 @@ public class KeyboardBase : MonoBehaviour
             if (needShift)
                 ReleaseKey((byte)VKCode.Shift);
         }
+        predictor.next(ascii);
+        Debug.Log(predictor.getSuggestions());
         statistics.outputCchars += addChars;
+    }
+
+    public void OutputWord(string word)
+    {
+        // 选中了预测出来的某个单词，输出单词.
+        int length = predictor.getCurLength();
+        // 删除末尾的length个字符.
+        inputField.text = inputField.text.Substring(0, inputField.text.Length - length);
+        // 加上预测出来的单词.
+        inputField.text += word;
+        // 刷新统计数据.
+        statistics.outputCchars = statistics.outputCchars - length + word.Length;
+        // 刷新单词预测器.
+        predictor.refresh();
     }
     
     protected void do_delete_char()
     {
         // 在inputField的当前位置删除一个字符.
-        // 直接用输入一个backspace实现删除.
-        statistics.deleteTtimes++;
-        PushKey((byte)VKCode.Back);
-        ReleaseKey((byte)VKCode.Back);
+        // 直接用输入一个backspace实现删除. 统一使用OutputLetter
+        //statistics.deleteTtimes++;
+        //PushKey((byte)VKCode.Back);
+        //ReleaseKey((byte)VKCode.Back);
+        OutputLetter((int)VKCode.Back);
     }
 
     protected void Seek(SEEK_MOD mode, int offset)
