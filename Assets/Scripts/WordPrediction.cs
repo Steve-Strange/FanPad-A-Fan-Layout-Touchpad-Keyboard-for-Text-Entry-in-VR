@@ -8,10 +8,10 @@ using UnityEngine;
 public class WordPrediction
 {
     public int initialCapacity = 82765;
-    public int maxEditDistanceDictionary = 2; //maximum edit distance per dictionary precalculation
+    public int maxEditDistanceDictionary = 4; //maximum edit distance per dictionary precalculation
 
-    public int maxEditDistanceLookup = 1; //max edit distance per lookup (maxEditDistanceLookup<=maxEditDistanceDictionary)
-    public SymSpell.Verbosity suggestionVerbosity = SymSpell.Verbosity.Closest; //Top, Closest, All
+    public int maxEditDistanceLookup = 4; //max edit distance per lookup (maxEditDistanceLookup<=maxEditDistanceDictionary)
+    public SymSpell.Verbosity suggestionVerbosity = SymSpell.Verbosity.All; //Top, Closest, All
 
     string curWord { get; set; } = string.Empty;
     int curLength { get; set; } = 0;   //当前已经输入的长度
@@ -35,6 +35,7 @@ public class WordPrediction
     {
         curLength = 0;
         curWord = string.Empty;
+        suggestions.Clear();
     }
 
     // 获取当前输入了的东西，更新状态.
@@ -44,7 +45,8 @@ public class WordPrediction
         if(('a'<=ascii && ascii<='z') || ('A'<=ascii && 'Z' <= ascii))
         {
             curLength++;
-            curWord += Convert.ToString(ascii);
+            byte[] letterArray = new byte[1]{(byte)ascii};
+            curWord += System.Text.Encoding.ASCII.GetString(letterArray);
             suggestions = symSpell.Lookup(curWord, suggestionVerbosity, maxEditDistanceLookup);
         }
         // 退格的特殊情况
@@ -52,8 +54,7 @@ public class WordPrediction
         {
             if(curLength > 0)
             {
-                curLength--;
-                curWord.Remove(curLength);
+                curWord = curWord.Remove(--curLength);
                 if (curLength != 0)
                     suggestions = symSpell.Lookup(curWord, suggestionVerbosity, maxEditDistanceLookup);
                 else
@@ -65,6 +66,7 @@ public class WordPrediction
         {
             refresh();
         }
+        //Debug.LogWarning("in wordprediction: " + curLength.ToString() + ", " + curWord);
     }
 
     // 获取状态.

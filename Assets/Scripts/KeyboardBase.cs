@@ -43,6 +43,7 @@ public class KeyboardBase : MonoBehaviour
     // text input field. 
     public TextMeshProUGUI inputText;
     public TMP_InputField inputField;
+    public WordCubes wordCubes;
 
     // ¼üÅÌÉÏµÄÎÄ×Ö.
     protected TextMeshProUGUI[,] keyStrings;
@@ -55,8 +56,10 @@ public class KeyboardBase : MonoBehaviour
     void Start()
     {
         inputField.ActivateInputField();
-        
-        keyStrings = fetchKeyStrings();        
+        keyStrings = fetchKeyStrings(); 
+        WordCubes tmp = GameObject.Find("wordcubes").GetComponent<WordCubes>();
+        if(tmp != null)
+            wordCubes = tmp;
     }
 
     // Update is called once per frame
@@ -350,7 +353,9 @@ public class KeyboardBase : MonoBehaviour
             if (needShift)
                 ReleaseKey((byte)VKCode.Shift);
         }
-        predictor.next(ascii);
+        predictor.next(ascii);        
+        string[] strarr = predictor.getSuggestions();
+        wordCubes.setWords(strarr);
         string tmp = string.Empty;
         foreach (string str in predictor.getSuggestions())
             tmp = tmp + str + ", ";

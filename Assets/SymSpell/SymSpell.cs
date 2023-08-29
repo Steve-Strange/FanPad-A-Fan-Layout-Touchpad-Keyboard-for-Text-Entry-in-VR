@@ -99,6 +99,9 @@ public class SymSpell
             // order by distance ascending, then by frequency count descending
             if (this.distance == other.distance) return other.count.CompareTo(this.count);
             return this.distance.CompareTo(other.distance);
+
+            // if (this.count == other.count) return this.distance.CompareTo(other.distance);
+            // return other.count.CompareTo(this.count);
         }
         public override bool Equals(object obj)
         {
