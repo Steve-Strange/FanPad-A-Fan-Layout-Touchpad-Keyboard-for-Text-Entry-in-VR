@@ -351,7 +351,10 @@ public class KeyboardBase : MonoBehaviour
                 ReleaseKey((byte)VKCode.Shift);
         }
         predictor.next(ascii);
-        Debug.Log(predictor.getSuggestions());
+        string tmp = string.Empty;
+        foreach (string str in predictor.getSuggestions())
+            tmp = tmp + str + ", ";
+        Debug.Log(tmp);
         statistics.outputCchars += addChars;
     }
 
