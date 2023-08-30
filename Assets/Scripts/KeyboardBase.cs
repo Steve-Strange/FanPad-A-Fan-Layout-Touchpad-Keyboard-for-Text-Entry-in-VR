@@ -385,8 +385,12 @@ public class KeyboardBase : MonoBehaviour
         inputField.text = inputField.text.Substring(0, inputField.text.Length - length);
         // 加上预测出来的单词.
         inputField.text += word;
+        // 将光标移动到最后面.
+        inputField.caretPosition += word.Length;
+        // 输出单词后跟着一个空格.
+        OutputLetter(' ');
         // 刷新统计数据.
-        statistics.outputCchars = statistics.outputCchars - length + word.Length;
+        statistics.outputCchars = statistics.outputCchars - length + word.Length + 1;  // 算上空格..
         // 刷新单词预测器.
         predictor.refresh();
     }
