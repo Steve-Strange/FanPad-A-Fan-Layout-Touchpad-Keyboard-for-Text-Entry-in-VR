@@ -6,6 +6,7 @@ using TMPro;
 public class WordCubes : MonoBehaviour
 {
     TextMeshProUGUI[] words;
+    int selectedIndex = -1;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,5 +27,14 @@ public class WordCubes : MonoBehaviour
         for(int i=0; i<words.Length; ++i){
             words[i].text = w[i];
         }
+    }
+
+    public void setSelectedIndex(int index) { selectedIndex = index; }
+    public int getSelectedIndex() { return selectedIndex;}
+    public string getSelectedWord() {
+        if (selectedIndex != -1)
+            return words[selectedIndex].text;
+        else
+            return string.Empty;
     }
 }

@@ -110,7 +110,8 @@ public class ClickKeyboard : KeyboardBase
             return;    // conduct TouchDown only when mutex is free.
         if (selected)
         {
-            last_caret_time = Time.time;
+            if(Time.time - select_down_time > selectThreshold)  //只有在按下扳机事件超过阈值，在移动光标状态中才需要更新last_caret_time.
+                last_caret_time = Time.time;
             return;
         }
         if (deleted)
@@ -130,8 +131,9 @@ public class ClickKeyboard : KeyboardBase
     // OnTouchUp, �ɿ������壬����Ҫ�����!
     public override void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        if (selected)
+        if (selected && Time.time - select_down_time > selectThreshold)
         {
+            // 超过阈值了，在移动光标状态！
             do_caret_move(lastSlideAxis - lastSlideDelta);
             return;
         }

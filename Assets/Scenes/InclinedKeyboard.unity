@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff1342b028754264894366d510898417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectThreshold: 0.5
   statistics: {fileID: 1885968684}
   keyboardActionSet:
     actionSetPath: /actions/Keyboard
@@ -18002,6 +18003,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff1342b028754264894366d510898417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectThreshold: 0.5
   statistics: {fileID: 1885968684}
   keyboardActionSet:
     actionSetPath: /actions/Keyboard
@@ -27956,7 +27958,6 @@ Transform:
   m_Children:
   - {fileID: 1507436430}
   - {fileID: 6636364}
-  - {fileID: 1911178575}
   m_Father: {fileID: 1892775340}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -28260,6 +28261,7 @@ GameObject:
   - component: {fileID: 1892172050}
   - component: {fileID: 1886930756}
   - component: {fileID: 1886072262}
+  - component: {fileID: 1893143511}
   m_Layer: 0
   m_Name: VRCamera
   m_TagString: MainCamera
@@ -28267,6 +28269,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1893143511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893143510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e943edb63e0633f42b0292ee6f2a7785, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1893148460
 GameObject:
   m_ObjectHideFlags: 0
@@ -28674,11 +28688,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!4 &1911178575 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
-  m_PrefabInstance: {fileID: 1821277570754397356}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1912626733
 GameObject:
   m_ObjectHideFlags: 0
@@ -33798,7 +33807,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1892708888}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 6517851944401022830, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_Name
@@ -33806,11 +33815,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.1295
+      value: 0.014
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -33818,7 +33827,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.915
+      value: 3.069
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -33826,15 +33835,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
