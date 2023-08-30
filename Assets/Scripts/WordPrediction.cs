@@ -30,6 +30,19 @@ public class WordPrediction
         }
     }
 
+    public WordPrediction(int _maxEditDistanceDictionary, int _maxEditDistanceLookup)
+    {
+        maxEditDistanceDictionary = _maxEditDistanceDictionary;
+        maxEditDistanceLookup = _maxEditDistanceLookup;
+        symSpell = new SymSpell(initialCapacity, maxEditDistanceDictionary);
+        string dictDir = "Assets/SymSpell/frequency_dictionary_en_82_765.txt";
+        int termIndex = 0, countIndex = 1;
+        if (!symSpell.LoadDictionary(dictDir, termIndex, countIndex))
+        {
+            Debug.LogError("Cannot find the dictionary for SymSpell.");
+        }
+    }
+
     // 重置这个单词预测器.
     public void refresh()
     {

@@ -28,6 +28,8 @@ public class KeyboardBase : MonoBehaviour
     [DllImport("User32.dll", EntryPoint = "keybd_event")]
     static extern void keybd_event(byte bVK, byte bScan, int dwFlags, int dwExtraInfo);
 
+    public float selectThreshold = 0.5f;  //区分按下扳机是选择单词（短按）还是移动光标（长按）的阈值.
+
     public Statistics statistics;
 
     //Keyboard action set
@@ -49,7 +51,7 @@ public class KeyboardBase : MonoBehaviour
     protected TextMeshProUGUI[,] keyStrings;
     protected bool selected = false, deleted = false, touched = false, longHolding = false;
     protected bool left_touched = false, right_touched = false;
-    protected float last_delete_time, hold_time_start, last_caret_time;
+    protected float last_delete_time, hold_time_start, last_caret_time, select_down_time;
 
     WordPrediction predictor = new WordPrediction();
 
@@ -155,6 +157,15 @@ public class KeyboardBase : MonoBehaviour
     // 移动光标和删除逻辑，这些在所有键盘中都是一样的.
     virtual public void OnSelectKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
+        if(Time.time - select_down_time < selectThreshold)
+        {
+            // 短按扳机，是要选择单词！
+            string word = wordCubes.getSelectedWord();
+            if(word != string.Empty)
+            {
+                OutputWord(word);
+            }
+        }
         selected = false;
     }
 
@@ -162,6 +173,7 @@ public class KeyboardBase : MonoBehaviour
     {
         selected = true;
         last_caret_time = Time.time;
+        select_down_time = last_caret_time;
     }
 
     virtual public void OnDeleteKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -355,7 +367,9 @@ public class KeyboardBase : MonoBehaviour
         }
         predictor.next(ascii);        
         string[] strarr = predictor.getSuggestions();
+        // 将单词提示显示到单词板上.
         wordCubes.setWords(strarr);
+        // 将预测的单词输出到控制台.
         string tmp = string.Empty;
         foreach (string str in predictor.getSuggestions())
             tmp = tmp + str + ", ";
