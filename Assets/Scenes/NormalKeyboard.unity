@@ -1951,7 +1951,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.768
+      value: 2.1
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1991,6 +1991,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
+--- !u!114 &1247284553 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8994266753776106750, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
+  m_PrefabInstance: {fileID: 1247284552}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2197b124c3d9314d8549d4e7e1c16f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1263128338
 GameObject:
   m_ObjectHideFlags: 0
@@ -4548,9 +4559,12 @@ MonoBehaviour:
   PadSlide:
     actionPath: /actions/Keyboard/in/slide
     needsReinit: 0
+  Fitting:
+    actionPath: /actions/Keyboard/in/fitting
+    needsReinit: 0
   inputText: {fileID: 1263128341}
   inputField: {fileID: 1011396644}
-  wordCubes: {fileID: 0}
+  wordCubes: {fileID: 1247284553}
   symbolBox: {fileID: 543450651790731576}
   keyboardRoot: {fileID: 8503388498259276066}
 --- !u!4 &8503388498259276066 stripped
@@ -4558,6 +4572,47 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8180968717066861272, guid: f9ba7c2e14f275848ac1bbf2be8e3aab, type: 3}
   m_PrefabInstance: {fileID: 8503388498259276063}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8503388498259276070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8503388498259276064}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea36b79efcddfbf40831426aecfab969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectThreshold: 0.5
+  statistics: {fileID: 258734442}
+  keyboardActionSet:
+    actionSetPath: /actions/Keyboard
+  DeleteKey:
+    actionPath: /actions/Keyboard/in/delete
+    needsReinit: 0
+  SelectKey:
+    actionPath: /actions/Keyboard/in/select
+    needsReinit: 0
+  PadTouch:
+    actionPath: /actions/Keyboard/in/touch
+    needsReinit: 0
+  PadPress:
+    actionPath: /actions/Keyboard/in/press
+    needsReinit: 0
+  PadSlide:
+    actionPath: /actions/Keyboard/in/slide
+    needsReinit: 0
+  Fitting:
+    actionPath: /actions/Keyboard/in/fitting
+    needsReinit: 0
+  inputText: {fileID: 2095329499}
+  inputField: {fileID: 1011396644}
+  wordCubes: {fileID: 1247284553}
+  symbolBox: {fileID: 543450651790731576}
+  keyboardRoot: {fileID: 8503388498259276066}
+  thumbTheta: 0.3
+  thumbLength: 6
 --- !u!4 &8761557543300095803
 Transform:
   m_ObjectHideFlags: 0

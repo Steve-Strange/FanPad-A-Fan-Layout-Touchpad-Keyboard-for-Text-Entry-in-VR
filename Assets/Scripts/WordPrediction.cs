@@ -48,19 +48,20 @@ public class WordPrediction
     {
         curLength = 0;
         curWord = string.Empty;
-        suggestions.Clear();
+        if(suggestions != null)
+            suggestions.Clear();
     }
 
     // 获取当前输入了的东西，更新状态.
     public void next(int ascii)
     {
         // 是字母
-        if(('a'<=ascii && ascii<='z') || ('A'<=ascii && 'Z' <= ascii))
+        if(('a'<=ascii && ascii<='z') || ('A'<=ascii && ascii <= 'Z'))
         {
             curLength++;
             byte[] letterArray = new byte[1]{(byte)ascii};
             curWord += System.Text.Encoding.ASCII.GetString(letterArray);
-            suggestions = symSpell.Lookup(curWord, suggestionVerbosity, maxEditDistanceLookup);
+            suggestions = symSpell.Lookup(curWord.ToLower(), suggestionVerbosity, maxEditDistanceLookup);//输入大写也应该有效.
         }
         // 退格的特殊情况
         else if(ascii == (int)VKCode.Back)  //VKCode的Back和ascii的退格键一样是8
@@ -69,7 +70,7 @@ public class WordPrediction
             {
                 curWord = curWord.Remove(--curLength);
                 if (curLength != 0)
-                    suggestions = symSpell.Lookup(curWord, suggestionVerbosity, maxEditDistanceLookup);
+                    suggestions = symSpell.Lookup(curWord.ToLower(), suggestionVerbosity, maxEditDistanceLookup);
                 else
                     suggestions.Clear();
             }
@@ -97,15 +98,23 @@ public class WordPrediction
     {
         string[] strSuggest = new string[5];
         int i = 0;
-        foreach(var suggest in suggestions)
-        {
-            strSuggest[i++] = suggest.term;
-            if (i >= 5)
-                break;
+        if(suggestions != null){
+            foreach(var suggest in suggestions)
+            {
+                strSuggest[i++] = suggest.term;
+                if (i >= 5)
+                    break;
+            }
+            for(; i<5; ++i)
+            {
+                strSuggest[i] = string.Empty;
+            }
         }
-        for(; i<5; ++i)
-        {
-            strSuggest[i] = string.Empty;
+        else{
+            for(; i<5; ++i)
+            {
+                strSuggest[i] = string.Empty;
+            }
         }
         return strSuggest;
     }

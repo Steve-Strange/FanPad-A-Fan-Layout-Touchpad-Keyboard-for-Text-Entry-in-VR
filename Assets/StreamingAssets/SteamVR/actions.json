@@ -101,6 +101,10 @@
     {
       "name": "/actions/Keyboard/in/delete",
       "type": "boolean"
+    },
+    {
+      "name": "/actions/Keyboard/in/fitting",
+      "type": "boolean"
     }
   ],
   "action_sets": [

@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Valve.VR;
-using UnityEditor.SceneManagement;
-using UnityEngine.SceneManagement;
 
 /* 倾斜�?盘，继承自ClickKeyboard，应当只用实现自己的Axis2Letter方法. */
-public class InclinedKeyboard : ClickKeyboard
+public class InclinedKeyboard_for_normal : ClickKeyboard
 {
-    public GameObject fitting;
     private float radius = 1;
     public float thumbTheta;
     public float thumbLength;
@@ -25,11 +22,10 @@ public class InclinedKeyboard : ClickKeyboard
                                               { { 0x20, 0x0D, 0, 0, 0, 0 }, {'V', 'B', 'N', 'M', 0X08, 0}, {'G', 'H', 'J', 'K', 'L' ,0X08} ,{'T', 'Y', 'U', 'I', 'O', 'P'}, { ',', ':', '\"', 0, 0, 0} },
                                               { { 0x20, 0x0D, 0, 0, 0, 0 }, {'_', ':', ';', '/', 0X08, 0}, {'%', '\'', '&', '*', '?',0X08} ,{'5', '6', '7', '8', '9', '0'}, { ',', ':', '\"', 0, 0, 0} }};
 
-    private void Start()
-    {
-        thumbTheta = 0.3f;
-        thumbLength = 6;
-    }
+    // private void Start()
+    // {
+
+    // }
     // private void Update()
     // {
     //    GameObject key;
@@ -47,15 +43,6 @@ public class InclinedKeyboard : ClickKeyboard
     //        }
     //    }
     // }
-
-
-
-    public override void OnFitting(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource){
-        // 因为只有倾斜键盘有自定义，所以应该放到InclinedKeyboard中.
-        enableOutput = !enableOutput;
-        fitting.GetComponent<Fitting>().onFittingMode = !enableOutput;
-        print(fitting.GetComponent<Fitting>().onFittingMode);
-    }
 
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
@@ -107,93 +94,53 @@ public class InclinedKeyboard : ClickKeyboard
 
         //print("thetaMax" + thetaMax);
         //print("currentTheta" + currentTheta);
+        print("row" + row);
+        print("fcolumn" + fcolumn);
 
         column = (int)fcolumn;
         if (column < 0) column = 0;
         if (column > keyColumn[row] - 1) column = keyColumn[row] - 1;
 
-        //Debug.LogWarning("( " + column + ' ' + row + " )");
+        Debug.Log("( " + column + ' ' + row + " )");
 
         int handmode = (hand == SteamVR_Input_Sources.LeftHand) ? mode : mode + 3;
-
         char output = (char)keys[handmode, row, column];
-        //Debug.Log(output);
-        Transform LR = hand == SteamVR_Input_Sources.LeftHand ? keyboardRoot.GetChild(0) : keyboardRoot.GetChild(1);
+        print(handmode);
+        print(output);
 
         switch (output)
         {
             case (char)VKCode.Space:
-                key = LR.Find("space").gameObject;
+                key = keyboardRoot.Find("space").gameObject;
                 break;
             case (char)VKCode.Shift:
-                if(row==2) key = LR.Find("shift").gameObject;
-                else key = LR.Find("shift2").gameObject;
+                key = keyboardRoot.Find("shift").gameObject;
                 break;
             case (char)VKCode.Switch:
-                key = LR.Find("sym").gameObject;
+                key = keyboardRoot.Find("sym").gameObject;
                 break;
             case (char)VKCode.Enter:
-                key = LR.Find("enter").gameObject;
+                key = keyboardRoot.Find("enter").gameObject;
                 break;
             case (char)VKCode.Back:
-                if(row==2) key = LR.Find("back").gameObject;
-                else key = LR.Find("back2").gameObject;
+                key = keyboardRoot.Find("back").gameObject;
                 break;
             case ',':
-                key = LR.Find("comma").gameObject;
+                key = keyboardRoot.Find("comma").gameObject;
                 break;
             case '.':
-                key = LR.Find("period").gameObject;
-                break;
-            case '\"':
-                key = LR.Find("quotation").gameObject;
-                break;
-            case '!':
-                if (row != 4) goto default;
-                key = LR.Find("exclamation").gameObject;
-                break;
-            case '?':
-                if (row != 4) goto default;
-                key = LR.Find("question").gameObject;
-                break;
-            case ':':
-                if (row != 4) goto default;
-                key = LR.Find("colon").gameObject;
+                key = keyboardRoot.Find("period").gameObject;
                 break;
             default:
                 string name = ((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString();
                 if (name[1] == '/')
                     name = "m\\";
-                key = LR.Find(name).gameObject;
+                key = keyboardRoot.Find(name).gameObject;
                 break;
         }
 
         return keys[handmode, row, column];
     }
 
-    protected override TextMeshProUGUI[,] fetchKeyStrings()
-    {
-        TextMeshProUGUI[,] ret = new TextMeshProUGUI[2, 30];
-        int i = 0;
-        Transform[] children = new Transform[2] { keyboardRoot.GetChild(0), keyboardRoot.GetChild(1) };
-        foreach(Transform LR in children)
-        {
-            foreach(var keys in LR.GetComponentsInChildren<MeshRenderer>())
-            {
-                Transform canvas = keys.transform.GetChild(0);
-                if(canvas.childCount == 2)
-                {
-                    foreach(var text in canvas.GetComponentsInChildren<TextMeshProUGUI>())
-                    {
-                        if (text.text[0] >= 'a' && text.text[0] <= 'z')
-                            ret[0, i] = text;
-                        else
-                            ret[1, i] = text;
-                    }
-                    ++i;
-                }
-            }
-        }
-        return ret;
-    }
+
 }

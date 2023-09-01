@@ -56,5 +56,13 @@ namespace Valve.VR
                 return SteamVR_Actions.keyboard_delete;
             }
         }
+        
+        public virtual SteamVR_Action_Boolean fitting
+        {
+            get
+            {
+                return SteamVR_Actions.keyboard_fitting;
+            }
+        }
     }
 }

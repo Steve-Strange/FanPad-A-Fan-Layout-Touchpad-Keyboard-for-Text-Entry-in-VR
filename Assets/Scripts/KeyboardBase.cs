@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 using TMPro;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 public enum Keybd_Flags
 {
@@ -30,7 +32,7 @@ public class KeyboardBase : MonoBehaviour
 
     public float selectThreshold = 0.5f;  //区分按下扳机是选择单词（短按）还是移动光标（长按）的阈值.
 
-    public Statistics statistics;
+    public Experiment exp;
 
     //Keyboard action set
     public SteamVR_ActionSet keyboardActionSet;
@@ -42,6 +44,8 @@ public class KeyboardBase : MonoBehaviour
     public SteamVR_Action_Boolean PadPress = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "press");  //touchpad按下
     public SteamVR_Action_Vector2 PadSlide = SteamVR_Input.GetAction<SteamVR_Action_Vector2>("keyboard", "slide");  //在touchpad上滑动
 
+    public SteamVR_Action_Boolean Fitting = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "fitting");  //
+
     // text input field. 
     public TextMeshProUGUI inputText;
     public TMP_InputField inputField;
@@ -52,6 +56,9 @@ public class KeyboardBase : MonoBehaviour
     protected bool selected = false, deleted = false, touched = false, longHolding = false;
     protected bool left_touched = false, right_touched = false;
     protected float last_delete_time, hold_time_start, last_caret_time, select_down_time;
+
+    // 允许/禁止输出.
+    public bool enableOutput = true;
 
     WordPrediction predictor = new WordPrediction();
 
@@ -87,6 +94,8 @@ public class KeyboardBase : MonoBehaviour
             PadPress[hand].onStateUp += OnPressUp;
             PadPress[hand].onStateDown += OnPressDown;
             PadSlide[hand].onChange += OnPadSlide;
+            Fitting[hand].onStateUp += OnFitting;
+            
         }
     }
 
@@ -108,6 +117,7 @@ public class KeyboardBase : MonoBehaviour
             PadPress[hand].onStateUp -= OnPressUp;
             PadPress[hand].onStateDown -= OnPressDown;
             PadSlide[hand].onChange -= OnPadSlide;
+            Fitting[hand].onStateUp -= OnFitting;
         }
     }
 
@@ -239,6 +249,12 @@ public class KeyboardBase : MonoBehaviour
 
     }
 
+    virtual public void OnFitting(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
+        // 关于自定义的一些操作，因为普通键盘和倾斜键盘不同，所以应该不同.
+        return;
+    }
+
     // Core
     virtual public int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
@@ -253,7 +269,8 @@ public class KeyboardBase : MonoBehaviour
 
     public void OutputLetter(int ascii)
     {
-        int addChars = 1;   // 是否统计算入一个字符.
+        if(!enableOutput)
+            return;
         // 把Ascii符号翻译为键盘.
         // 更聪明的办法，应该是用一个ascii->VKcode的数组!
         // 注意，Shift, Enter等控制键不使用ascii，传入就直接用VKCode
@@ -356,15 +373,16 @@ public class KeyboardBase : MonoBehaviour
                     break;
                 default:
                     PutChar((byte)ascii);   //shift, enter等控制键，直接按照VKCode输出.
-                    if (ascii == (int)VKCode.Back)
-                        statistics.deleteTtimes++;
-                    if(ascii != (int)VKCode.Enter)
-                        addChars = 0;
                     break;
             }
             if (needShift)
                 ReleaseKey((byte)VKCode.Shift);
         }
+        // 统计.
+        if(exp.onExperiment){
+            exp.Next(ascii);
+        }
+        // 单词纠错
         predictor.next(ascii);        
         string[] strarr = predictor.getSuggestions();
         // 将单词提示显示到单词板上.
@@ -374,13 +392,19 @@ public class KeyboardBase : MonoBehaviour
         foreach (string str in predictor.getSuggestions())
             tmp = tmp + str + ", ";
         Debug.Log(tmp);
-        statistics.outputCchars += addChars;
     }
 
     public void OutputWord(string word)
     {
+        if(!enableOutput)
+            return;
         // 选中了预测出来的某个单词，输出单词.
         int length = predictor.getCurLength();
+        // 处理首字母大写问题，从wordPrediction中取出 curWord判断首字母是否大写.
+        string curword = predictor.getCurWord();
+        if('A' <= curword[0] && curword[0] <= 'Z'){
+            word = word.Substring(0,1).ToUpper() + word.Remove(0, 1);
+        }  // 首字母大写.
         // 删除末尾的length个字符.
         inputField.text = inputField.text.Substring(0, inputField.text.Length - length);
         // 加上预测出来的单词.
@@ -390,7 +414,9 @@ public class KeyboardBase : MonoBehaviour
         // 输出单词后跟着一个空格.
         OutputLetter(' ');
         // 刷新统计数据.
-        statistics.outputCchars = statistics.outputCchars - length + word.Length + 1;  // 算上空格..
+        if(exp.onExperiment){
+            exp.Next(word, curword);
+        }
         // 刷新单词预测器.
         predictor.refresh();
     }

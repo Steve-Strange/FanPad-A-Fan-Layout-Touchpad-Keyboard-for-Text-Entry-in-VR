@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectThreshold: 0.5
-  statistics: {fileID: 1885968684}
+  exp: {fileID: 224178740}
   keyboardActionSet:
     actionSetPath: /actions/Keyboard
   DeleteKey:
@@ -188,13 +188,18 @@ MonoBehaviour:
   PadSlide:
     actionPath: /actions/Keyboard/in/slide
     needsReinit: 0
+  Fitting:
+    actionPath: /actions/Keyboard/in/fitting
+    needsReinit: 0
   inputText: {fileID: 486862239}
   inputField: {fileID: 1435210822}
-  wordCubes: {fileID: 0}
+  wordCubes: {fileID: 1943372798}
+  enableOutput: 1
   symbolBox: {fileID: 1507436430}
   keyboardRoot: {fileID: 6636364}
-  thumbTheta: 0.3
-  thumbLength: 6
+  fitting: {fileID: 1226545610}
+  thumbTheta: 0
+  thumbLength: 0
 --- !u!1 &11123031
 GameObject:
   m_ObjectHideFlags: 0
@@ -3800,6 +3805,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 213708733}
   m_CullTransparentMesh: 1
+--- !u!1 &224178739
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 224178741}
+  - component: {fileID: 224178740}
+  m_Layer: 0
+  m_Name: experiment
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &224178740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224178739}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 204976a54114d3f4089228842189a9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onExperiment: 1
+  username: ljh
+  keyboardType: 3
+  phrasesNumber: 1
+  transcript: {fileID: 1102444547}
+  inputField: {fileID: 1435210822}
+  LogDir: Assets/ExpLog/
+  PadTouch:
+    actionPath: /actions/Keyboard/in/touch
+    needsReinit: 0
+  PadSlide:
+    actionPath: /actions/Keyboard/in/slide
+    needsReinit: 0
+--- !u!4 &224178741
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224178739}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.06253673, y: -0.5107524, z: 1.3458076}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &224885380
 GameObject:
   m_ObjectHideFlags: 0
@@ -17619,6 +17681,80 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1226545610
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1226545612}
+  - component: {fileID: 1226545611}
+  m_Layer: 0
+  m_Name: fitting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1226545611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226545610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d56facadfe146a7498de20bc03a4814e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectThreshold: 0.5
+  exp: {fileID: 0}
+  keyboardActionSet:
+    actionSetPath: /actions/Keyboard
+  DeleteKey:
+    actionPath: /actions/Keyboard/in/delete
+    needsReinit: 0
+  SelectKey:
+    actionPath: /actions/Keyboard/in/select
+    needsReinit: 0
+  PadTouch:
+    actionPath: /actions/Keyboard/in/touch
+    needsReinit: 0
+  PadPress:
+    actionPath: /actions/Keyboard/in/press
+    needsReinit: 0
+  PadSlide:
+    actionPath: /actions/Keyboard/in/slide
+    needsReinit: 0
+  Fitting:
+    actionPath: /actions/Keyboard/in/fitting
+    needsReinit: 0
+  inputText: {fileID: 0}
+  inputField: {fileID: 0}
+  wordCubes: {fileID: 0}
+  enableOutput: 0
+  InclinedKeyboard: {fileID: 0}
+  onFittingMode: 0
+  theta: 0
+  radius: 0
+--- !u!4 &1226545612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226545610}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.6371345, y: 1.3008916, z: 1.0766265}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1239890476
 GameObject:
   m_ObjectHideFlags: 0
@@ -18004,7 +18140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectThreshold: 0.5
-  statistics: {fileID: 1885968684}
+  exp: {fileID: 0}
   keyboardActionSet:
     actionSetPath: /actions/Keyboard
   DeleteKey:
@@ -18022,11 +18158,16 @@ MonoBehaviour:
   PadSlide:
     actionPath: /actions/Keyboard/in/slide
     needsReinit: 0
+  Fitting:
+    actionPath: /actions/Keyboard/in/fitting
+    needsReinit: 0
   inputText: {fileID: 486862239}
   inputField: {fileID: 1435210822}
   wordCubes: {fileID: 0}
+  enableOutput: 1
   symbolBox: {fileID: 1507436430}
   keyboardRoot: {fileID: 1254501258}
+  fitting: {fileID: 0}
   thumbTheta: 0.3
   thumbLength: 4
 --- !u!1 &1256589726
@@ -27263,6 +27404,7 @@ GameObject:
   - component: {fileID: 1885968681}
   - component: {fileID: 1885968680}
   - component: {fileID: 1885968684}
+  - component: {fileID: 1885968685}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -27362,6 +27504,61 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outputCchars: 0
   deleteTtimes: 0
+--- !u!114 &1885968685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885968679}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0821e8889f311146bc574754b60e43f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectThreshold: 0.5
+  statistics: {fileID: 0}
+  keyboardActionSet:
+    actionSetPath: /actions/Keyboard
+  DeleteKey:
+    actionPath: /actions/Keyboard/in/delete
+    needsReinit: 0
+  SelectKey:
+    actionPath: /actions/Keyboard/in/select
+    needsReinit: 0
+  PadTouch:
+    actionPath: /actions/Keyboard/in/touch
+    needsReinit: 0
+  PadPress:
+    actionPath: /actions/Keyboard/in/press
+    needsReinit: 0
+  PadSlide:
+    actionPath: /actions/Keyboard/in/slide
+    needsReinit: 0
+  Fitting:
+    actionPath: /actions/Keyboard/in/fitting
+    needsReinit: 0
+  inputText: {fileID: 0}
+  inputField: {fileID: 0}
+  wordCubes: {fileID: 0}
+  selected: 0
+  deleted: 0
+  touched: 0
+  longHolding: 0
+  left_touched: 0
+  right_touched: 0
+  last_delete_time: 0
+  hold_time_start: 0
+  last_caret_time: 0
+  select_down_time: 0
+  enableOutput: 1
+  leftAxis: {x: 0, y: 0}
+  rightAxis: {x: 0, y: 0}
+  leftAxisX: 0
+  rightAxisX: 0
+  points: []
+  onFittingMode: 0
+  theta: 0
 --- !u!124 &1886072262
 Behaviour:
   m_ObjectHideFlags: 0
@@ -29279,6 +29476,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1939187606}
   m_CullTransparentMesh: 1
+--- !u!114 &1943372798 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8994266753776106750, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
+  m_PrefabInstance: {fileID: 1821277570754397356}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2197b124c3d9314d8549d4e7e1c16f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1948859172
 GameObject:
   m_ObjectHideFlags: 0
@@ -33840,7 +34048,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.55
+      value: 2.19
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -35598,7 +35806,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 197768562227940688}
   m_LocalRotation: {x: 0.32789242, y: 0.6264876, z: -0.6264875, w: 0.32789215}
-  m_LocalPosition: {x: -2.431501, y: -0.000000166064, z: 1.0041244}
+  m_LocalPosition: {x: -2.37, y: 0, z: 1.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
