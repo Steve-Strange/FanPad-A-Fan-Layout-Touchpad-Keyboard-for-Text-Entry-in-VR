@@ -42,8 +42,9 @@ public class Fitting : KeyboardBase
         if(points.Count == 200) {
             LeastSquaresFit(points);
             Debug.LogWarning("done fitting!!");
-            InclinedKeyboard.GetComponent<InclinedKeyboard>().thumbTheta = theta;
-            InclinedKeyboard.GetComponent<InclinedKeyboard>().thumbLength = radius < 5.5 ? 5.5f : radius;
+            // InclinedKeyboard.GetComponent<InclinedKeyboard>().thumbTheta = theta;
+            // InclinedKeyboard.GetComponent<InclinedKeyboard>().thumbLength = radius < 5.5 ? 5.5f : radius;
+            InclinedKeyboard.GetComponent<InclinedKeyboard>().setThetaR(theta, radius);
         }
     }
     
@@ -112,6 +113,7 @@ public class Fitting : KeyboardBase
         cent_y = b / (-2);
 
         radius = Mathf.Sqrt(a * a + b * b - 4 * c) * 2;
+        radius = radius < 5.5 ? 5.5f : radius;
 
         theta = Mathf.Abs(Mathf.Atan(cent_x / cent_y));
         Debug.LogWarning(cent_x);

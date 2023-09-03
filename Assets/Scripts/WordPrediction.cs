@@ -15,7 +15,7 @@ public class WordPrediction
 
     string curWord { get; set; } = string.Empty;
     int curLength { get; set; } = 0;   //当前已经输入的长度
-    List<SymSpell.SuggestItem> suggestions;
+    List<SymSpell.SuggestItem> suggestions = new List<SymSpell.SuggestItem>();
 
     SymSpell symSpell;
 

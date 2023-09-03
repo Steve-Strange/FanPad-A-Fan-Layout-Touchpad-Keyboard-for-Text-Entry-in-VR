@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/NormalKeyboard.unity
+    path: Assets/Scenes/NormalKeyboardCrossover.unity
     guid: eb5d2ec09b08e9c4fb17c7698aa18674
   - enabled: 0
     path: Assets/Scenes/InclinedKeyboard.unity

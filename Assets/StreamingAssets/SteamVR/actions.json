@@ -105,6 +105,10 @@
     {
       "name": "/actions/Keyboard/in/fitting",
       "type": "boolean"
+    },
+    {
+      "name": "/actions/Keyboard/in/over",
+      "type": "boolean"
     }
   ],
   "action_sets": [

@@ -16,30 +16,34 @@ public class Experiment : MonoBehaviour
     public TMP_InputField inputField;   //用于获取输入的内容.
     public string LogDir = "Assets/ExpLog/";  //存储实验记录的文件夹路径.
     public SteamVR_Action_Boolean PadTouch = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "touch");
+    public SteamVR_Action_Boolean Over = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "over");
     public SteamVR_Action_Vector2 PadSlide = SteamVR_Input.GetAction<SteamVR_Action_Vector2>("keyboard", "slide");
     string phrases;  //所有句子合成一个，以回车为分割.
-    int index = 0;    //当前正要打哪个字母的下标.
+    public int index = 0;    //当前正要打哪个字母的下标.
     List<string> inputSequence = new List<string>();
-    int totalErr = 0;
+    public int totalErr = 0;
     bool[] alphaerr;  //错过的位置只记一次错误
 
     Record record;
 
-    float startTime, endTime;
+    float startTime, endTime, firstTypeTime = 0f, lastTypeTime = 0f;
     bool touched = false, start = false, endexp = false;
+    public AudioSource endaudio;  // 结束音效
 
     // Start is called before the first frame update
     void Start()
     {
+        inputField.ActivateInputField();
+        endaudio = GetComponent<AudioSource>();
         if(onExperiment){
             // 需要进行实验.
-            record = new Record(name, keyboardType);
+            record = new Record(username, keyboardType);
             // 获取用于实验的句子
             List<string> phs = PhraseProvider.GetPhrases(phrasesNumber);
             // 将句子数组存储到record中
             record.phrases = phs;
             // 将所有句子整合到一个字符串里，显示到黑板上 最后一个字母后面填上回车.
-            phrases = string.Join("\n", phs.ToArray()) + "\n";  //最后多加一个回车键，表示结束！注意多加了回车!
+            phrases = string.Join("\n", phs.ToArray());  //最后不需要回车键作为结束符
             transcript.text = phrases;
             // 记录长度
             record.phraseLength = phrases.Length;
@@ -53,15 +57,17 @@ public class Experiment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        inputField.ActivateInputField();
     }
 
-        void OnEnable(){
+    void OnEnable(){
         if(onExperiment){
             SteamVR_Input_Sources[] tmp = new SteamVR_Input_Sources[] { SteamVR_Input_Sources.LeftHand, SteamVR_Input_Sources.RightHand };
             foreach(var hand in tmp){
+                PadTouch[hand].onStateDown += OnTouchDown;
                 PadTouch[hand].onStateUp += OnTouchUp;
                 PadSlide[hand].onChange += OnPadSlide;
+                Over[hand].onStateDown += OnOverDown;
             }
         }
     }
@@ -70,8 +76,10 @@ public class Experiment : MonoBehaviour
         if(onExperiment){
             SteamVR_Input_Sources[] tmp = new SteamVR_Input_Sources[] { SteamVR_Input_Sources.LeftHand, SteamVR_Input_Sources.RightHand };
             foreach(var hand in tmp){
+                PadTouch[hand].onStateDown -= OnTouchDown;
                 PadTouch[hand].onStateUp -= OnTouchUp;
                 PadSlide[hand].onChange -= OnPadSlide;
+                Over[hand].onStateDown -= OnOverDown;
             }
         }
     }
@@ -79,6 +87,10 @@ public class Experiment : MonoBehaviour
     public void Next(int ascii){
         if(endexp)
             return;
+        if(firstTypeTime < 1e-6 && firstTypeTime > -1e-6){
+            firstTypeTime = Time.time;
+        }
+        lastTypeTime = Time.time;
         if(index >= phrases.Length){
             // 可能是不小心输入多了，正在删除.
             if(ascii == (int)VKCode.Back)
@@ -123,16 +135,14 @@ public class Experiment : MonoBehaviour
         else
             seqitem = ((char)ascii).ToString();
         inputSequence.Add(seqitem);
-        // 判断是否结束  
-        if(ascii == (int)VKCode.Enter && index == phrases.Length)
-            EndExp();
     }   
 
     public void Next(string word, string replaced){
         // word: 整个输入的单词，注意这里没有空格，但是实际上会输入这个空格. replaced 为被替换掉的字符串.
         if(endexp)
             return;
-        word += " ";
+        // 一定已经有单个输入，不会在这里更新firstTypeTime
+        lastTypeTime = Time.time;
         inputSequence.Add("-"+replaced+", +"+word);  //"-XXX, +XXX" 表示单词纠正.
         index -= replaced.Length;
         for(int i=0; i<word.Length; ++i){
@@ -146,7 +156,12 @@ public class Experiment : MonoBehaviour
             }
         }
         index += word.Length;
-        // 因为是以回车为结束，所以不可能结束在这里！
+        // 所以不可能结束在这里！
+    }
+
+    public void OnOverDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource){
+        // 结束实验流程.
+        EndExp();
     }
 
     public void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource){
@@ -170,32 +185,43 @@ public class Experiment : MonoBehaviour
         }
     }
 
+    public void setThetaR(float theta, float r){
+        record.theta = theta;
+        record.r = r;
+    }
+
     void FinalCalculate(){
         // 做最后的结算工作, 处理Record中的记录.
-        record.seconds = endTime - startTime;  //Time.time直接是秒.
+        record.seconds = endTime - firstTypeTime;  //Time.time直接是秒.
         record.inputSequence = inputSequence;
         record.result = inputField.text;
+        record.WPM = record.phraseLength / (record.seconds / 60) / 5;
         record.totalErr = totalErr;
         record.TER = (float)totalErr / record.phraseLength;
         // 比较字符串，计算未修正错误率.
         record.ncErr = 0;
-        for(int i=0; i<phrases.Length; ++i){
-            if(phrases[i] != inputField.text[i])
+        for(int i=0; i<phrases.Length && i<record.result.Length; ++i){
+            if(phrases[i] != record.result[i])
                 ++record.ncErr;
+        }
+        if(phrases.Length != record.result.Length){
+            record.ncErr += Mathf.Abs(phrases.Length - record.result.Length);
         }
         record.NCER = (float)record.ncErr / record.phraseLength;
     }
     void SaveRecord(){
         // 保存试验记录
-        string json = JsonConvert.SerializeObject(record);
-        string path = LogDir + username + keyboardType.ToString() + "_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".json";
+        string json = JsonConvert.SerializeObject(record, Formatting.Indented);
+        string path = LogDir + username + "_" + keyboardType.ToString() + "_" + System.DateTime.Now.ToString("yyyyMMddHHmmss") + ".json";
         System.IO.File.WriteAllText(path, json);
     }
 
     void EndExp(){
         endexp = true;
+        endTime = lastTypeTime;
         FinalCalculate();
         SaveRecord();
         // 提示音
+        endaudio.Play();
     }
 }

@@ -130,6 +130,8 @@ public class KeyboardBase : MonoBehaviour
 
     protected void switchCapital()
     {
+        if(!enableOutput)
+            return;
         bool upper;
         if (keyStrings[0, 0].text[0] >= 'a' && keyStrings[0, 0].text[0] <= 'z')  // 原本是小写，变大写.
             upper = false;
@@ -151,6 +153,8 @@ public class KeyboardBase : MonoBehaviour
 
     protected void switchSymbol()
     {
+        if(!enableOutput)
+            return;
         // 符号键盘/普通键盘互换.，把keyStrings的第一二行互换.
         int length = keyStrings.GetLength(1);
         print(length);
@@ -167,13 +171,15 @@ public class KeyboardBase : MonoBehaviour
     // 移动光标和删除逻辑，这些在所有键盘中都是一样的.
     virtual public void OnSelectKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        if(Time.time - select_down_time < selectThreshold)
-        {
-            // 短按扳机，是要选择单词！
-            string word = wordCubes.getSelectedWord();
-            if(word != string.Empty)
+        if(enableOutput){
+            if(Time.time - select_down_time < selectThreshold)
             {
-                OutputWord(word);
+                // 短按扳机，是要选择单词！
+                string word = wordCubes.getSelectedWord();
+                if(word != string.Empty)
+                {
+                    OutputWord(word);
+                }
             }
         }
         selected = false;
@@ -411,12 +417,12 @@ public class KeyboardBase : MonoBehaviour
         inputField.text += word;
         // 将光标移动到最后面.
         inputField.caretPosition += word.Length;
-        // 输出单词后跟着一个空格.
-        OutputLetter(' ');
-        // 刷新统计数据.
+        // 刷新统计数据. 输出空格应当在此之后.
         if(exp.onExperiment){
             exp.Next(word, curword);
         }
+        // 输出单词后跟着一个空格.
+        OutputLetter(' ');
         // 刷新单词预测器.
         predictor.refresh();
     }

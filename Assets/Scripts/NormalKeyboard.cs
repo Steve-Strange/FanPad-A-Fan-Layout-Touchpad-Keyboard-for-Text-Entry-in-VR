@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
-/* ÆÕÍ¨¼üÅÌ£¬¼Ì³Ð×ÔClickKeyboard£¬Ó¦µ±Ö»ÓÃÊµÏÖ×Ô¼ºµÄAxis2Letter·½·¨. */
+/* ï¿½ï¿½Í¨ï¿½ï¿½ï¿½Ì£ï¿½ï¿½Ì³ï¿½ï¿½ï¿½ClickKeyboardï¿½ï¿½Ó¦ï¿½ï¿½Ö»ï¿½ï¿½Êµï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½Axis2Letterï¿½ï¿½ï¿½ï¿½. */
 public class NormalKeyboard : ClickKeyboard
 {
+    public bool Crossover = false;
 
     //private void Update()
     //{
@@ -25,31 +26,44 @@ public class NormalKeyboard : ClickKeyboard
     //    }
     //}
 
-    private int[,,] keys = new int[6, 4, 6] { { { 0x00, ',', ',', 0x20, 0x20, 0x20 }, { 0x10, 'z', 'x', 'c', 'v', 'b' }, { 'a', 's', 'd', 'f', 'g', 'h' } ,{ 'q', 'w', 'e', 'r', 't', 'y'}},
-                                              { { 0x00, ',', ',', 0x20, 0x20, 0x20 }, { 0x10, 'Z', 'X', 'C', 'V', 'B' }, { 'A', 'S', 'D', 'F', 'G', 'H' } ,{ 'Q', 'W', 'E', 'R', 'T', 'Y'}},
-                                              { { 0x00, ',', ',', 0x20, 0x20, 0x20 }, { 0x10, '(', ')', '-', '_', ':' }, { '~', '!', '@', '#', '%', '\''} ,{ '1', '2', '3', '4', '5', '6'}},
-                                              { { 0x20, 0x20, 0x20, '.', '.', 0x0D }, {'c', 'v', 'b', 'n', 'm', 0x08 }, {'f', 'g', 'h', 'j', 'k', 'l' } ,{'t', 'y', 'u', 'i', 'o', 'p'}},
-                                              { { 0x20, 0x20, 0x20, '.', '.', 0x0D }, {'C', 'V', 'B', 'N', 'M', 0x08 }, {'F', 'G', 'H', 'J', 'K', 'L' } ,{'T', 'Y', 'U', 'I', 'O', 'P'}},
-                                              { { 0x20, 0x20, 0x20, '.', '.', 0x0D }, {'-', '_', ':', ';', '/', 0x08 }, {'#', '%', '\'', '&', '*', '?'} ,{'5', '6', '7', '8', '9', '0'}} };
+    private int[,,] keys;
+
+    private int[,,] keys_with_crossover = new int[6, 4, 6] { { { 0x00, ',', ',', 0x20, 0x20, 0x20 }, { 0x10, 'z', 'x', 'c', 'v', 'b' }, { 'a', 's', 'd', 'f', 'g', 'h' } ,{ 'q', 'w', 'e', 'r', 't', 'y'}},
+                                                             { { 0x00, ',', ',', 0x20, 0x20, 0x20 }, { 0x10, 'Z', 'X', 'C', 'V', 'B' }, { 'A', 'S', 'D', 'F', 'G', 'H' } ,{ 'Q', 'W', 'E', 'R', 'T', 'Y'}},
+                                                             { { 0x00, ',', ',', 0x20, 0x20, 0x20 }, { 0x10, '(', ')', '-', '_', ':' }, { '~', '!', '@', '#', '%', '\''} ,{ '1', '2', '3', '4', '5', '6'}},
+                                                             { { 0x20, 0x20, 0x20, '.', '.', 0x0D }, {'c', 'v', 'b', 'n', 'm', 0x08 }, {'f', 'g', 'h', 'j', 'k', 'l' } ,{'t', 'y', 'u', 'i', 'o', 'p'}},
+                                                             { { 0x20, 0x20, 0x20, '.', '.', 0x0D }, {'C', 'V', 'B', 'N', 'M', 0x08 }, {'F', 'G', 'H', 'J', 'K', 'L' } ,{'T', 'Y', 'U', 'I', 'O', 'P'}},
+                                                             { { 0x20, 0x20, 0x20, '.', '.', 0x0D }, {'-', '_', ':', ';', '/', 0x08 }, {'#', '%', '\'', '&', '*', '?'} ,{'5', '6', '7', '8', '9', '0'}} };
+    
+
+    private int[,,] keys_without_crossover = new int[6, 4, 6] { { { 0x00, ',', ',', 0x20, 0x20, 0}, { 0x10, 'z', 'x', 'c', 'v', 0}, { 'a', 's', 'd', 'f', 'g', 0} ,{ 'q', 'w', 'e', 'r', 't', 0}},
+                                                                { { 0x00, ',', ',', 0x20, 0x20, 0}, { 0x10, 'Z', 'X', 'C', 'V', 0}, { 'A', 'S', 'D', 'F', 'G', 0} ,{ 'Q', 'W', 'E', 'R', 'T', 0}},
+                                                                { { 0x00, ',', ',', 0x20, 0x20, 0}, { 0x10, '(', ')', '-', '_', 0}, { '~', '!', '@', '#', '%', 0} ,{ '1', '2', '3', '4', '5', 0}},
+                                                                { { 0x20, 0x20, '.', '.', 0x0D, 0}, {'v', 'b', 'n', 'm', 0x08 , 0}, {'g', 'h', 'j', 'k', 'l' , 0} ,{ 'y', 'u', 'i', 'o', 'p', 0}},
+                                                                { { 0x20, 0x20, '.', '.', 0x0D, 0}, {'V', 'B', 'N', 'M', 0x08 , 0}, {'G', 'H', 'J', 'K', 'L' , 0} ,{ 'Y', 'U', 'I', 'O', 'P', 0}},
+                                                                { { 0x20, 0x20, '.', '.', 0x0D, 0}, {'_', ':', ';', '/', 0x08 , 0}, {'%', '\'', '&', '*','?' , 0} ,{ '6', '7', '8', '9', '0', 0}} }; 
+
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
-        Debug.Log("Source: " + hand);
+        keys = Crossover ? keys_with_crossover : keys_without_crossover;
+        int column_number = Crossover ? 6 : 5;
+        print(keys);
+        print(column_number);
+
         int row, column;
-        // TODO!! ÆÕÍ¨¼üÅÌµÄÓ³Éä.
         if (axis.y <= -0.5) row = 0;
         else if (axis.y < -0.05 && axis.y > -0.5) row = 1;
         else if (axis.y > -0.05 && axis.y < 0.4) row = 2;
         else row = 3;
 
         float width = Mathf.Sqrt(1 - axis.y * axis.y);
-        float columnRatio = (axis.x + width) / (2 * width / 6);
+        float columnRatio = (axis.x + width) / (2 * width / column_number);
         column = Mathf.FloorToInt(columnRatio);
-        if (column > 5) column = 5;
+        if (column > column_number - 1) column = column_number - 1;
         else if (column < 0) column = 0;
 
         int handmode = (hand == SteamVR_Input_Sources.LeftHand) ? mode : mode + 3;
         char output = (char)keys[handmode, row, column];
-        print(handmode);
         print(output);
 
         switch (output)
