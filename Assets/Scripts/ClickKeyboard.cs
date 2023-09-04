@@ -13,6 +13,7 @@ public class ClickKeyboard : KeyboardBase
     public Transform symbolBox;
 
     public Transform keyboardRoot;          // ����1, 2 ClickKeyboard�ĸ���Ϸ����.
+    public float longHoldingTime = 1.5f;
 
     GameObject hoveringKey, checkKey = null;   // hoveringKey�ǵ�ǰ�����ڵİ�����checkKey�������жϳ�����
     Color oldColor, hoveringColor = new Color(255, 255, 0, 30);  //TODO: 调整颜色.
@@ -47,7 +48,7 @@ public class ClickKeyboard : KeyboardBase
                     hold_time_start = Time.time;
                     checkKey = hoveringKey;
                 }
-                else if(Time.time - hold_time_start > 0.65)  // 多久算长按, 调参
+                else if(Time.time - hold_time_start > longHoldingTime)  // 多久算长按, 调参
                 {
                     // ����1s, ��������ſ�.
                     longHolding = true;

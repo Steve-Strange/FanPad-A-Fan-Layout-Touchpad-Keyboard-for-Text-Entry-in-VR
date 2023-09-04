@@ -1,0 +1,87 @@
+{
+  "name": "wzt",
+  "keyboardType": 2,
+  "seconds": 31.8029556,
+  "phraseLength": 161,
+  "phrases": [
+    "I cannot believe I ate the whole thing",
+    "dolphins leap high out of the water",
+    "effort is what it will take",
+    "on the way to the cottage",
+    "put garbage in an abandoned mine"
+  ],
+  "result": "\nv",
+  "totalErr": 4,
+  "ncErr": 161,
+  "WPM": 60.74907,
+  "TER": 0.024844721,
+  "NCER": 1.0,
+  "theta": 0.3,
+  "r": 6.0,
+  "firstTouches": [
+    {
+      "key": "I",
+      "lr": 1,
+      "x": 0.5033113,
+      "y": -0.598651
+    },
+    {
+      "key": " ",
+      "lr": 1,
+      "x": -0.889309347,
+      "y": -0.457350373
+    },
+    {
+      "key": " ",
+      "lr": 1,
+      "x": -0.7744376,
+      "y": -0.632709742
+    },
+    {
+      "key": "c",
+      "lr": 1,
+      "x": 0.7582629,
+      "y": 0.5732597
+    },
+    {
+      "key": "a",
+      "lr": 1,
+      "x": 0.529679239,
+      "y": 0.7292703
+    },
+    {
+      "key": "n",
+      "lr": 1,
+      "x": 0.530472755,
+      "y": 0.8476821
+    },
+    {
+      "key": "a",
+      "lr": 1,
+      "x": 0.5329142,
+      "y": 0.842921257
+    },
+    {
+      "key": "c",
+      "lr": 1,
+      "x": 0.486159861,
+      "y": 0.873867
+    },
+    {
+      "key": " ",
+      "lr": 1,
+      "x": 0.290902436,
+      "y": 0.9568163
+    }
+  ],
+  "inputSequence": [
+    "Enter",
+    "v",
+    "p",
+    "p",
+    "Back",
+    "Back",
+    "Back",
+    "Back"
+  ]
+}

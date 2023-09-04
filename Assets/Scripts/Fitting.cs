@@ -15,6 +15,8 @@ public class Fitting : KeyboardBase
     public float theta;
     public float radius;
 
+    public AudioSource fittingaudio;  // 结束音效
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,8 +42,10 @@ public class Fitting : KeyboardBase
             points.Add(PadSlide[SteamVR_Input_Sources.RightHand].axis);
         }
         if(points.Count == 200) {
+            fittingaudio.Play();
             LeastSquaresFit(points);
             Debug.LogWarning("done fitting!!");
+
             // InclinedKeyboard.GetComponent<InclinedKeyboard>().thumbTheta = theta;
             // InclinedKeyboard.GetComponent<InclinedKeyboard>().thumbLength = radius < 5.5 ? 5.5f : radius;
             InclinedKeyboard.GetComponent<InclinedKeyboard>().setThetaR(theta, radius);

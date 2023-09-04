@@ -114,8 +114,10 @@ public class Experiment : MonoBehaviour
                 alphaerr[index] = true;
             }
         }
-        else if(ascii != (int)VKCode.Shift && ascii != (int)VKCode.Switch){
+        else if((ascii != (int)VKCode.Shift && ascii != (int)VKCode.Switch) && 
+                !(ascii == ' ' && phrases[index] == (int)VKCode.Enter)){
             // 用户输入了有用的占位字符, 字母/数字/符号/回车
+            // 如果用户输入的是空格而这个位置需要回车，就当作空格不存在，忽略，不增加totalErr也不增加index.
             if(ascii != phrases[index] && !alphaerr[index]){
                 alphaerr[index] = true;
                 ++totalErr;
@@ -161,7 +163,8 @@ public class Experiment : MonoBehaviour
 
     public void OnOverDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource){
         // 结束实验流程.
-        EndExp();
+        if(!endexp)
+            EndExp();
     }
 
     public void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource){

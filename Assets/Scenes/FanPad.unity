@@ -281,6 +281,7 @@ MonoBehaviour:
   enableOutput: 1
   symbolBox: {fileID: 1507436430}
   keyboardRoot: {fileID: 6636364}
+  longHoldingTime: 0.8
   Crossover: 0
   fitting: {fileID: 1226545610}
   thumbTheta: 0.3
@@ -3717,7 +3718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onExperiment: 1
-  username: wzt
+  username: lyc
   keyboardType: 2
   phrasesNumber: 5
   transcript: {fileID: 1102444547}
@@ -3748,7 +3749,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &224178742
 AudioSource:
@@ -7268,8 +7269,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 14
+  m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 0
@@ -16906,16 +16907,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "I have a dream that one day this nation will rise up and live out the
-    true meaning of its creed: \"We hold these truths to be self-evident, that all
-    men are created equal.\"\r\nI have a dream that one day on the red hills of Georgia,
-    the sons of former slaves and the sons of former slave owners will be able to
-    sit down together at the table of brotherhood.\r\nI have a dream that one day
-    even the state of Mississippi, a state sweltering with the heat of injustice,
-    sweltering with the heat of oppression, will be transformed into an oasis of
-    freedom and justice.\r\nI have a dream that my four little children will one
-    day live in a nation where they will not be judged by the color of their skin
-    but by the content of their character.\r\nI have a dream today!\r"
+  m_text: 'I have a dream that one day this nation will rise up and live out the
+    true meaning of its creed: "We hold these truths to be self-evident, that all
+    men are created equal."
+
+    I have a dream that one day on the red hills of
+    Georgia, the sons of '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -16942,8 +16939,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 26
+  m_fontSizeBase: 26
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -18116,6 +18113,7 @@ MonoBehaviour:
   onFittingMode: 0
   theta: 0
   radius: 0
+  fittingaudio: {fileID: 224178742}
 --- !u!4 &1226545612
 Transform:
   m_ObjectHideFlags: 0
@@ -18129,7 +18127,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1239890476
 GameObject:
@@ -18543,6 +18541,7 @@ MonoBehaviour:
   enableOutput: 1
   symbolBox: {fileID: 1507436430}
   keyboardRoot: {fileID: 1254501258}
+  longHoldingTime: 0.8
   Crossover: 0
   fitting: {fileID: 0}
   thumbTheta: 0.3
@@ -21149,7 +21148,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.142, y: 104}
+  m_AnchoredPosition: {x: -1.142, y: 80}
   m_SizeDelta: {x: 441.451, y: 65.806}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1435210822
@@ -25762,6 +25761,8 @@ RectTransform:
   - {fileID: 1435210821}
   - {fileID: 1948859173}
   - {fileID: 1102444546}
+  - {fileID: 1943372799}
+  - {fileID: 1885968683}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -28080,11 +28081,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1885968679}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.352, y: 18.5054, z: 75}
-  m_LocalScale: {x: 85.71424, y: 42.10961, z: 0.1}
+  m_LocalPosition: {x: 3.9678094, y: 208.59631, z: 11.272186}
+  m_LocalScale: {x: 966.1869, y: 474.6674, z: 1.1272186}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1709282469}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1885968684
@@ -30008,6 +30009,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2197b124c3d9314d8549d4e7e1c16f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1943372799 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
+  m_PrefabInstance: {fileID: 1821277570754397356}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1948859172
 GameObject:
   m_ObjectHideFlags: 0
@@ -30045,7 +30051,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 384.441, y: 104}
+  m_AnchoredPosition: {x: 384.441, y: 80}
   m_SizeDelta: {x: 91.968, y: 65.806}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1948859174
@@ -34232,7 +34238,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1709282469}
     m_Modifications:
     - target: {fileID: 1419935443437673620, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_IsTrigger
@@ -34256,19 +34262,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 225.44373
+      objectReference: {fileID: 0}
+    - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 225.44373
+      objectReference: {fileID: 0}
+    - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 11.272186
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.573
+      value: -2.3671591
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.19
+      value: 188.1328
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.069
+      value: -26.038723
       objectReference: {fileID: 0}
     - target: {fileID: 8203062596379773556, guid: 1952535f09aabb14ea4149d1cd5ef13f, type: 3}
       propertyPath: m_LocalRotation.w
