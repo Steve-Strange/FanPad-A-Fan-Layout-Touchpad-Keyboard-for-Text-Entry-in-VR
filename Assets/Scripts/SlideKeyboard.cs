@@ -1,379 +1,276 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.ExceptionServices;
 using TMPro;
 using UnityEngine;
 using Valve.VR;
 
-/* µÚÈý¸ö·½°¸»ùÓÚ»¬¶¯µÄ·½°¸ºÍÆäËûÓÐ²»Ì«Ò»ÑùµÄÂß¼­¡£Õâ¸öÀàÔÚKeyboardBaseµÄ»ù´¡ÉÏÊµÏÖµÚÈý¸ö·½°¸. */
-public class SlideKeyboard : KeyboardBase
+/* ??ï¿½???ï¿½??ï¿½?????ï¿½?ï¿½??????ClickKeyboard????????????ï¿½?ï¿½?ï¿½?ï¿½?ï¿½??????ï¿½??Axis2Letter??ï¿½???. */
+public class SlideKeyboard : ClickKeyboard
 {
-    Dictionary<string,char> ALT1 = new Dictionary<string,char>();
-    Dictionary<string,char> ALT2 = new Dictionary<string, char>();
+    private float radius = 1;
+    public float thumbTheta;
+    public float thumbLength;
+    private Vector2[] thumbCenter = new Vector2[12];
+    private float[] d= new float[12];
+    Color hoveringColor = new Color(255, 255, 0, 30);  //TODO: ????.
 
-    bool have_slide = false;
-    Vector3 last_move;    
-    public GameObject controller;
-    private Collider target;
+    private int[,,] keys = new int[6, 5, 6] { { { 0x20, 0, 0, 0, 0, 0 }, { 'v', 'c', 'x', 'z', 0X10, 0 }, {'g', 'f', 'd', 's', 'a' , 0X10}, { 'y', 't', 'r', 'e', 'w', 'q' }, {  '.', '?', '!', 0, 0, 0} },
+                                              { { 0x20, 0, 0, 0, 0, 0 }, { 'V', 'C', 'X', 'Z', 0X10, 0 }, {'G', 'F', 'D', 'S', 'A' , 0X10}, { 'Y', 'T', 'R', 'E', 'W', 'Q' }, {  '.', '?', '!', 0, 0, 0} },
+                                              { { 0x20, 0, 0, 0, 0, 0 }, { '_', '-', ')', '(', 0X10, 0 }, {'%', '#', '@', '!', '~' , 0X10}, { '6', '5', '4', '3', '2', '1' }, {  '.', '?', '!', 0, 0, 0} },
+                                              { { 0x20, 0x0D, 0, 0, 0, 0 }, {'v', 'b', 'n', 'm', 0X08, 0}, {'g', 'h', 'j', 'k', 'l' ,0X08} ,{'t', 'y', 'u', 'i', 'o', 'p'}, { ',', ':', '\"', 0, 0, 0} },
+                                              { { 0x20, 0x0D, 0, 0, 0, 0 }, {'V', 'B', 'N', 'M', 0X08, 0}, {'G', 'H', 'J', 'K', 'L' ,0X08} ,{'T', 'Y', 'U', 'I', 'O', 'P'}, { ',', ':', '\"', 0, 0, 0} },
+                                              { { 0x20, 0x0D, 0, 0, 0, 0 }, {'_', ':', ';', '/', 0X08, 0}, {'%', '\'', '&', '*', '?',0X08} ,{'5', '6', '7', '8', '9', '0'}, { ',', ':', '\"', 0, 0, 0} }};
+
+    private int left_column = 0;
+    private int right_column = 0;
+    int _mode = 0;
+    bool isCapitalDisplay = false;
+    public GameObject keyboard_model;
+    public GameObject keyboard_root;
     
-    private int mode = 0;
 
-    private float deltatime = 1f;
-    private float begintime;
-    private float loose;
+    Vector2 lastSlideAxis, lastSlideDelta;
 
-    private bool press = false;
-    public GameObject Alt;
-    public GameObject l;
-    public GameObject m;
-    public GameObject r;
-    public Material material;
+    // private void Start()        
+    // {
 
-    private Vector3 EndPos;
-    private Vector3 PressPos;
-   
+    // }
 
-    public TextMeshProUGUI[] Up;
-    public TextMeshProUGUI[] Mid;
-    protected TextMeshProUGUI[,] Key = new TextMeshProUGUI[2,36];
-    public TextMeshProUGUI left;
-    public TextMeshProUGUI mid;
-    public TextMeshProUGUI right;
-    private bool first = true;
-    private char choose;
-    // Start is called before the first frame update
-    //void Start()
-    //{
-        
-    //    fetchKeyStrings();
-    //}
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (selected == true && Time.time - begintime > deltatime && target != null && target.name.Length == 3)
+        if (left_touched)
         {
-            Alt.SetActive(true);
-            right.text = target.name[0].ToString();
-            left.text = target.name[1].ToString();
-            mid.text = target.name[2].ToString();
-            longHolding = true;
-
+            left_column = getPosition(PadSlide[SteamVR_Input_Sources.LeftHand].axis, SteamVR_Input_Sources.LeftHand);
         }
-        else longHolding = false;
-        Debug.Log(longHolding);
-    }
-    
-    protected override TextMeshProUGUI[,] fetchKeyStrings()
-    {
-        for (int i = 0; i <= Up.Length-1; i++)
-        {
-            Key[1, i] = Up[i];
-            Key[0, i] = Mid[i];
-         }
-        return Key;
-    }
-    override public void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {
-        touched = true;
-        if(selected == true)
-            PressPos = PadSlide[fromSource].axis;
-    }
-
-    override public void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {
-        touched = false;
-        
-        //Debug.Log("Touch Up");
-        // ×îºóÒ»´ÎËÉ¿ªµÄË²¼äÒòÎª´¥Ãþ¶ÁÈ¡ÓÐÎó£¬Ó¦¸Ã°Ñ×îºóÒ»´ÎÒÆ¶¯ÄæÏò·µ»ØÈ¥.
-        controller.transform.localPosition = controller.transform.localPosition - last_move;
-        first = true;
-
-    }
-
-   /* override public void OnPressDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {
-       
-        press = true;
-        PressPos = PadSlide[fromSource].axis;
-
-        if (target != null)
-           target.GetComponent<MeshRenderer>().material.color = Color.yellow;
-        begintime = Time.time;
-   
-    }*/
-    private void OnTriggerEnter(Collider other)
-    { 
-        
-        if(longHolding == false)
-        { 
-        Debug.LogWarning("enter the"+other.name);
-        target = other;
-        other.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        else {
+            left_column = -1;
         }
-    }
-    private void OnTriggerStay(Collider other)
-    {
-        if (!longHolding)
+        if (right_touched)
         {
-            target = other;
-            other.GetComponent<MeshRenderer>().material.color = Color.yellow;
+            right_column = getPosition(PadSlide[SteamVR_Input_Sources.RightHand].axis, SteamVR_Input_Sources.RightHand);
         }
-    }
-    void OnTriggerExit(Collider other)      //  ´¥·¢½áÊø±»µ÷ÓÃ  
-    {
-       
-        if(!longHolding)
-        {
-        other.GetComponent<MeshRenderer>().material.color = Color.white;
-        target = null;
-        Debug.LogWarning("Exit");//Í¬µÈÓÚprint("")Êä³ö
-
+        else {
+            right_column = -1;
         }
-
+        highlight(left_column, right_column);
         
     }
 
-    override public void OnSelectKeyDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    public int getPosition(Vector2 axis, SteamVR_Input_Sources hand)
     {
-        selected = true;
-        last_caret_time = Time.time;
-
-        
-
-        if (target != null)
-            target.GetComponent<MeshRenderer>().material.color = Color.yellow;
-        begintime = Time.time;
-    }
-
-    override public void OnSelectKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-    {
-        /* ËÉ¿ªÉ¾³ý¼ü */
-        loose = Time.time;
-        selected = false;
-        r.GetComponent<MeshRenderer>().material = material;
-        m.GetComponent<MeshRenderer>().material = material;
-        l.GetComponent<MeshRenderer>().material = material;
-        if (target == null) return;
-        // 
-        if(longHolding && target.name.Length == 3)
-         {
-              Debug.Log(PadSlide[fromSource].axis[0]+" "+ PressPos[0]);
-             if (choose == 'r')
-                 OutputLetter(target.name[0]);
-             else if (choose == 'l')
-                 OutputLetter(target.name[1]);
-             else 
-                 OutputLetter(target.name[2]);
-
-         }
-         else
-         {
-
-             if(target.name == "shift")
-             {
-
-                 switchCapital();
-                 if (mode == 0) mode = 1;
-                 else if(mode == 1) mode = 0;
-
-             }
-             else if(target.name =="Symbol")
-             {
-                 switchSymbol();
-                 if (mode == 0)
-                     mode = 2;
-                 else if (mode == 2)
-                     mode = 0;
-             }
-             else if(target.name == "back")
-             {
-                 OutputLetter((int )VKCode.Back);
-             }
-             else if(target.name =="sp")
-             {
-                 OutputLetter(' ');
-             }
-             else if(target.name == "Enter")
-             {
-                 OutputLetter((int)VKCode.Enter);
-             }
-
-             if(target.name.Length == 3)
-             {
-                 //Debug.Log("Should print "+mode.ToString()+" "+ target.name[0]);
-             if (mode == 0)
-                 OutputLetter(target.name[0]);
-             if (mode == 1)
-                 OutputLetter(target.name[1]);
-             if (mode == 2)
-                 OutputLetter(target.name[2]); 
-             }
-             else if(target.name.Length == 1)
-             {
-                 OutputLetter(target.name[0]);
-             }
-         }
-
-         longHolding = false;
-         if(target!=null)
-         target.GetComponent<MeshRenderer>().material.color = Color.white;
-         Alt.SetActive(false);
-         press = false;
-     }
-
-
-    /*   override public void OnPressUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
-     {
-        ²»¹ÜÊÇÊ²Ã´¼üÅÌ£¬ÕâÀï¶¼ÐèÒªÊä³ö×Ö·ûÁË! 
-        // Debug.LogWarning("PRESS UP ONE");
-        if (target == null) return;
-       // 
-       /* if(longHolding && target.name.Length == 3)
+        if(hand == SteamVR_Input_Sources.LeftHand)
         {
-             Debug.Log(PadSlide[fromSource].axis[0]+" "+ PressPos[0]);
-            if (PadSlide[fromSource].axis[0]-PressPos[0]>0.05)
-                OutputLetter(target.name[0]);
-            else if (PadSlide[fromSource].axis[0] - PressPos[0] < - 0.05)
-                OutputLetter(target.name[1]);
-            else 
-                OutputLetter(target.name[2]);
-            
+            for (int i = 0; i < 11; i++)
+            {
+                d[i] = thumbLength + (float)(i - 5) * 1 / 5f;
+                thumbCenter[i] = new Vector2((d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
+            }
         }
         else
         {
-
-            if(target.name == "shift")
+            for (int i = 0; i < 11; i++)
             {
-
-                switchCapital();
-                if (mode == 0) mode = 1;
-                else if(mode == 1) mode = 0;
-
-            }
-            else if(target.name =="Symbol")
-            {
-                switchSymbol();
-                if (mode == 0)
-                    mode = 2;
-                else if (mode == 2)
-                    mode = 0;
-            }
-            else if(target.name == "back")
-            {
-                OutputLetter((int )VKCode.Back);
-            }
-            else if(target.name =="sp")
-            {
-                OutputLetter(' ');
-            }
-            else if(target.name == "Enter")
-            {
-                OutputLetter((int)VKCode.Enter);
-            }
-
-            if(target.name.Length == 3)
-            {
-                //Debug.Log("Should print "+mode.ToString()+" "+ target.name[0]);
-            if (mode == 0)
-                OutputLetter(target.name[0]);
-            if (mode == 1)
-                OutputLetter(target.name[1]);
-            if (mode == 2)
-                OutputLetter(target.name[2]); 
-            }
-            else if(target.name.Length == 1)
-            {
-                OutputLetter(target.name[0]);
+                d[i] = thumbLength + (float)(i - 5) * 1 / 5f;
+                thumbCenter[i] = new Vector2(-(d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
             }
         }
-        
-        longHolding = false;
-        if(target!=null)
-        target.GetComponent<MeshRenderer>().material.color = Color.white;
-        Alt.SetActive(false);
-        press = false;
-    }*/
-        
 
-    override public void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
-    {
-        /* 
-         ÊÖÖ¸ÔÚ´¥Ãþ°åÉÏ»¬¶¯¡£Ò»¸öÊÇÒÔÒ»¶¨µÄ¹æÔòÒÆ¶¯¸Ä±ä¸ßÁÁ£¬Ò»¸öÔÚ°´ÏÂ°â»úµÄÊ±ºòÒÆ¶¯¹â±ê.
-         */
-        
-        
-        if (controller == null) return;
-
-        if(first == true)
+        int column;
+        int row = 0;
+        for (int i = 0; i < 11; i++)
         {
-            first = false;
-            return;
+            float distanceA = Mathf.Sqrt(Mathf.Pow((axis.x - thumbCenter[i].x), 2) + Mathf.Pow((axis.y - thumbCenter[i].y), 2));
+            float distanceB = Mathf.Sqrt(Mathf.Pow((axis.x - thumbCenter[i+1].x), 2) + Mathf.Pow((axis.y - thumbCenter[i+1].y), 2));
+
+            if (distanceA < thumbLength && distanceB > thumbLength)
+            {
+                row = i;
+                break;
+            }
+        }
+
+        //print("d: " + axis.y);
+        //print("d[row] " + d[row]);
+        //print("thetaMax cos num " + Mathf.Min((Mathf.Pow(d[row], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row] * thumbLength),
+        //                                      (Mathf.Pow(d[row + 1], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row + 1] * thumbLength)));
+
+        int maxThetaRow = (Mathf.Pow(d[row], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row] * thumbLength)
+                            < (Mathf.Pow(d[row + 1], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row + 1] * thumbLength) ? row : row + 1;
+
+        float thetaMax = Mathf.Acos((Mathf.Pow(d[maxThetaRow], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[maxThetaRow] * thumbLength));
+
+        float currentTheta = (thumbTheta == 0) ? Mathf.Atan((axis.x - thumbCenter[maxThetaRow].x) / (axis.y - thumbCenter[maxThetaRow].y)) : 
+                                                 Mathf.Abs(Mathf.Atan((axis.x - thumbCenter[maxThetaRow].x) / (axis.y - thumbCenter[maxThetaRow].y))) - thumbTheta;
+
+        float fcolumn = (currentTheta + thetaMax) / (2 * thetaMax / 6);
+
+        //print("thetaMax" + thetaMax);
+        //print("currentTheta" + currentTheta);
+        //print("fcolumn" + fcolumn);
+
+        column = (int)fcolumn;
+        if (column < 0) column = 0;
+        if (column > 5) column = 5;
+        
+        return column;
+    }
+
+    public void highlight(int left_column, int right_column){
+        for(int i = 1; i <= 36; i++){
+            string str = i.ToString();
+            GameObject highlight_key = GameObject.Find("Player/SteamVRObjects/VRCamera/SlideKeyboard_orimodel/Line0" + str);
+            highlight_key.GetComponent<MeshRenderer>().material.color = Color.white;
+                
         }
         
-        else if(selected == false || Time.time-loose<0.01)
-        {
-            if(target == false) { 
-            Vector3  move = new Vector3(-delta.x*2.8f, 0,-delta.y*2.8f);
-            //Ó³ÉäÂß¼­
-            Debug.Log(move.magnitude);
-            if (move.magnitude < 1)
-            {
-                controller.transform.localPosition = controller.transform.localPosition + move;
-                last_move = move;
-            }}
-            else
-            {
-                Vector3 move = new Vector3(-delta.x * 2.5f, 0, -delta.y * 2.5f);
-                //Ó³ÉäÂß¼­
-                Debug.Log(move.magnitude);
-                if (move.magnitude < 1)
-                {
-                    controller.transform.localPosition = controller.transform.localPosition + move;
-                    last_move = move;
-                }
+        if(left_column != -1){
+            for(int i = 0; i < 6; i++){
+                int num = left_column + 1 + i * 6;
+                string str = num.ToString();
+                GameObject highlight_key = GameObject.Find("Player/SteamVRObjects/VRCamera/SlideKeyboard_orimodel/Line0" + str);
+                Material mat = highlight_key.GetComponent<MeshRenderer>().material;
+                mat.color = hoveringColor;
             }
-          // EndPos
+        }
+        if(right_column != -1){
+            for(int i = 0; i < 6; i++){
+                int num = (5-right_column) * 6 + i + 1;
+                string str = num.ToString();
+                GameObject highlight_key = GameObject.Find("Player/SteamVRObjects/VRCamera/SlideKeyboard_orimodel/Line0" + str);
+                Material mat = highlight_key.GetComponent<MeshRenderer>().material;
+                mat.color = hoveringColor;
+            }
+        }
+        if(left_column != -1 && right_column != -1){
+            int num = (5-right_column) * 6 + left_column + 1;
+            string str = num.ToString();
+            GameObject highlight_key = GameObject.Find("Player/SteamVRObjects/VRCamera/SlideKeyboard_orimodel/Line0" + str);
+            Material mat = highlight_key.GetComponent<MeshRenderer>().material;
+            mat.color = Color.red;
+        }
+    }
     
-        }
-        else if(selected == true)
-        {   
-            
-            if(axis[0]< PressPos[0]-0.05)
-            {   choose = 'l';
-                l.GetComponent<MeshRenderer>().material.color = Color.yellow;
-                r.GetComponent<MeshRenderer>().material = material;
-                m.GetComponent<MeshRenderer>().material = material;
-                
-            }
-            else if(axis[0]>PressPos[0]+0.05)
-            {    choose = 'r';
-                r.GetComponent<MeshRenderer>().material.color = Color.yellow;
-                l.GetComponent<MeshRenderer>().material = material;
-                m.GetComponent<MeshRenderer>().material = material;
-                
-            }
-            else
-            {   choose = 'm';
-                m.GetComponent<MeshRenderer>().material.color = Color.yellow;
-                r.GetComponent<MeshRenderer>().material = material;
-                l.GetComponent<MeshRenderer>().material = material;
-               
-            }
-            //int move = 0;
-            //if (delta[0] > 0)
-            //{
-            //    move =(int) (delta[0] / 2 * 5);
-            //    inputField.caretPosition = inputField.caretPosition + move;
-            //}
-            //else if (delta[0] < 0)
-            //{
-            //    move = (int)((-delta[0]) / 2 * 5);
-            //    inputField.caretPosition = inputField.caretPosition - move;
-            //}
-            //do_caret_move(axis);
+    public override void OnPressDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
+        if(right_touched && left_touched){
+            hold_time_start = Time.time;
         }
 
     }
-}
 
+    public override void OnPressUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
+        if(right_touched && left_touched){
+            GameObject tmp;
+            int ascii = Axis2Letter(new Vector2(left_column, right_column), fromSource, _mode, out tmp);
+
+            if(ascii == (int)VKCode.Shift)  
+            {
+                if(_mode != 2)
+                {
+                    _mode = _mode == 1 ? 0 : 1;
+                    isCapitalDisplay = !isCapitalDisplay;
+                    switchCapital();
+                }
+
+            }
+            else if(ascii == (int)VKCode.Switch)   //ï¿½?ï¿½?ï¿½ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½??ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½.
+            {
+                _mode = _mode == 2 ? (isCapitalDisplay ? 1 : 0) : 2;
+                switchSymbol();
+            }
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?ï¿½ï¿½ï¿½???ï¿½ï¿½ï¿½ï¿½?ï¿½.
+            else
+            {
+                OutputLetter(ascii);
+                if(longHolding)
+                {
+                    symbolBox.gameObject.SetActive(false); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?ï¿½
+                    longHolding = false;
+                }
+            }
+        }
+
+    }
+    
+
+    public override void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
+        if(fromSource == SteamVR_Input_Sources.RightHand)
+            right_touched = true;
+        if(fromSource == SteamVR_Input_Sources.LeftHand)
+            left_touched = true;
+    }
+
+    public override void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
+        if(fromSource == SteamVR_Input_Sources.RightHand)
+            right_touched = false;
+        if(fromSource == SteamVR_Input_Sources.LeftHand)
+            left_touched = false;
+    }
+    // public override void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
+    // {
+    //     if(fromSource == SteamVR_Input_Sources.LeftHand)
+    //         LeftHand_axis = PadSlide[SteamVR_Input_Sources.LeftHand].axis;
+    //     if(fromSource == SteamVR_Input_Sources.RightHand)
+    //         RightHand_axis = PadSlide[SteamVR_Input_Sources.RightHand].axis;    
+    // }
+
+    public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject useless){
+        int ascii;
+        int cnt = (int)((5-axis.x)*6 + axis.y);
+        useless = null;
+        Transform key = transform.GetChild(cnt);
+
+        switch (key.name)
+        {
+            case "Sym":
+                ascii = 0x00;
+                break;
+            case "Space":
+                ascii = 0x20;
+                break;
+            case "Enter":
+                ascii = 0x0D;
+                break;
+            case "Shift":
+                ascii = 0x10;
+                break;
+            case "Back":
+                ascii = 0x08;
+                break;            
+            default:
+                ascii = key.name[mode];
+                break;
+        }
+
+        return ascii;
+    }
+
+    protected override TextMeshProUGUI[,] fetchKeyStrings()
+    {
+        TextMeshProUGUI[,] keychar = new TextMeshProUGUI[2, 26];
+        int i = 0;
+        foreach (var key in keyboardRoot.GetComponentsInChildren<MeshRenderer>())
+        {
+            Transform canvas = key.transform.GetChild(0);    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ò»ï¿½ï¿½Ö±ï¿½Ó¶ï¿½ï¿½ï¿½ï¿½ï¿½Canvas.
+            if(canvas.childCount == 2)
+            {
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó£ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½.
+                foreach (var text in canvas.GetComponentsInChildren<TextMeshProUGUI>())
+                {
+                    // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ä¸Ò»ï¿½ï¿½ï¿½ï¿½Ð¡Ð´ï¿½ï¿½.
+                    if (text.text[0] >= 'a' && text.text[0] <= 'z')
+                    {
+                        keychar[0, i] = text;   //ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½Ç¸ï¿½text.
+                    }
+                    else
+                        keychar[1, i] = text;
+                }
+                ++i;
+            }
+        }
+        return keychar;
+    }
+}

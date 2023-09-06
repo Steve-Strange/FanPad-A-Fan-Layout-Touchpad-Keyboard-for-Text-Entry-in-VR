@@ -13,6 +13,7 @@ public class ClickKeyboard : KeyboardBase
     public Transform symbolBox;
 
     public Transform keyboardRoot;          // ����1, 2 ClickKeyboard�ĸ���Ϸ����.
+    public float longHoldingTime = 1.5f;
 
     GameObject hoveringKey, checkKey = null;   // hoveringKey�ǵ�ǰ�����ڵİ�����checkKey�������жϳ�����
     Color oldColor, hoveringColor = new Color(255, 255, 0, 30);  //TODO: 调整颜色.
@@ -47,7 +48,7 @@ public class ClickKeyboard : KeyboardBase
                     hold_time_start = Time.time;
                     checkKey = hoveringKey;
                 }
-                else if(Time.time - hold_time_start > 1)  // 多久算长按, 调参
+                else if(Time.time - hold_time_start > longHoldingTime)  // 多久算长按, 调参
                 {
                     // ����1s, ��������ſ�.
                     longHolding = true;
@@ -105,11 +106,13 @@ public class ClickKeyboard : KeyboardBase
     public override void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         Debug.Log("Touch down!");
+        print(fromSource);
         if (mutex != SteamVR_Input_Sources.Any)
             return;    // conduct TouchDown only when mutex is free.
         if (selected)
         {
-            last_caret_time = Time.time;
+            if(Time.time - select_down_time > selectThreshold)  //只有在按下扳机事件超过阈值，在移动光标状态中才需要更新last_caret_time.
+                last_caret_time = Time.time;
             return;
         }
         if (deleted)
@@ -129,8 +132,9 @@ public class ClickKeyboard : KeyboardBase
     // OnTouchUp, �ɿ������壬����Ҫ�����!
     public override void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        if (selected)
+        if (selected && Time.time - select_down_time > selectThreshold)
         {
+            // 超过阈值了，在移动光标状态！
             do_caret_move(lastSlideAxis - lastSlideDelta);
             return;
         }
@@ -143,13 +147,17 @@ public class ClickKeyboard : KeyboardBase
         int ascii = longHolding ? longHoldingLogic(new Vector2(1,1), ref tmp) : Axis2Letter(lastSlideAxis - lastSlideDelta, fromSource, _mode, out tmp);
         hoveringKey.GetComponent<MeshRenderer>().material.color = oldColor;
         // ������Ƽ���Ŀǰֻ��VKCode.Shift.
-        if(ascii == (int)VKCode.Shift)  //Shift, mode��0��1����1��0. �������Ƽ���ʱ��_mode��Ӧ���ܱ�Ϊ2.
+        if(ascii == (int)VKCode.Shift && enableOutput)  //Shift, mode��0��1����1��0. �������Ƽ���ʱ��_mode��Ӧ���ܱ�Ϊ2.
         {
-            _mode = _mode == 1 ? 0 : 1;
-            isCapitalDisplay = !isCapitalDisplay;
-            switchCapital();
+            if(_mode != 2)
+            {
+                _mode = _mode == 1 ? 0 : 1;
+                isCapitalDisplay = !isCapitalDisplay;
+                switchCapital();
+            }
+
         }
-        else if(ascii == (int)VKCode.Switch)   //�л�Ϊ���ż��̣����ߴӷ��ż����л�����ͨ����.
+        else if(ascii == (int)VKCode.Switch && enableOutput)   //�л�Ϊ���ż��̣����ߴӷ��ż����л�����ͨ����.
         {
             _mode = _mode == 2 ? (isCapitalDisplay ? 1 : 0) : 2;
             switchSymbol();
@@ -211,13 +219,13 @@ public class ClickKeyboard : KeyboardBase
         }
     }
 
-    bool canBeLongHeld(GameObject key)
+    public bool canBeLongHeld(GameObject key)
     {
         // �����ж�key�Ƿ���������ţ����Գ���.
         return key.transform.GetChild(0).transform.childCount == 2;
     }
 
-    int longHoldingLogic(Vector2 delta, ref GameObject key)
+    public int longHoldingLogic(Vector2 delta, ref GameObject key)
     {
         //(0,0), ��ʼ���� ��1��1��������.
         if (delta.x == 0 && delta.y == 0)
@@ -229,7 +237,7 @@ public class ClickKeyboard : KeyboardBase
             longHoldingAxis += delta;
         PrepareLongholding plh = symbolBox.GetComponent<PrepareLongholding>();
         if (longHoldingAxis.x >= 0.15)
-        {   //0.03 magic number ����.
+        {
             key = plh.rects[2];
             return plh.texts[2].text[0];
         }

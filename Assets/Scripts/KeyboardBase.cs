@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 using TMPro;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
 public enum Keybd_Flags
 {
@@ -28,7 +30,9 @@ public class KeyboardBase : MonoBehaviour
     [DllImport("User32.dll", EntryPoint = "keybd_event")]
     static extern void keybd_event(byte bVK, byte bScan, int dwFlags, int dwExtraInfo);
 
-    public Statistics statistics;
+    public float selectThreshold = 0.5f;  //区分按下扳机是选择单词（短按）还是移动光标（长按）的阈值.
+
+    public Experiment exp;
 
     //Keyboard action set
     public SteamVR_ActionSet keyboardActionSet;
@@ -40,19 +44,31 @@ public class KeyboardBase : MonoBehaviour
     public SteamVR_Action_Boolean PadPress = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "press");  //touchpad按下
     public SteamVR_Action_Vector2 PadSlide = SteamVR_Input.GetAction<SteamVR_Action_Vector2>("keyboard", "slide");  //在touchpad上滑动
 
+    public SteamVR_Action_Boolean Fitting = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "fitting");  //
+
     // text input field. 
     public TextMeshProUGUI inputText;
     public TMP_InputField inputField;
+    public WordCubes wordCubes;
 
     // 键盘上的文字.
     protected TextMeshProUGUI[,] keyStrings;
     protected bool selected = false, deleted = false, touched = false, longHolding = false;
-    protected float last_delete_time, hold_time_start, last_caret_time;
+    protected bool left_touched = false, right_touched = false;
+    protected float last_delete_time, hold_time_start, last_caret_time, select_down_time;
+
+    // 允许/禁止输出.
+    public bool enableOutput = true;
+
+    WordPrediction predictor = new WordPrediction();
 
     void Start()
     {
         inputField.ActivateInputField();
-        keyStrings = fetchKeyStrings();
+        keyStrings = fetchKeyStrings(); 
+        WordCubes tmp = GameObject.Find("wordcubes").GetComponent<WordCubes>();
+        if(tmp != null)
+            wordCubes = tmp;
     }
 
     // Update is called once per frame
@@ -78,6 +94,8 @@ public class KeyboardBase : MonoBehaviour
             PadPress[hand].onStateUp += OnPressUp;
             PadPress[hand].onStateDown += OnPressDown;
             PadSlide[hand].onChange += OnPadSlide;
+            Fitting[hand].onStateUp += OnFitting;
+            
         }
     }
 
@@ -99,6 +117,7 @@ public class KeyboardBase : MonoBehaviour
             PadPress[hand].onStateUp -= OnPressUp;
             PadPress[hand].onStateDown -= OnPressDown;
             PadSlide[hand].onChange -= OnPadSlide;
+            Fitting[hand].onStateUp -= OnFitting;
         }
     }
 
@@ -111,8 +130,10 @@ public class KeyboardBase : MonoBehaviour
 
     protected void switchCapital()
     {
+        if(!enableOutput)
+            return;
         bool upper;
-        if ((keyStrings[0, 0].text[0] >= 'a' && keyStrings[0, 0].text[0] <= 'z'))  // 原本是小写，变大写.
+        if (keyStrings[0, 0].text[0] >= 'a' && keyStrings[0, 0].text[0] <= 'z')  // 原本是小写，变大写.
             upper = false;
         else if (keyStrings[0, 0].text[0] >= 'A' && keyStrings[0, 0].text[0] <= 'Z')  //原本是大写，变小写.
             upper = true;
@@ -122,6 +143,7 @@ public class KeyboardBase : MonoBehaviour
         int length = keyStrings.GetLength(1);
         for(int i=0; i<length; ++i)
         {
+            print(keyStrings[0, i].text);
             if (upper)
                 keyStrings[0, i].text = keyStrings[0, i].text.ToLower();
             else
@@ -131,10 +153,15 @@ public class KeyboardBase : MonoBehaviour
 
     protected void switchSymbol()
     {
+        if(!enableOutput)
+            return;
         // 符号键盘/普通键盘互换.，把keyStrings的第一二行互换.
         int length = keyStrings.GetLength(1);
+        print(length);
         for(int i=0; i<length; ++i)
         {
+            print(keyStrings[0, i]);
+            print(keyStrings[1, i]);
             string tmp = keyStrings[0, i].text;
             keyStrings[0, i].text = keyStrings[1, i].text;
             keyStrings[1, i].text = tmp;
@@ -144,6 +171,17 @@ public class KeyboardBase : MonoBehaviour
     // 移动光标和删除逻辑，这些在所有键盘中都是一样的.
     virtual public void OnSelectKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
+        if(enableOutput){
+            if(Time.time - select_down_time < selectThreshold)
+            {
+                // 短按扳机，是要选择单词！
+                string word = wordCubes.getSelectedWord();
+                if(word != string.Empty)
+                {
+                    OutputWord(word);
+                }
+            }
+        }
         selected = false;
     }
 
@@ -151,6 +189,7 @@ public class KeyboardBase : MonoBehaviour
     {
         selected = true;
         last_caret_time = Time.time;
+        select_down_time = last_caret_time;
     }
 
     virtual public void OnDeleteKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
@@ -181,16 +220,25 @@ public class KeyboardBase : MonoBehaviour
     // 下面是触摸板相关的，每个键盘不太一样.必须在外面重载!
     virtual public void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
+        if(fromSource == SteamVR_Input_Sources.RightHand)
+            right_touched = true;
+        if(fromSource == SteamVR_Input_Sources.LeftHand)
+            left_touched = true;
         touched = true;
     }
 
     virtual public void OnTouchUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
+        if(fromSource == SteamVR_Input_Sources.RightHand)
+            right_touched = false;
+        if(fromSource == SteamVR_Input_Sources.LeftHand)
+            left_touched = false;
         touched = false;
     }
 
     virtual public void OnPressDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
+        
         /* 在SlideKeyboard中，要用这个开始判断长按. */
     }
 
@@ -207,6 +255,12 @@ public class KeyboardBase : MonoBehaviour
 
     }
 
+    virtual public void OnFitting(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
+    {
+        // 关于自定义的一些操作，因为普通键盘和倾斜键盘不同，所以应该不同.
+        return;
+    }
+
     // Core
     virtual public int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
@@ -221,7 +275,8 @@ public class KeyboardBase : MonoBehaviour
 
     public void OutputLetter(int ascii)
     {
-        int addChars = 1;   // 是否统计算入一个字符.
+        if(!enableOutput)
+            return;
         // 把Ascii符号翻译为键盘.
         // 更聪明的办法，应该是用一个ascii->VKcode的数组!
         // 注意，Shift, Enter等控制键不使用ascii，传入就直接用VKCode
@@ -324,25 +379,62 @@ public class KeyboardBase : MonoBehaviour
                     break;
                 default:
                     PutChar((byte)ascii);   //shift, enter等控制键，直接按照VKCode输出.
-                    if (ascii == (int)VKCode.Back)
-                        statistics.deleteTtimes++;
-                    if(ascii != (int)VKCode.Enter)
-                        addChars = 0;
                     break;
             }
             if (needShift)
                 ReleaseKey((byte)VKCode.Shift);
         }
-        statistics.outputCchars += addChars;
+        // 统计.
+        if(exp.onExperiment){
+            exp.Next(ascii);
+        }
+        // 单词纠错
+        predictor.next(ascii);        
+        string[] strarr = predictor.getSuggestions();
+        // 将单词提示显示到单词板上.
+        wordCubes.setWords(strarr);
+        // 将预测的单词输出到控制台.
+        string tmp = string.Empty;
+        foreach (string str in predictor.getSuggestions())
+            tmp = tmp + str + ", ";
+        Debug.Log(tmp);
+    }
+
+    public void OutputWord(string word)
+    {
+        if(!enableOutput)
+            return;
+        // 选中了预测出来的某个单词，输出单词.
+        int length = predictor.getCurLength();
+        // 处理首字母大写问题，从wordPrediction中取出 curWord判断首字母是否大写.
+        string curword = predictor.getCurWord();
+        if('A' <= curword[0] && curword[0] <= 'Z'){
+            word = word.Substring(0,1).ToUpper() + word.Remove(0, 1);
+        }  // 首字母大写.
+        // 删除末尾的length个字符.
+        inputField.text = inputField.text.Substring(0, inputField.text.Length - length);
+        // 加上预测出来的单词.
+        inputField.text += word;
+        // 将光标移动到最后面.
+        inputField.caretPosition += word.Length;
+        // 刷新统计数据. 输出空格应当在此之后.
+        if(exp.onExperiment){
+            exp.Next(word, curword);
+        }
+        // 输出单词后跟着一个空格.
+        OutputLetter(' ');
+        // 刷新单词预测器.
+        predictor.refresh();
     }
     
     protected void do_delete_char()
     {
         // 在inputField的当前位置删除一个字符.
-        // 直接用输入一个backspace实现删除.
-        statistics.deleteTtimes++;
-        PushKey((byte)VKCode.Back);
-        ReleaseKey((byte)VKCode.Back);
+        // 直接用输入一个backspace实现删除. 统一使用OutputLetter
+        //statistics.deleteTtimes++;
+        //PushKey((byte)VKCode.Back);
+        //ReleaseKey((byte)VKCode.Back);
+        OutputLetter((int)VKCode.Back);
     }
 
     protected void Seek(SEEK_MOD mode, int offset)

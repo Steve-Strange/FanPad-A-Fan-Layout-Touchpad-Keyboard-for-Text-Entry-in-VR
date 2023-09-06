@@ -25,6 +25,7 @@
 
 # Visual Studio cache directory
 .vs/
+.vscode/
 
 # Gradle cache directory
 .gradle/
@@ -74,4 +75,9 @@ crashlytics-build.properties
 .vsconfig
 Packages/
 *.max
-~$Test.xlsx
+.dll
+.exe
+.asset
+Build-Inclined/
+Build-Normal/
+Build-Slide/

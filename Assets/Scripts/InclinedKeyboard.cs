@@ -3,32 +3,43 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Valve.VR;
+using UnityEditor.SceneManagement;
+using UnityEngine.SceneManagement;
 
-/* «„–±º¸≈Ã£¨ºÃ≥–◊‘ClickKeyboard£¨”¶µ±÷ª”√ µœ÷◊‘º∫µƒAxis2Letter∑Ω∑®. */
+/* ÂÄæÊñúÔøΩ?ÁõòÔºåÁªßÊâøËá™ClickKeyboardÔºåÂ∫îÂΩìÂè™Áî®ÂÆûÁé∞Ëá™Â∑±ÁöÑAxis2LetterÊñπÊ≥ï. */
 public class InclinedKeyboard : ClickKeyboard
 {
+    public bool Crossover = false;
+    public GameObject fitting;
     private float radius = 1;
-    public float thumbTheta;
-    public float thumbLength;
+    public float thumbTheta = 0.3f;
+    public float thumbLength = 6;
     private Vector2[] thumbCenter = new Vector2[7];
     private float[] d = new float[7];
 
-    private int[] keyColumn = new int[6] { 1, 2, 3, 5, 4, 3};
+    private int[] keyColumn_without_crossover = new int[5] {3, 4, 5, 5, 3};
+    private int[] keyColumn_with_crossover = new int[5] {3, 5, 6, 6, 3};
 
-    private int[,,] keys = new int[6, 6, 5]     { { { 0x20, 0, 0, 0, 0 }, {0, 'q', 0, 0, 0 }, {'a', 's','w' , 0, 0, }, {'.' ,'z' , 'x', 'd' , 'e'}, {',', 'c' ,'f' ,'r' , 0, }, { 'v' , 'g', 't' , 0, 0 } },
-                                                  { { 0x20, 0, 0, 0, 0 }, {0, 'Q', 0, 0, 0 }, {'A', 'S','W' , 0, 0, }, {'.' ,'Z' , 'X', 'D' , 'E'}, {',', 'C' ,'F' ,'R' , 0, }, { 'V' , 'G', 'T' , 0, 0 } },
-                                                  { { 0x20, 0, 0, 0, 0 }, {0, '1', 0, 0, 0 }, {'~', '!','2' , 0, 0, }, {'.' ,'(' , ')', '@' , '3'}, {',', '-' ,'#' ,'4' , 0, }, { '_' , '%', '5' , 0, 0 } },
-                                                  { { 0x10, 0, 0, 0, 0 }, {0x0D, 'p', 0, 0, 0 }, {'l' , 'k','o',  0, 0, }, { '?', 'm', 'n', 'j', 'i'}, {'!', 'b', 'h', 'u', 0, }, { 'v', 'g', 'y' , 0, 0 } },
-                                                  { { 0x10, 0, 0, 0, 0 }, {0x0D, 'P', 0, 0, 0 }, {'L' , 'K','O',  0, 0, }, { '?', 'M', 'N', 'J', 'I'}, {'!', 'B', 'H', 'U', 0, }, { 'V', 'G', 'Y' , 0, 0 } },
-                                                  { { 0x10, 0, 0, 0, 0 }, {0x0D, '0', 0, 0, 0 }, {'?' , '*','9',  0, 0, }, { '?', '/', ';', '&', '8'}, {'!', ':', '\'', '7', 0, }, { '_', '%', '6' , 0, 0 } }};
+    private int[] keyColumn;
 
-    //private void Start()
-    //{
-    //}
+    private int[,,] keys_without_crossover = new int[6, 5, 6] { { { 0x20, 0x20, 0, 0, 0, 0 }, { 'v', 'c', 'x', 'z', 0, 0 }, {'g', 'f', 'd', 's', 'a' , 0 }, {'t', 'r', 'e', 'w', 'q', 0}, {  '.', '?', 0X10, 0, 0, 0} },
+                                                                { { 0x20, 0x20, 0, 0, 0, 0 }, { 'V', 'C', 'X', 'Z', 0, 0 }, {'G', 'F', 'D', 'S', 'A' , 0 }, {'T', 'R', 'E', 'W', 'Q', 0}, {  '.', '?', 0X10, 0, 0, 0} },
+                                                                { { 0x20, 0x20, 0, 0, 0, 0 }, { '_', '-', ')', '(', 0, 0 }, {'%', '#', '@', '!', '~' , 0 }, {'5', '4', '3', '2', '1', 0}, {  '.', '?', 0X10, 0, 0, 0} },
+                                                                { { 0x20, 0x20, 0x0D, 0, 0, 0 }, {'v', 'b', 'n', 'm', 0, 0}, {'g', 'h', 'j', 'k', 'l' ,0 } ,{'y', 'u', 'i', 'o', 'p', 0}, { ',', '!', 0X08, 0, 0, 0} },
+                                                                { { 0x20, 0x20, 0x0D, 0, 0, 0 }, {'V', 'B', 'N', 'M', 0, 0}, {'G', 'H', 'J', 'K', 'L' ,0 } ,{'Y', 'U', 'I', 'O', 'P', 0}, { ',', '!', 0X08, 0, 0, 0} },
+                                                                { { 0x20, 0x20, 0x0D, 0, 0, 0 }, {'_', ':', ';', '/', 0, 0}, {'%', '\'', '&', '*', '?',0 } ,{'6', '7', '8', '9', '0', 0}, { ',', '!', 0X08, 0, 0, 0} }};
 
-    //◊˜Œ™≤‚ ‘£¨‘⁄Update¿Ô√Ê¬÷—Ø.
-    //private void Update()
-    //{
+    private int[,,] keys_with_crossover = new int[6, 5, 6] { { { 0x20, 0x20, 0, 0, 0, 0 }, {'b', 'v', 'c', 'x', 'z', 0 }, {'h', 'g', 'f', 'd', 's', 'a'  }, {'y', 't', 'r', 'e', 'w', 'q'}, { '.', '?', 0X10, 0, 0, 0} },
+                                                             { { 0x20, 0x20, 0, 0, 0, 0 }, {'B', 'V', 'C', 'X', 'Z', 0 }, {'H', 'G', 'F', 'D', 'S', 'A'  }, {'Y', 'T', 'R', 'E', 'W', 'Q'}, { '.', '?', 0X10, 0, 0, 0} },
+                                                             { { 0x20, 0x20, 0, 0, 0, 0 }, {':', '_', '-', ')', '(', 0 }, {'\'', '%', '#', '@', '!', '~' }, {'6', '5', '4', '3', '2', '1'}, { '.', '?', 0X10, 0, 0, 0} },
+                                                             { { 0x20, 0x20, 0x0D, 0, 0, 0 }, {'c', 'v', 'b', 'n', 'm', 0}, {'f', 'g', 'h', 'j', 'k', 'l' } ,{'t', 'y', 'u', 'i', 'o', 'p'}, { ',', '!', 0X08, 0, 0, 0} },
+                                                             { { 0x20, 0x20, 0x0D, 0, 0, 0 }, {'C', 'V', 'B', 'N', 'M', 0}, {'F', 'G', 'H', 'J', 'K', 'L' } ,{'T', 'Y', 'U', 'I', 'O', 'P'}, { ',', '!', 0X08, 0, 0, 0} },
+                                                             { { 0x20, 0x20, 0x0D, 0, 0, 0 }, {'-', '_', ':', ';', '/', 0}, {'#', '%', '\'', '&', '*', '?'} ,{'5', '6', '7', '8', '9', '0'}, { ',', '!', 0X08, 0, 0, 0} }};
+    
+    private int[,,] keys;
+
+    // private void Update()
+    // {
     //    GameObject key;
     //    if (touched)
     //    {
@@ -43,31 +54,41 @@ public class InclinedKeyboard : ClickKeyboard
     //            //Debug.Log("Key: " + ascii);
     //        }
     //    }
-    //}
+    // }
+
+
+
+    public override void OnFitting(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource){
+        // Âõ†‰∏∫Âè™ÊúâÂÄæÊñúÈîÆÁõòÊúâËá™ÂÆö‰πâÔºåÊâÄ‰ª•Â∫îËØ•ÊîæÂà∞InclinedKeyboard‰∏≠.
+        enableOutput = !enableOutput;
+        fitting.GetComponent<Fitting>().onFittingMode = !enableOutput;
+        print(fitting.GetComponent<Fitting>().onFittingMode);
+    }
 
     public override int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
+        keys = Crossover ? keys_with_crossover : keys_without_crossover;
+        keyColumn = Crossover ? keyColumn_with_crossover : keyColumn_without_crossover;
         if(hand == SteamVR_Input_Sources.LeftHand)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
-                d[i] = thumbLength + (float)(i - 3) * 1 / 3f;
+                d[i] = thumbLength + (float)(i - 2.5) * 1 / 2.5f;
                 thumbCenter[i] = new Vector2((d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
             }
         }
         else
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
-                d[i] = thumbLength + (float)(i - 3) * 1 / 3f;
+                d[i] = thumbLength + (float)(i - 2.5) * 1 / 2.5f;
                 thumbCenter[i] = new Vector2(-(d[i] * Mathf.Sin(thumbTheta)), (d[i] * Mathf.Cos(thumbTheta)));
             }
         }
 
-        // TODO: ªÒ»°œ‡”¶Œª÷√µƒ∞¥º˛∂‘œÛ≤¢∏≥÷µ∏¯key
         int column;
         int row = 0;
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 5; i++)
         {
             float distanceA = Mathf.Sqrt(Mathf.Pow((axis.x - thumbCenter[i].x), 2) + Mathf.Pow((axis.y - thumbCenter[i].y), 2));
             float distanceB = Mathf.Sqrt(Mathf.Pow((axis.x - thumbCenter[i+1].x), 2) + Mathf.Pow((axis.y - thumbCenter[i+1].y), 2));
@@ -83,7 +104,7 @@ public class InclinedKeyboard : ClickKeyboard
         //print("d[row] " + d[row]);
         //print("thetaMax cos num " + Mathf.Min((Mathf.Pow(d[row], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row] * thumbLength),
         //                                      (Mathf.Pow(d[row + 1], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row + 1] * thumbLength)));
-
+    
         int maxThetaRow = (Mathf.Pow(d[row], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row] * thumbLength)
                             < (Mathf.Pow(d[row + 1], 2) + Mathf.Pow(thumbLength, 2) - Mathf.Pow(radius, 2)) / (2 * d[row + 1] * thumbLength) ? row : row + 1;
 
@@ -96,20 +117,18 @@ public class InclinedKeyboard : ClickKeyboard
 
         //print("thetaMax" + thetaMax);
         //print("currentTheta" + currentTheta);
-        //print("fcolumn" + fcolumn);
 
         column = (int)fcolumn;
         if (column < 0) column = 0;
         if (column > keyColumn[row] - 1) column = keyColumn[row] - 1;
 
-        Debug.Log("( " + column + ' ' + row + " )");
+        //Debug.LogWarning("( " + column + ' ' + row + " )");
 
         int handmode = (hand == SteamVR_Input_Sources.LeftHand) ? mode : mode + 3;
 
         char output = (char)keys[handmode, row, column];
+        //Debug.Log(output);
         Transform LR = hand == SteamVR_Input_Sources.LeftHand ? keyboardRoot.GetChild(0) : keyboardRoot.GetChild(1);
-
-
 
         switch (output)
         {
@@ -134,13 +153,20 @@ public class InclinedKeyboard : ClickKeyboard
             case '.':
                 key = LR.Find("period").gameObject;
                 break;
+            case '\"':
+                key = LR.Find("quotation").gameObject;
+                break;
             case '!':
-                if (hand == SteamVR_Input_Sources.LeftHand) goto default;
+                if (row != 4) goto default;
                 key = LR.Find("exclamation").gameObject;
                 break;
             case '?':
-                if (row == 2) goto default;
+                if (row != 4) goto default;
                 key = LR.Find("question").gameObject;
+                break;
+            case ':':
+                if (row != 4) goto default;
+                key = LR.Find("colon").gameObject;
                 break;
             default:
                 string name = ((char)keys[handmode - mode, row, column]).ToString() + ((char)keys[handmode - mode + 2, row, column]).ToString();
@@ -155,7 +181,9 @@ public class InclinedKeyboard : ClickKeyboard
 
     protected override TextMeshProUGUI[,] fetchKeyStrings()
     {
-        TextMeshProUGUI[,] ret = new TextMeshProUGUI[2, 28];
+        Debug.LogWarning("fetchKeyStrings");
+        int number = Crossover ? 34 : 28;
+        TextMeshProUGUI[,] ret = new TextMeshProUGUI[2, number];
         int i = 0;
         Transform[] children = new Transform[2] { keyboardRoot.GetChild(0), keyboardRoot.GetChild(1) };
         foreach(Transform LR in children)
@@ -165,10 +193,9 @@ public class InclinedKeyboard : ClickKeyboard
                 Transform canvas = keys.transform.GetChild(0);
                 if(canvas.childCount == 2)
                 {
-                    // ”–¡Ω∏ˆ∂˘◊”£¨”–”√.  ”–◊÷ƒ∏”–∑˚∫≈.
                     foreach(var text in canvas.GetComponentsInChildren<TextMeshProUGUI>())
                     {
-                        if (text.text[0] >= 'a' && text.text[0] <= 'z')  //≥ı º±ÿ∂®–°–¥.
+                        if (text.text[0] >= 'a' && text.text[0] <= 'z')
                             ret[0, i] = text;
                         else
                             ret[1, i] = text;
@@ -178,5 +205,11 @@ public class InclinedKeyboard : ClickKeyboard
             }
         }
         return ret;
+    }
+
+    public void setThetaR(float theta, float r){
+        this.thumbTheta = theta;
+        this.thumbLength = r;
+        this.exp.setThetaR(theta, r);
     }
 }
