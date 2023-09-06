@@ -147,7 +147,7 @@ public class ClickKeyboard : KeyboardBase
         int ascii = longHolding ? longHoldingLogic(new Vector2(1,1), ref tmp) : Axis2Letter(lastSlideAxis - lastSlideDelta, fromSource, _mode, out tmp);
         hoveringKey.GetComponent<MeshRenderer>().material.color = oldColor;
         // ������Ƽ���Ŀǰֻ��VKCode.Shift.
-        if(ascii == (int)VKCode.Shift)  //Shift, mode��0��1����1��0. �������Ƽ���ʱ��_mode��Ӧ���ܱ�Ϊ2.
+        if(ascii == (int)VKCode.Shift && enableOutput)  //Shift, mode��0��1����1��0. �������Ƽ���ʱ��_mode��Ӧ���ܱ�Ϊ2.
         {
             if(_mode != 2)
             {
@@ -157,7 +157,7 @@ public class ClickKeyboard : KeyboardBase
             }
 
         }
-        else if(ascii == (int)VKCode.Switch)   //�л�Ϊ���ż��̣����ߴӷ��ż����л�����ͨ����.
+        else if(ascii == (int)VKCode.Switch && enableOutput)   //�л�Ϊ���ż��̣����ߴӷ��ż����л�����ͨ����.
         {
             _mode = _mode == 2 ? (isCapitalDisplay ? 1 : 0) : 2;
             switchSymbol();

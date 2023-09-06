@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18068196, g: 0.22618999, b: 0.30713663, a: 1}
+  m_IndirectSpecularColor: {r: 0.07316032, g: 0.09041229, b: 0.12088588, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11737,7 +11737,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onExperiment: 1
-  username: ljh
+  username: fjy
   keyboardType: 3
   phrasesNumber: 5
   transcript: {fileID: 257553751}
