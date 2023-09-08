@@ -66,6 +66,13 @@ public class FirstTouch
     public float x {get; set;}
     public float y {get; set;}
 
+    public FirstTouch(){
+        this.key = string.Empty;
+        this.lr = 0;
+        this.x = 0;
+        this.y = 0;
+    }
+
     public FirstTouch(string key, int lr, float x, float y){
         this.key = key;
         this.lr = lr;

@@ -18,6 +18,7 @@ public class Experiment : MonoBehaviour
     public SteamVR_Action_Boolean PadTouch = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "touch");
     public SteamVR_Action_Boolean Over = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "over");
     public SteamVR_Action_Vector2 PadSlide = SteamVR_Input.GetAction<SteamVR_Action_Vector2>("keyboard", "slide");
+    public SteamVR_Action_Boolean Fitting = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "fitting");
     string phrases;  //所有句子合成一个，以回车为分割.
     public int index = 0;    //当前正要打哪个字母的下标.
     List<string> inputSequence = new List<string>();
@@ -27,7 +28,9 @@ public class Experiment : MonoBehaviour
     Record record;
 
     float startTime, endTime, firstTypeTime = 0f, lastTypeTime = 0f;
-    bool touched = false, start = false, endexp = false;
+    bool touched = false, start = false, endexp = false, fitting = false;
+
+    FirstTouch firstTouch = new FirstTouch();
     public AudioSource endaudio;  // 结束音效
 
     // Start is called before the first frame update
@@ -68,6 +71,9 @@ public class Experiment : MonoBehaviour
                 PadTouch[hand].onStateUp += OnTouchUp;
                 PadSlide[hand].onChange += OnPadSlide;
                 Over[hand].onStateDown += OnOverDown;
+                if(keyboardType == 2 || keyboardType == 3){
+                    Fitting[hand].onStateDown += OnFitting;
+                }
             }
         }
     }
@@ -80,6 +86,9 @@ public class Experiment : MonoBehaviour
                 PadTouch[hand].onStateUp -= OnTouchUp;
                 PadSlide[hand].onChange -= OnPadSlide;
                 Over[hand].onStateDown -= OnOverDown;
+                if(keyboardType == 2 || keyboardType == 3){
+                    Fitting[hand].onStateDown += OnFitting;
+                }
             }
         }
     }
@@ -137,6 +146,17 @@ public class Experiment : MonoBehaviour
         else
             seqitem = ((char)ascii).ToString();
         inputSequence.Add(seqitem);
+
+        // 添加firstTouch.
+        if(firstTouch.key != string.Empty){
+            // 有效.
+            firstTouch.key = seqitem;
+            record.firstTouches.Add(firstTouch);
+            firstTouch = new FirstTouch();  //刷新掉
+        }
+        else if(seqitem == "Back"){
+            record.firstTouches.Add(new FirstTouch("Back", -1, 100, 100)); // 占位.
+        }
     }   
 
     public void Next(string word, string replaced){
@@ -179,12 +199,17 @@ public class Experiment : MonoBehaviour
         touched = false;
     }
     // 记录firsttouch! 
+
+    public void OnFitting(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource){
+        fitting = !fitting;
+    }
     public void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
     {
-        if(!touched && index < phrases.Length){
+        if(!fitting && !touched && index < phrases.Length){
             touched = true;
             int lr = fromSource == SteamVR_Input_Sources.LeftHand ? 0 : 1;
-            record.firstTouches.Add(new FirstTouch(phrases[index].ToString(), lr, axis));
+            //record.firstTouches.Add(new FirstTouch(phrases[index].ToString(), lr, axis));
+            firstTouch = new FirstTouch("spaceholder", lr, axis);
         }
     }
 
