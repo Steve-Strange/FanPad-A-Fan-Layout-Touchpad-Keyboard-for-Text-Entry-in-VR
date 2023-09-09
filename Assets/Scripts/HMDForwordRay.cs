@@ -30,6 +30,7 @@ public class HMDForwordRay : MonoBehaviour
             if(raycasthit.collider.name.Substring(0, raycasthit.collider.name.Length-1)=="wordcube"){
                 //Debug.LogWarning("hit " + raycasthit.collider.name);
                 int index = raycasthit.collider.name[raycasthit.collider.name.Length-1] - '1';
+                //Debug.LogWarning("index = " + index.ToString());
                 wordCubes.selectbyRay(index);
             }
         }

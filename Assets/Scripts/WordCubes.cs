@@ -36,7 +36,7 @@ public class WordCubes : MonoBehaviour
     }
 
     public void selectbyRay(int index){
-        if(index == selectedIndex){
+        if(index == selectedIndex && index >=0 && index < wordCubeTriggers.Length){
             wordCubeTriggers[selectedIndex].highlight(true);
             return;
         }
@@ -47,7 +47,7 @@ public class WordCubes : MonoBehaviour
             selectedIndex = index;
             wordCubeTriggers[selectedIndex].highlight(true);
         }
-        else{
+        else if(index >=0 && index < wordCubeTriggers.Length){
             wordCubeTriggers[selectedIndex].highlight(false);
             selectedIndex = -1;
         }
