@@ -27,7 +27,7 @@ public class Fitting : KeyboardBase
     void Update()
     {
         if(!onFittingMode) points.Clear();
-        if(onFittingMode && points.Count < 200) {
+        if(onFittingMode && points.Count < 300) {
             print(points.Count);
             GetCostomized();
         }
@@ -41,7 +41,7 @@ public class Fitting : KeyboardBase
         {
             points.Add(PadSlide[SteamVR_Input_Sources.RightHand].axis);
         }
-        if(points.Count == 200) {
+        if(points.Count == 300) {
             fittingaudio.Play();
             LeastSquaresFit(points);
             Debug.LogWarning("done fitting!!");
@@ -117,9 +117,10 @@ public class Fitting : KeyboardBase
         cent_y = b / (-2);
 
         radius = Mathf.Sqrt(a * a + b * b - 4 * c) * 2;
-        radius = radius < 5.5 ? 5.5f : radius;
+        radius = radius < 6f ? 6f : radius;
 
         theta = Mathf.Abs(Mathf.Atan(cent_x / cent_y));
+        theta = theta < 0.2f ? 0.2f : theta;
         Debug.LogWarning(cent_x);
         Debug.LogWarning(cent_y);
         Debug.LogWarning("theta: " + theta);

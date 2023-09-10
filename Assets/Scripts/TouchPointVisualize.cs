@@ -48,11 +48,13 @@ public class TouchPointVisualize : MonoBehaviour
     {
         if(fromSource == SteamVR_Input_Sources.LeftHand)
         {
-            touchpoint.parent = touchpadL;
+            //touchpoint.parent = touchpadL;
+            touchpoint.SetParent(touchpadL);
         }
         else
         {
-            touchpoint.parent = touchpadR;
+            //touchpoint.parent = touchpadR;
+            touchpoint.SetParent(touchpadR);
         }
         // ÉèÖÃµã×ø±ê
         touchpoint.localPosition = axis * touchpadL.sizeDelta / 2;
