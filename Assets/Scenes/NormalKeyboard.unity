@@ -825,7 +825,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onExperiment: 1
-  username: wzt
+  username: ljh
   keyboardType: 0
   phrasesNumber: 5
   transcript: {fileID: 207022583}
@@ -839,6 +839,9 @@ MonoBehaviour:
     needsReinit: 0
   PadSlide:
     actionPath: /actions/Keyboard/in/slide
+    needsReinit: 0
+  Fitting:
+    actionPath: /actions/Keyboard/in/fitting
     needsReinit: 0
   index: 0
   totalErr: 0
