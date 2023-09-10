@@ -11752,6 +11752,9 @@ MonoBehaviour:
   PadSlide:
     actionPath: /actions/Keyboard/in/slide
     needsReinit: 0
+  Fitting:
+    actionPath: /actions/Keyboard/in/fitting
+    needsReinit: 0
   index: 0
   totalErr: 0
   endaudio: {fileID: 0}
