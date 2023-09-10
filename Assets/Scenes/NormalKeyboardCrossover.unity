@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18068196, g: 0.22618999, b: 0.30713663, a: 1}
+  m_IndirectSpecularColor: {r: 0.07316032, g: 0.09041229, b: 0.12088588, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -642,7 +642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onExperiment: 1
-  username: lhz
+  username: ljh
   keyboardType: 1
   phrasesNumber: 5
   transcript: {fileID: 536131960}
@@ -656,6 +656,9 @@ MonoBehaviour:
     needsReinit: 0
   PadSlide:
     actionPath: /actions/Keyboard/in/slide
+    needsReinit: 0
+  Fitting:
+    actionPath: /actions/Keyboard/in/fitting
     needsReinit: 0
   index: 0
   totalErr: 0
