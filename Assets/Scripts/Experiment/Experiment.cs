@@ -5,6 +5,7 @@ using TMPro;
 using Newtonsoft.Json;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
+using UnityEngine.Animations;
 
 public class Experiment : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class Experiment : MonoBehaviour
 
     FirstTouch firstTouch = new FirstTouch();
     public AudioSource endaudio;  // 结束音效
+    // 记录最后一次滑动点所用.
+    Vector2 lastSlideAxis = new Vector2(), lastSlideDelta = new Vector2();
 
     // Start is called before the first frame update
     void Start()
@@ -100,6 +103,7 @@ public class Experiment : MonoBehaviour
             firstTypeTime = Time.time;
         }
         lastTypeTime = Time.time;
+        // 下面这一行和index相关的，判断错误的都无效.
         if(index >= phrases.Length){
             // 可能是不小心输入多了，正在删除.
             if(ascii == (int)VKCode.Back)
@@ -149,13 +153,16 @@ public class Experiment : MonoBehaviour
 
         // 添加firstTouch.
         if(firstTouch.key != string.Empty){
-            // 有效.
+            // 有效.之前有按下过touchpad
+            Vector2 upAxis = lastSlideAxis - lastSlideDelta;
             firstTouch.key = seqitem;
+            firstTouch.x_up = upAxis.x; firstTouch.y_up = upAxis.y;  // 设置抬手位置.
             record.firstTouches.Add(firstTouch);
             firstTouch = new FirstTouch();  //刷新掉
         }
         else if(seqitem == "Back"){
-            record.firstTouches.Add(new FirstTouch("Back", -1, 100, 100)); // 占位.
+            // 有输入，但是之前没有按下触摸板，说明是用了手柄上按键的delete.
+            record.firstTouches.Add(new FirstTouch("Back", -1, 100, 100, 100, 100)); // 占位.
         }
     }   
 
@@ -205,11 +212,18 @@ public class Experiment : MonoBehaviour
     }
     public void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
     {
-        if(!fitting && !touched && index < phrases.Length){
+        lastSlideAxis = axis;
+        lastSlideDelta = delta;
+        // delta太大的不要.这个阈值是跟着clickboard来的.
+        if(Mathf.Sqrt(delta.x*delta.x + delta.y * delta.y) > 0.2){
+            return;
+        }
+        // 希望记忆抬手点，所以应该仿照clickkeyboard, 记忆lastSlidePoint 和 lastSlideDelta. 并且舍弃delta向量长度大于0.2的滑动输入.
+        if(!fitting && !touched){
             touched = true;
             int lr = fromSource == SteamVR_Input_Sources.LeftHand ? 0 : 1;
             //record.firstTouches.Add(new FirstTouch(phrases[index].ToString(), lr, axis));
-            firstTouch = new FirstTouch("spaceholder", lr, axis);
+            firstTouch = new FirstTouch("spaceholder", lr, axis, axis);
         }
     }
 

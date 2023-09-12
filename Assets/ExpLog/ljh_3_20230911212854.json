@@ -1,0 +1,23 @@
+{
+  "name": "ljh",
+  "keyboardType": 3,
+  "seconds": 0.0,
+  "phraseLength": 150,
+  "phrases": [
+    "never mix religion and politics",
+    "most judges are very honest",
+    "every Saturday he folds the laundry",
+    "the laser printer is jammed",
+    "one of the poorest nations"
+  ],
+  "result": "\n",
+  "totalErr": 0,
+  "ncErr": 150,
+  "WPM": "Infinity",
+  "TER": 0.0,
+  "NCER": 1.0,
+  "theta": 0.3,
+  "r": 6.0,
+  "firstTouches": [],
+  "inputSequence": []
+}

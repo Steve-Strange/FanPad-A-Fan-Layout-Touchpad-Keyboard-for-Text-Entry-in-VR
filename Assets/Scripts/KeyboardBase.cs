@@ -23,14 +23,14 @@ public enum SEEK_MOD
     End = 2
 }
 
-/* ¼üÅÌ½Å±¾£¬Ó¦¸ÃÖ±½Ó¹ÒÔØµ½¼üÅÌ×îÉÏ²ã! */
+/* ï¿½ï¿½ï¿½Ì½Å±ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Ö±ï¿½Ó¹ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï²ï¿½! */
 public class KeyboardBase : MonoBehaviour
 {
     // Start is called before the first frame update
     [DllImport("User32.dll", EntryPoint = "keybd_event")]
     static extern void keybd_event(byte bVK, byte bScan, int dwFlags, int dwExtraInfo);
 
-    public float selectThreshold = 0.5f;  //Çø·Ö°´ÏÂ°â»úÊÇÑ¡Ôñµ¥´Ê£¨¶Ì°´£©»¹ÊÇÒÆ¶¯¹â±ê£¨³¤°´£©µÄãÐÖµ.
+    public float selectThreshold = 0.5f;  //ï¿½ï¿½ï¿½Ö°ï¿½ï¿½Â°ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ñµ¥´Ê£ï¿½ï¿½Ì°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ê£¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ.
 
     public Experiment exp;
 
@@ -38,11 +38,11 @@ public class KeyboardBase : MonoBehaviour
     public SteamVR_ActionSet keyboardActionSet;
 
     // fetch actions.
-    public SteamVR_Action_Boolean DeleteKey = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "delete");//É¾³ý¼ü-É¾³ý×Ö·û
-    public SteamVR_Action_Boolean SelectKey = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "select");//°â»ú¼ü-ÒÆ¶¯¹â±ê
-    public SteamVR_Action_Boolean PadTouch = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "touch");  //touchpad´¥Ãþ
-    public SteamVR_Action_Boolean PadPress = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "press");  //touchpad°´ÏÂ
-    public SteamVR_Action_Vector2 PadSlide = SteamVR_Input.GetAction<SteamVR_Action_Vector2>("keyboard", "slide");  //ÔÚtouchpadÉÏ»¬¶¯
+    public SteamVR_Action_Boolean DeleteKey = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "delete");//É¾ï¿½ï¿½ï¿½ï¿½-É¾ï¿½ï¿½ï¿½Ö·ï¿½
+    public SteamVR_Action_Boolean SelectKey = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "select");//ï¿½ï¿½ï¿½ï¿½ï¿½-ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½
+    public SteamVR_Action_Boolean PadTouch = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "touch");  //touchpadï¿½ï¿½ï¿½ï¿½
+    public SteamVR_Action_Boolean PadPress = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "press");  //touchpadï¿½ï¿½ï¿½ï¿½
+    public SteamVR_Action_Vector2 PadSlide = SteamVR_Input.GetAction<SteamVR_Action_Vector2>("keyboard", "slide");  //ï¿½ï¿½touchpadï¿½Ï»ï¿½ï¿½ï¿½
 
     public SteamVR_Action_Boolean Fitting = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("keyboard", "fitting");  //
 
@@ -51,13 +51,13 @@ public class KeyboardBase : MonoBehaviour
     public TMP_InputField inputField;
     public WordCubes wordCubes;
 
-    // ¼üÅÌÉÏµÄÎÄ×Ö.
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½.
     protected TextMeshProUGUI[,] keyStrings;
     protected bool selected = false, deleted = false, touched = false, longHolding = false;
     protected bool left_touched = false, right_touched = false;
     protected float last_delete_time, hold_time_start, last_caret_time, select_down_time;
 
-    // ÔÊÐí/½ûÖ¹Êä³ö.
+    // ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½.
     public bool enableOutput = true;
 
     WordPrediction predictor = new WordPrediction();
@@ -121,10 +121,10 @@ public class KeyboardBase : MonoBehaviour
         }
     }
 
-    // ¼üÅÌÉÏµÄÎÄ×ÖÏÔÊ¾Ïà¹Ø
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½
     protected virtual TextMeshProUGUI[,] fetchKeyStrings()
     {
-        // ×î¿ªÊ¼µÄÊ±ºò»ñÈ¡ keyStrings.
+        // ï¿½î¿ªÊ¼ï¿½ï¿½Ê±ï¿½ï¿½ï¿½È¡ keyStrings.
         return new TextMeshProUGUI[1, 1];
     }
 
@@ -133,13 +133,13 @@ public class KeyboardBase : MonoBehaviour
         if(!enableOutput)
             return;
         bool upper;
-        if (keyStrings[0, 0].text[0] >= 'a' && keyStrings[0, 0].text[0] <= 'z')  // Ô­±¾ÊÇÐ¡Ð´£¬±ä´óÐ´.
+        if (keyStrings[0, 0].text[0] >= 'a' && keyStrings[0, 0].text[0] <= 'z')  // Ô­ï¿½ï¿½ï¿½ï¿½Ð¡Ð´ï¿½ï¿½ï¿½ï¿½ï¿½Ð´.
             upper = false;
-        else if (keyStrings[0, 0].text[0] >= 'A' && keyStrings[0, 0].text[0] <= 'Z')  //Ô­±¾ÊÇ´óÐ´£¬±äÐ¡Ð´.
+        else if (keyStrings[0, 0].text[0] >= 'A' && keyStrings[0, 0].text[0] <= 'Z')  //Ô­ï¿½ï¿½ï¿½Ç´ï¿½Ð´ï¿½ï¿½ï¿½ï¿½Ð¡Ð´.
             upper = true;
-        else         // µ±Ç°middle²»ÊÇ×ÖÄ¸£¬ËµÃ÷ÔÚ·ûºÅ¼üÅÌ×´Ì¬ÖÐ£¬²»ÇÐ»»´óÐ¡Ð´.
+        else         // ï¿½ï¿½Ç°middleï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½Ëµï¿½ï¿½ï¿½Ú·ï¿½ï¿½Å¼ï¿½ï¿½ï¿½×´Ì¬ï¿½Ð£ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½Ð¡Ð´.
             return;
-        // ÇÐ»»×Ö·û´óÐ¡Ð´.
+        // ï¿½Ð»ï¿½ï¿½Ö·ï¿½ï¿½ï¿½Ð¡Ð´.
         int length = keyStrings.GetLength(1);
         for(int i=0; i<length; ++i)
         {
@@ -155,7 +155,7 @@ public class KeyboardBase : MonoBehaviour
     {
         if(!enableOutput)
             return;
-        // ·ûºÅ¼üÅÌ/ÆÕÍ¨¼üÅÌ»¥»».£¬°ÑkeyStringsµÄµÚÒ»¶þÐÐ»¥»».
+        // ï¿½ï¿½ï¿½Å¼ï¿½ï¿½ï¿½/ï¿½ï¿½Í¨ï¿½ï¿½ï¿½Ì»ï¿½ï¿½ï¿½.ï¿½ï¿½ï¿½ï¿½keyStringsï¿½Äµï¿½Ò»ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½.
         int length = keyStrings.GetLength(1);
         print(length);
         for(int i=0; i<length; ++i)
@@ -168,13 +168,13 @@ public class KeyboardBase : MonoBehaviour
         }
     }
 
-    // ÒÆ¶¯¹â±êºÍÉ¾³ýÂß¼­£¬ÕâÐ©ÔÚËùÓÐ¼üÅÌÖÐ¶¼ÊÇÒ»ÑùµÄ.
+    // ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½Ð©ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½.
     virtual public void OnSelectKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         if(enableOutput){
             if(Time.time - select_down_time < selectThreshold)
             {
-                // ¶Ì°´°â»ú£¬ÊÇÒªÑ¡Ôñµ¥´Ê£¡
+                // ï¿½Ì°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÒªÑ¡ï¿½ñµ¥´Ê£ï¿½
                 string word = wordCubes.getSelectedWord();
                 if(word != string.Empty)
                 {
@@ -194,13 +194,13 @@ public class KeyboardBase : MonoBehaviour
 
     virtual public void OnDeleteKeyUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* ËÉ¿ªÉ¾³ý¼ü */
+        /* ï¿½É¿ï¿½É¾ï¿½ï¿½ï¿½ï¿½ */
         deleted = false;
     }
 
     public void OnDeleteKeyDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* °´ÏÂÉ¾³ý¼ü */
+        /* ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ */
         deleted = true;
         last_delete_time = Time.time;
         do_delete_char();
@@ -208,8 +208,8 @@ public class KeyboardBase : MonoBehaviour
 
     public void OnDeleteKeyHolding(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* ³¤°´É¾³ý¼ü¡£ÊÇonStateµÄ»Øµ÷º¯Êý£¬ÒòÎªonState±¾ÉíÒªÔÚtrue²Å´¥·¢£¬ËùÒÔ²»ÓÃÅÐ¶ÏÊÇ·ñtrue. */
-        // ²»ÄÜÉ¾µÄÌ«¿ì£¬±ÈÈçÏà¸ô0.2sÔÙÉ¾.
+        /* ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½onStateï¿½Ä»Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªonStateï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½trueï¿½Å´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½Ç·ï¿½true. */
+        // ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½Ì«ï¿½ì£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½0.2sï¿½ï¿½É¾.
         if (Time.time - last_delete_time > 0.15f)
         {
             last_delete_time = Time.time;
@@ -217,7 +217,7 @@ public class KeyboardBase : MonoBehaviour
         }
     }
 
-    // ÏÂÃæÊÇ´¥Ãþ°åÏà¹ØµÄ£¬Ã¿¸ö¼üÅÌ²»Ì«Ò»Ñù.±ØÐëÔÚÍâÃæÖØÔØ!
+    // ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ØµÄ£ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Ì²ï¿½Ì«Ò»ï¿½ï¿½.ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!
     virtual public void OnTouchDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         if(fromSource == SteamVR_Input_Sources.RightHand)
@@ -239,37 +239,37 @@ public class KeyboardBase : MonoBehaviour
     virtual public void OnPressDown(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
         
-        /* ÔÚSlideKeyboardÖÐ£¬ÒªÓÃÕâ¸ö¿ªÊ¼ÅÐ¶Ï³¤°´. */
+        /* ï¿½ï¿½SlideKeyboardï¿½Ð£ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½Ð¶Ï³ï¿½ï¿½ï¿½. */
     }
 
     virtual public void OnPressUp(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        /* ²»¹ÜÊÇÊ²Ã´¼üÅÌ£¬ÕâÀï¶¼ÐèÒªÊä³ö×Ö·ûÁË! */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê²Ã´ï¿½ï¿½ï¿½Ì£ï¿½ï¿½ï¿½ï¿½ï¶¼ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½! */
     }
 
     virtual public void OnPadSlide(SteamVR_Action_Vector2 fromAction, SteamVR_Input_Sources fromSource, Vector2 axis, Vector2 delta)
     {
         /* 
-         ÊÖÖ¸ÔÚ´¥Ãþ°åÉÏ»¬¶¯¡£Ò»¸öÊÇÒÔÒ»¶¨µÄ¹æÔòÒÆ¶¯¸Ä±ä¸ßÁÁ£¬Ò»¸öÔÚ°´ÏÂ°â»úµÄÊ±ºòÒÆ¶¯¹â±ê.
+         ï¿½ï¿½Ö¸ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï»ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ú°ï¿½ï¿½Â°ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½.
          */
 
     }
 
     virtual public void OnFitting(SteamVR_Action_Boolean fromAction, SteamVR_Input_Sources fromSource)
     {
-        // ¹ØÓÚ×Ô¶¨ÒåµÄÒ»Ð©²Ù×÷£¬ÒòÎªÆÕÍ¨¼üÅÌºÍÇãÐ±¼üÅÌ²»Í¬£¬ËùÒÔÓ¦¸Ã²»Í¬.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Ò»Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½Í¨ï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½Ì²ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã²ï¿½Í¬.
         return;
     }
 
     // Core
     virtual public int Axis2Letter(Vector2 axis, SteamVR_Input_Sources hand, int mode, out GameObject key)
     {
-        // Ó¦¸Ã½ÐAxis2Char¸üºÃ..
-        // ½«µ±Ç°Î»ÖÃ´¥Ãþ°åµÄÎ»ÖÃ×ª»¯ÎªÒªÊä³öµÄAscii×Ö·û. ²¢ÇÒ°Ñµ±Ç°Ëù´¦µÄ¼üÅÌÎ»ÖÃµÄ°´¼þµÄGameObject
-        // mode: ÌØÊâ×´Ì¬£¬±ÈÈç´óÐ´µÄ×´Ì¬£¬ÌØÊâ·ûºÅµÄ×´Ì¬. 0- Ð¡Ð´£¬ 1-´óÐ´£¬ 2-·ûºÅ¼üÅÌÄ£Ê½, 3-³¤°´.
-        // key: Òª°Ñµ±Ç°Ëù´¦µÄ°´¼üµÄGameObject(ÒýÓÃ)¸³Öµ¸økey. ×¢Òâ£¬Èç¹ûmode==2£¬ÓÐÌØÊâ·ûºÅµÄÑ¡Ôñ¿ò£¬ÔòÓ¦¸Ã°ÑÏàÓ¦µÄÑ¡Ôñ¿òÄÚµÄÈý¸ö°´¼üÖ®Ò»¸³Öµ¸økey.
-        // Axis2LetterÒªÄÜ´¦Àí³¤°´ºó¡¢µ¯³öÁËÈý¸öÑ¡Ôñ¿òÊ±ºòµÄÌØÊâÇé¿ö£»ÕâÊ±ºòÖ»¿´×óÓÒË®Æ½ÒÆ¶¯µÄ·ÖÁ¿. Ïà¶Ô×óÒÆ£¬·µ»ØasciiÎª×î×ó±ßÄÇ¸ö°´¼üµÄÖµ£»Ïà¶ÔÓÒÒÆ£¬·µ»Ø×îÓÒ±ßÄÇ¸ö°´¼üµÄÖµ.
-        key = this.gameObject;  //meaningless, Ö»ÊÇÕ¼Î»ÊÔÍ¼Í¨¹ý±àÒë.
+        // Ó¦ï¿½Ã½ï¿½Axis2Charï¿½ï¿½ï¿½ï¿½..
+        // ï¿½ï¿½ï¿½ï¿½Ç°Î»ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½×ªï¿½ï¿½ÎªÒªï¿½ï¿½ï¿½ï¿½ï¿½Asciiï¿½Ö·ï¿½. ï¿½ï¿½ï¿½Ò°Ñµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Î»ï¿½ÃµÄ°ï¿½ï¿½ï¿½ï¿½ï¿½GameObject
+        // mode: ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åµï¿½×´Ì¬. 0- Ð¡Ð´ï¿½ï¿½ 1-ï¿½ï¿½Ð´ï¿½ï¿½ 2-ï¿½ï¿½ï¿½Å¼ï¿½ï¿½ï¿½Ä£Ê½, 3-ï¿½ï¿½ï¿½ï¿½.
+        // key: Òªï¿½Ñµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Ä°ï¿½ï¿½ï¿½ï¿½ï¿½GameObject(ï¿½ï¿½ï¿½ï¿½)ï¿½ï¿½Öµï¿½ï¿½key. ×¢ï¿½â£¬ï¿½ï¿½ï¿½mode==2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åµï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã°ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®Ò»ï¿½ï¿½Öµï¿½ï¿½key.
+        // Axis2LetterÒªï¿½Ü´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó¡¢µï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë®Æ½ï¿½Æ¶ï¿½ï¿½Ä·ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½asciiÎªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò±ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ.
+        key = this.gameObject;  //meaningless, Ö»ï¿½ï¿½Õ¼Î»ï¿½ï¿½Í¼Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
         return 0;
     }
 
@@ -277,10 +277,10 @@ public class KeyboardBase : MonoBehaviour
     {
         if(!enableOutput)
             return;
-        // °ÑAscii·ûºÅ·­ÒëÎª¼üÅÌ.
-        // ¸ü´ÏÃ÷µÄ°ì·¨£¬Ó¦¸ÃÊÇÓÃÒ»¸öascii->VKcodeµÄÊý×é!
-        // ×¢Òâ£¬Shift, EnterµÈ¿ØÖÆ¼ü²»Ê¹ÓÃascii£¬´«Èë¾ÍÖ±½ÓÓÃVKCode
-        // 1. ×ÖÄ¸
+        // ï¿½ï¿½Asciiï¿½ï¿½ï¿½Å·ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä°ì·¨ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ascii->VKcodeï¿½ï¿½ï¿½ï¿½ï¿½ï¿½!
+        // ×¢ï¿½â£¬Shift, Enterï¿½È¿ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½asciiï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½VKCode
+        // 1. ï¿½ï¿½Ä¸
         if ('a' <= ascii && ascii <= 'z')
         {
             PutChar((byte)(ascii - 'a' + VKCode.Letters));
@@ -291,12 +291,12 @@ public class KeyboardBase : MonoBehaviour
             PutChar((byte)(ascii - 'A' + VKCode.Letters));
             ReleaseKey((byte)VKCode.Shift);
         }
-        // 2. Êý×Ö
+        // 2. ï¿½ï¿½ï¿½ï¿½
         else if('0' <= ascii && ascii <= '9')
         {
             PutChar((byte)(ascii - '0' + VKCode.Numbers));
         }
-        // 3. ÆäËü·ûºÅ, Ã¶¾Ù..
+        // 3. ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Ã¶ï¿½ï¿½..
         else
         {
             bool needShift = false;
@@ -378,22 +378,22 @@ public class KeyboardBase : MonoBehaviour
                     PutChar((byte)VKCode.Space);
                     break;
                 default:
-                    PutChar((byte)ascii);   //shift, enterµÈ¿ØÖÆ¼ü£¬Ö±½Ó°´ÕÕVKCodeÊä³ö.
+                    PutChar((byte)ascii);   //shift, enterï¿½È¿ï¿½ï¿½Æ¼ï¿½ï¿½ï¿½Ö±ï¿½Ó°ï¿½ï¿½ï¿½VKCodeï¿½ï¿½ï¿½.
                     break;
             }
             if (needShift)
                 ReleaseKey((byte)VKCode.Shift);
         }
-        // Í³¼Æ.
+        // Í³ï¿½ï¿½.
         if(exp.onExperiment){
             exp.Next(ascii);
         }
-        // µ¥´Ê¾À´í
+        // ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½
         predictor.next(ascii);        
         string[] strarr = predictor.getSuggestions();
-        // ½«µ¥´ÊÌáÊ¾ÏÔÊ¾µ½µ¥´Ê°åÉÏ.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Ê°ï¿½ï¿½ï¿½.
         wordCubes.setWords(strarr);
-        // ½«Ô¤²âµÄµ¥´ÊÊä³öµ½¿ØÖÆÌ¨.
+        // ï¿½ï¿½Ô¤ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¨.
         string tmp = string.Empty;
         foreach (string str in predictor.getSuggestions())
             tmp = tmp + str + ", ";
@@ -404,33 +404,33 @@ public class KeyboardBase : MonoBehaviour
     {
         if(!enableOutput)
             return;
-        // Ñ¡ÖÐÁËÔ¤²â³öÀ´µÄÄ³¸öµ¥´Ê£¬Êä³öµ¥´Ê.
+        // Ñ¡ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä³ï¿½ï¿½ï¿½ï¿½ï¿½Ê£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
         int length = predictor.getCurLength();
-        // ´¦ÀíÊ××ÖÄ¸´óÐ´ÎÊÌâ£¬´ÓwordPredictionÖÐÈ¡³ö curWordÅÐ¶ÏÊ××ÖÄ¸ÊÇ·ñ´óÐ´.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½Ð´ï¿½ï¿½ï¿½â£¬ï¿½ï¿½wordPredictionï¿½ï¿½È¡ï¿½ï¿½ curWordï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½Ç·ï¿½ï¿½Ð´.
         string curword = predictor.getCurWord();
         if('A' <= curword[0] && curword[0] <= 'Z'){
             word = word.Substring(0,1).ToUpper() + word.Remove(0, 1);
-        }  // Ê××ÖÄ¸´óÐ´.
-        // É¾³ýÄ©Î²µÄlength¸ö×Ö·û.
+        }  // ï¿½ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½Ð´.
+        // É¾ï¿½ï¿½Ä©Î²ï¿½ï¿½lengthï¿½ï¿½ï¿½Ö·ï¿½.
         inputField.text = inputField.text.Substring(0, inputField.text.Length - length);
-        // ¼ÓÉÏÔ¤²â³öÀ´µÄµ¥´Ê.
+        // ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½ï¿½ï¿½.
         inputField.text += word;
-        // ½«¹â±êÒÆ¶¯µ½×îºóÃæ.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
         inputField.caretPosition += word.Length;
-        // Ë¢ÐÂÍ³¼ÆÊý¾Ý. Êä³ö¿Õ¸ñÓ¦µ±ÔÚ´ËÖ®ºó.
+        // Ë¢ï¿½ï¿½Í³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½Õ¸ï¿½Ó¦ï¿½ï¿½ï¿½Ú´ï¿½Ö®ï¿½ï¿½.
         if(exp.onExperiment){
             exp.Next(word, curword);
         }
-        // Êä³öµ¥´Êºó¸ú×ÅÒ»¸ö¿Õ¸ñ.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êºï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Õ¸ï¿½.
         OutputLetter(' ');
-        // Ë¢ÐÂµ¥´ÊÔ¤²âÆ÷.
+        // Ë¢ï¿½Âµï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½ï¿½.
         predictor.refresh();
     }
     
     protected void do_delete_char()
     {
-        // ÔÚinputFieldµÄµ±Ç°Î»ÖÃÉ¾³ýÒ»¸ö×Ö·û.
-        // Ö±½ÓÓÃÊäÈëÒ»¸öbackspaceÊµÏÖÉ¾³ý. Í³Ò»Ê¹ÓÃOutputLetter
+        // ï¿½ï¿½inputFieldï¿½Äµï¿½Ç°Î»ï¿½ï¿½É¾ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ö·ï¿½.
+        // Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½backspaceÊµï¿½ï¿½É¾ï¿½ï¿½. Í³Ò»Ê¹ï¿½ï¿½OutputLetter
         //statistics.deleteTtimes++;
         //PushKey((byte)VKCode.Back);
         //ReleaseKey((byte)VKCode.Back);
@@ -439,8 +439,8 @@ public class KeyboardBase : MonoBehaviour
 
     protected void Seek(SEEK_MOD mode, int offset)
     {
-        // ÒÆ¶¯ inputField µÄ¹â±ê.
-        // ÓÀÔ¶¶Ôoffset×ö¼ÓºÅ£¬Èç¹ûÊÇÒÆ¶¯µ½Ä©Î²£¬offsetÔòÓ¦¸ÃÊÇ¸ºÊý!
+        // ï¿½Æ¶ï¿½ inputField ï¿½Ä¹ï¿½ï¿½.
+        // ï¿½ï¿½Ô¶ï¿½ï¿½offsetï¿½ï¿½ï¿½ÓºÅ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½Ä©Î²ï¿½ï¿½offsetï¿½ï¿½Ó¦ï¿½ï¿½ï¿½Ç¸ï¿½ï¿½ï¿½!
         if(mode == SEEK_MOD.Start)
         {
             inputField.caretPosition = offset;
@@ -451,27 +451,27 @@ public class KeyboardBase : MonoBehaviour
         }
         else
         {
-            inputField.MoveTextEnd(false);  //Ö±½ÓÒÆ¶¯µ½Ä©Î².
+            inputField.MoveTextEnd(false);  //Ö±ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½Ä©Î².
             inputField.caretPosition += offset;
         }
     }
 
     protected void do_caret_move(Vector2 axis)
     {
-        // ÒÆ¶¯¹â±ê¿ÉÒÔÓÃÕâ¸ö.
-        // ¸ù¾ÝÊÖÖ¸ËùÔÚµÄÎ»ÖÃ£¬ÏòÉÏ/ÏÂ/×ó/ÓÒ·½ÏòÒÆ¶¯**1¸ñ**.
+        // ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Úµï¿½Î»ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½/ï¿½ï¿½/ï¿½Ò·ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½**1ï¿½ï¿½**.
         Debug.Log("do_caret_move");
-        float slope = axis.y / (axis.x + 1e-6f);  //·ÀÖ¹³ýÒÔ0.
-        if(-1 < slope && slope < 1)   //ÊÇ×óÓÒÒÆ¶¯.
+        float slope = axis.y / (axis.x + 1e-6f);  //ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½0.
+        if(-1 < slope && slope < 1)   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½.
             Seek(SEEK_MOD.Current, axis.x >= 0 ? 1 : -1);
         else
         {
-            // ÊÇÉÏÏÂÒÆ¶¯. ÏÈ»ñÈ¡Ò»ÐÐÓÐ¶àÉÙ×Ö·û£¬È»ºóÔÙÒÆ¶¯Ò»ÐÐµÄ×Ö·ûÊý.
-            // ÓÉÓÚÊ¹ÓÃµÈ¿í×ÖÌå£¬²¢ÇÒÖ»ÓÐÓ¢ÎÄ£¬²»ÓÃ¿¼ÂÇÒ»ÐÐ×ÖÊý²»Í¬.
-            var linesinfo = inputText.GetTextInfo(inputText.text);   //ÓÃÕâ¸ö·½·¨»ñÈ¡ÎÄ×ÖÎÄ±¾ÐÅÏ¢!
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½. ï¿½È»ï¿½È¡Ò»ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½È»ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½Ò»ï¿½Ðµï¿½ï¿½Ö·ï¿½ï¿½ï¿½.
+            // ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ÃµÈ¿ï¿½ï¿½ï¿½ï¿½å£¬ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½Ó¢ï¿½Ä£ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬.
+            var linesinfo = inputText.GetTextInfo(inputText.text);   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½Ï¢!
             int chars_per_line = linesinfo.characterCount / linesinfo.lineCount;
             int plus1 = linesinfo.characterCount % linesinfo.lineCount == 0 ? 0 : 1;
-            chars_per_line += plus1;    //ÓÉÓÚÃ¿ÐÐ×Ö·ûÊýÏàµÈ£¬Ç¡ºÃÌîÂú×îºóÒ»ÐÐµÄÊ±ºòÆ½¾ùÊÇ¶ÔµÄ£»Ã»ÓÐÌîÂú×îºóÒ»ÐÐµÄÊ±ºòÆ½¾ù±ÈÕæÕýµÄÖµÉÙ1.
+            chars_per_line += plus1;    //ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½È£ï¿½Ç¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Ðµï¿½Ê±ï¿½ï¿½Æ½ï¿½ï¿½ï¿½Ç¶ÔµÄ£ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Ðµï¿½Ê±ï¿½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½1.
             Seek(SEEK_MOD.Current, axis.y >= 0 ? -chars_per_line : chars_per_line);
         }
     }

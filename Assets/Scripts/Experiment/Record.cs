@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+//using System.Numerics;
 using UnityEngine;
 
 // 记录实验结果用. 最后存下来的句子中，每个句子原句末尾没有回车，但打出来的末尾有回车.
@@ -65,25 +66,34 @@ public class FirstTouch
     public int lr {get; set;} //0-left, 1-right
     public float x {get; set;}
     public float y {get; set;}
+    // 加上结束时候的x,y.
+    public float x_up {get; set;}
+    public float y_up {get; set;}
 
     public FirstTouch(){
         this.key = string.Empty;
         this.lr = 0;
         this.x = 0;
         this.y = 0;
+        this.x_up = 0;
+        this.y_up = 0;
     }
 
-    public FirstTouch(string key, int lr, float x, float y){
+    public FirstTouch(string key, int lr, float x, float y, float xup, float yup){
         this.key = key;
         this.lr = lr;
         this.x = x;
         this.y = y;
+        this.x_up = xup;
+        this.y_up = yup;
     }
 
-    public FirstTouch(string key, int lr, Vector2 point){
+    public FirstTouch(string key, int lr, Vector2 point_down, Vector2 point_up){
         this.key = key;
         this.lr = lr;
-        this.x = point.x;
-        this.y = point.y;
+        this.x = point_down.x;
+        this.y = point_down.y;
+        this.x_up = point_up.x;
+        this.y_up = point_up.y;
     }
 }
