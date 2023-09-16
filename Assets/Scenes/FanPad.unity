@@ -283,7 +283,7 @@ MonoBehaviour:
   keyboardRoot: {fileID: 6636364}
   longHoldingTime: 0.8
   Crossover: 0
-  fitting: {fileID: 1226545610}
+  fitting: {fileID: 2029142340}
   thumbTheta: 0.3
   thumbLength: 6
 --- !u!1 &11123031
@@ -3870,7 +3870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onExperiment: 1
-  username: dyh
+  username: ljh
   keyboardType: 2
   phrasesNumber: 5
   transcript: {fileID: 1102444547}
@@ -3904,7 +3904,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &224178742
 AudioSource:
@@ -7602,7 +7602,7 @@ MonoBehaviour:
   m_fontSizeMin: 0
   m_fontSizeMax: 0
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -17366,7 +17366,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -18547,81 +18547,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1 &1226545610
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1226545612}
-  - component: {fileID: 1226545611}
-  m_Layer: 0
-  m_Name: fitting
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1226545611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226545610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d56facadfe146a7498de20bc03a4814e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectThreshold: 0.5
-  exp: {fileID: 224178740}
-  keyboardActionSet:
-    actionSetPath: /actions/Keyboard
-  DeleteKey:
-    actionPath: /actions/Keyboard/in/delete
-    needsReinit: 0
-  SelectKey:
-    actionPath: /actions/Keyboard/in/select
-    needsReinit: 0
-  PadTouch:
-    actionPath: /actions/Keyboard/in/touch
-    needsReinit: 0
-  PadPress:
-    actionPath: /actions/Keyboard/in/press
-    needsReinit: 0
-  PadSlide:
-    actionPath: /actions/Keyboard/in/slide
-    needsReinit: 0
-  Fitting:
-    actionPath: /actions/Keyboard/in/fitting
-    needsReinit: 0
-  inputText: {fileID: 0}
-  inputField: {fileID: 0}
-  wordCubes: {fileID: 0}
-  enableOutput: 0
-  InclinedKeyboard: {fileID: 0}
-  onFittingMode: 0
-  theta: 0
-  radius: 0
-  fittingaudio: {fileID: 224178742}
---- !u!4 &1226545612
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1226545610}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.6371345, y: 1.3008916, z: 1.0766265}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1239890476
 GameObject:
   m_ObjectHideFlags: 0
@@ -32161,6 +32086,81 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &2029142340
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2029142342}
+  - component: {fileID: 2029142341}
+  m_Layer: 0
+  m_Name: fitting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2029142341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029142340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d56facadfe146a7498de20bc03a4814e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectThreshold: 0.5
+  exp: {fileID: 224178740}
+  keyboardActionSet:
+    actionSetPath: /actions/Keyboard
+  DeleteKey:
+    actionPath: /actions/Keyboard/in/delete
+    needsReinit: 0
+  SelectKey:
+    actionPath: /actions/Keyboard/in/select
+    needsReinit: 0
+  PadTouch:
+    actionPath: /actions/Keyboard/in/touch
+    needsReinit: 0
+  PadPress:
+    actionPath: /actions/Keyboard/in/press
+    needsReinit: 0
+  PadSlide:
+    actionPath: /actions/Keyboard/in/slide
+    needsReinit: 0
+  Fitting:
+    actionPath: /actions/Keyboard/in/fitting
+    needsReinit: 0
+  inputText: {fileID: 0}
+  inputField: {fileID: 0}
+  wordCubes: {fileID: 0}
+  enableOutput: 0
+  InclinedKeyboard: {fileID: 0}
+  onFittingMode: 0
+  theta: 0
+  radius: 0
+  fittingaudio: {fileID: 224178742}
+--- !u!4 &2029142342
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029142340}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.6371345, y: 1.3008916, z: 1.0766265}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2033643409
 GameObject:
   m_ObjectHideFlags: 0

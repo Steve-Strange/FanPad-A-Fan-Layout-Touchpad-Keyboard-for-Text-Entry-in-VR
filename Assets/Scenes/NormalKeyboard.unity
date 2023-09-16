@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.07316032, g: 0.09041229, b: 0.12088588, a: 1}
+  m_IndirectSpecularColor: {r: 0.0012073659, g: 0.0013261206, b: 0.0012073659, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -789,7 +789,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onExperiment: 1
-  username: dyh
+  username: ljh
   keyboardType: 0
   phrasesNumber: 5
   transcript: {fileID: 207022583}
@@ -2620,6 +2620,14 @@ PrefabInstance:
     - target: {fileID: 2512492523220686004, guid: 4a98f5a1fe46e0d46bb79ad9b6e788e8, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512492523502280154, guid: 4a98f5a1fe46e0d46bb79ad9b6e788e8, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2512492523731275643, guid: 4a98f5a1fe46e0d46bb79ad9b6e788e8, type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5983326065704606655, guid: 4a98f5a1fe46e0d46bb79ad9b6e788e8, type: 3}
       propertyPath: m_LocalPosition.y
