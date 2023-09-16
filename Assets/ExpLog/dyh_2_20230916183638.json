@@ -1,0 +1,23 @@
+{
+  "name": "dyh",
+  "keyboardType": 2,
+  "seconds": 0.0,
+  "phraseLength": 142,
+  "phrases": [
+    "try to enjoy your maternity leave",
+    "the second largest country",
+    "destruction of the rain forest",
+    "this person is a disaster",
+    "the facts get in the way"
+  ],
+  "result": "\n",
+  "totalErr": 0,
+  "ncErr": 142,
+  "WPM": "Infinity",
+  "TER": 0.0,
+  "NCER": 1.0,
+  "theta": 0.3,
+  "r": 6.0,
+  "firstTouches": [],
+  "inputSequence": []
+}
