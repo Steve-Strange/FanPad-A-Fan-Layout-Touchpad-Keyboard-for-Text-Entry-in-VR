@@ -10,12 +10,12 @@
         "medieval times were very hard",
         "watch out for low flying objects"
     ],
-    "result": "we dine out on the weekends\nyou want to eat your cake\nmedieval times were very hard\nwatch out for low flying objects ",
+    "result": "this phenomenon will never occur\nwe dine out on the weekends\nyou want to eat your cake\nmedieval times were very hard\nwatch out for low flying objects ",
     "totalErr": 32,
     "ncErr": 145,
     "WPM": 10.9899855,
-    "TER": 0.42953020134228187,
-    "NCER": 0.2214765100671141,
+    "TER": 0.2080536912751678,
+    "NCER": 0.0,
     "theta": 0.381156951,
     "r": 6.4876585,
     "firstTouches": [
