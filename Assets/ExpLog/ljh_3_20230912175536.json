@@ -10,12 +10,12 @@
         "do you like to go camping",
         "insurance is important for bad drivers"
     ],
-    "result": "three two one zero blast off \nlonger than a football field\nthat agreement is rife with problem \ninsurance is important for bad drivers",
+    "result": "three two one zero blast off \nlonger than a football field\nthat agreement is rife with problem \ndo you like to go camping\ninsurance is important for bad drivers",
     "totalErr": 107,
     "ncErr": 128,
     "WPM": 17.6747017,
-    "TER": 0.18238993710691823,
-    "NCER": 0.16981132075471697,
+    "TER": 0.018867924528301886,
+    "NCER": 0.006289308176100629,
     "theta": 0.544537663,
     "r": 6.0,
     "firstTouches": [
