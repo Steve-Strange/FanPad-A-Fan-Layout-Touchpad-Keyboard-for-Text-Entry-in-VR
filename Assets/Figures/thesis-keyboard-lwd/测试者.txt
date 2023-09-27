@@ -1,0 +1,5 @@
+四种layout. 
+zby(26key user), 3, 
+fjy(26key user), 2,
+qym(9key user), 2,
+lhz(26key user), 3,
