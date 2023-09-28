@@ -157,12 +157,13 @@ public class Experiment : MonoBehaviour
             Vector2 upAxis = lastSlideAxis - lastSlideDelta;
             firstTouch.key = seqitem;
             firstTouch.x_up = upAxis.x; firstTouch.y_up = upAxis.y;  // 设置抬手位置.
+            firstTouch.release_time = Time.time;
             record.firstTouches.Add(firstTouch);
             firstTouch = new FirstTouch();  //刷新掉
         }
         else if(seqitem == "Back"){
             // 有输入，但是之前没有按下触摸板，说明是用了手柄上按键的delete.
-            record.firstTouches.Add(new FirstTouch("Back", -1, 100, 100, 100, 100)); // 占位.
+            record.firstTouches.Add(new FirstTouch("Back", -1, 100, 100, 100, 100, 0, 0)); // 占位.
         }
     }   
 
@@ -223,7 +224,7 @@ public class Experiment : MonoBehaviour
             touched = true;
             int lr = fromSource == SteamVR_Input_Sources.LeftHand ? 0 : 1;
             //record.firstTouches.Add(new FirstTouch(phrases[index].ToString(), lr, axis));
-            firstTouch = new FirstTouch("spaceholder", lr, axis, axis);
+            firstTouch = new FirstTouch("spaceholder", lr, axis, axis, Time.time, Time.time);
         }
     }
 

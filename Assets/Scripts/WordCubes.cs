@@ -16,8 +16,9 @@ public class WordCubes : MonoBehaviour
         wordCubeTriggers = new WordCubeTrigger[childcount];
         for(int i=0; i<childcount; ++i){
             Transform child = transform.GetChild(i);
-            words[i] = child.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
-            wordCubeTriggers[i] = child.GetComponent<WordCubeTrigger>();
+            int ind = child.name[child.name.Length - 1] - '1';
+            words[ind] = child.GetChild(0).GetChild(0).GetComponent<TextMeshProUGUI>();
+            wordCubeTriggers[ind] = child.GetComponent<WordCubeTrigger>();
         }
     }
 
