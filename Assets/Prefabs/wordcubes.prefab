@@ -149,7 +149,7 @@ GameObject:
   - component: {fileID: 8095050931834678213}
   - component: {fileID: 5329941019904479420}
   m_Layer: 0
-  m_Name: wordcube3
+  m_Name: wordcube1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -813,7 +813,7 @@ GameObject:
   - component: {fileID: 8203426950875521808}
   - component: {fileID: 6340748431167828887}
   m_Layer: 0
-  m_Name: wordcube1
+  m_Name: wordcube4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -926,7 +926,7 @@ GameObject:
   - component: {fileID: 3420506878014420100}
   - component: {fileID: 5902737028864016750}
   m_Layer: 0
-  m_Name: wordcube4
+  m_Name: wordcube3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

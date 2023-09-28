@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 //using System.Numerics;
 using UnityEngine;
+using Valve.VR;
 
 // 记录实验结果用. 最后存下来的句子中，每个句子原句末尾没有回车，但打出来的末尾有回车.
 public class Record
@@ -69,6 +70,8 @@ public class FirstTouch
     // 加上结束时候的x,y.
     public float x_up {get; set;}
     public float y_up {get; set;}
+    public float press_time {get; set;}
+    public float release_time {get; set;}
 
     public FirstTouch(){
         this.key = string.Empty;
@@ -77,23 +80,29 @@ public class FirstTouch
         this.y = 0;
         this.x_up = 0;
         this.y_up = 0;
+        this.press_time = 0;
+        this.release_time = 0;
     }
 
-    public FirstTouch(string key, int lr, float x, float y, float xup, float yup){
+    public FirstTouch(string key, int lr, float x, float y, float xup, float yup, float p_t, float r_t){
         this.key = key;
         this.lr = lr;
         this.x = x;
         this.y = y;
         this.x_up = xup;
         this.y_up = yup;
+        this.press_time = p_t;
+        this.release_time = r_t;
     }
 
-    public FirstTouch(string key, int lr, Vector2 point_down, Vector2 point_up){
+    public FirstTouch(string key, int lr, Vector2 point_down, Vector2 point_up, float p_t, float r_t){
         this.key = key;
         this.lr = lr;
         this.x = point_down.x;
         this.y = point_down.y;
         this.x_up = point_up.x;
         this.y_up = point_up.y;
+        this.press_time = p_t;
+        this.release_time = r_t;
     }
 }
