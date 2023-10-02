@@ -22,7 +22,7 @@ def getKey_WTN(wtn:WTN):
     return wtn.wpm
         
 
-wanted = ['wzt_2', 'wzt_3', 'ljh_2', 'ljh_3', 'wj_2', 'wj_3']       # 要导出的数据
+wanted = ['wzt_2', 'wzt_3', 'ljh_2', 'ljh_3', 'wj_2', 'wj_3', 'dyh_2', 'dyh_3']       # 要导出的数据
 data = {}
 for i in wanted:
     data[i] = []
