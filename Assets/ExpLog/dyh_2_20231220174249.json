@@ -1,0 +1,23 @@
+{
+  "name": "dyh",
+  "keyboardType": 2,
+  "seconds": 0.0,
+  "phraseLength": 149,
+  "phrases": [
+    "victims deserve more redress",
+    "seasoned golfers love the game",
+    "lie detector tests never work",
+    "go out for some pizza and beer",
+    "sent this by registered mail"
+  ],
+  "result": "\n",
+  "totalErr": 0,
+  "ncErr": 149,
+  "WPM": "Infinity",
+  "TER": 0.0,
+  "NCER": 1.0,
+  "theta": 0.3,
+  "r": 6.0,
+  "firstTouches": [],
+  "inputSequence": []
+}

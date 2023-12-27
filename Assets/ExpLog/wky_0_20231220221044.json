@@ -1,0 +1,23 @@
+{
+  "name": "wky",
+  "keyboardType": 0,
+  "seconds": 0.0,
+  "phraseLength": 144,
+  "phrases": [
+    "do you like to shop on Sunday",
+    "our silver anniversary is coming",
+    "I just cannot figure this out",
+    "Canada has ten provinces",
+    "find a nearby parking spot"
+  ],
+  "result": "\n",
+  "totalErr": 0,
+  "ncErr": 144,
+  "WPM": "Infinity",
+  "TER": 0.0,
+  "NCER": 1.0,
+  "theta": 0.3,
+  "r": 6.0,
+  "firstTouches": [],
+  "inputSequence": []
+}

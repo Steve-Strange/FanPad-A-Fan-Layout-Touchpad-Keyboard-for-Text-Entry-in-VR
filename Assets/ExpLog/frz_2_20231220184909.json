@@ -1,0 +1,23 @@
+{
+  "name": "frz",
+  "keyboardType": 2,
+  "seconds": 0.0,
+  "phraseLength": 165,
+  "phrases": [
+    "careless driving results in a fine",
+    "jumping right out of the water",
+    "the first time he tried to swim",
+    "drove my chevy to the levee",
+    "pumping helps if the roads are slippery"
+  ],
+  "result": "\n",
+  "totalErr": 0,
+  "ncErr": 165,
+  "WPM": "Infinity",
+  "TER": 0.0,
+  "NCER": 1.0,
+  "theta": 0.3,
+  "r": 6.0,
+  "firstTouches": [],
+  "inputSequence": []
+}

@@ -1,0 +1,23 @@
+{
+  "name": "wky",
+  "keyboardType": 2,
+  "seconds": 0.0,
+  "phraseLength": 136,
+  "phrases": [
+    "are you talking to me",
+    "get aboard the ship is leaving",
+    "the registration period is over",
+    "do not drink the water",
+    "these cookies are so amazing"
+  ],
+  "result": "\n",
+  "totalErr": 0,
+  "ncErr": 136,
+  "WPM": "Infinity",
+  "TER": 0.0,
+  "NCER": 1.0,
+  "theta": 0.3,
+  "r": 6.0,
+  "firstTouches": [],
+  "inputSequence": []
+}

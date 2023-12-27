@@ -1,0 +1,36 @@
+{
+  "name": "frz",
+  "keyboardType": 2,
+  "seconds": 0.0,
+  "phraseLength": 121,
+  "phrases": [
+    "the most beautiful sunset",
+    "I agree with you",
+    "hands on experience with a job",
+    "you are a wonderful example",
+    "have a good weekend"
+  ],
+  "result": "p",
+  "totalErr": 1,
+  "ncErr": 121,
+  "WPM": "Infinity",
+  "TER": 0.008264462,
+  "NCER": 1.0,
+  "theta": 0.22596474,
+  "r": 6.0,
+  "firstTouches": [
+    {
+      "key": "p",
+      "lr": 1,
+      "x": 0.8319587,
+      "y": 0.5530912,
+      "x_up": 0.8319066,
+      "y_up": 0.55311954,
+      "press_time": 0.353333354,
+      "release_time": 1.44788718
+    }
+  ],
+  "inputSequence": [
+    "p"
+  ]
+}
