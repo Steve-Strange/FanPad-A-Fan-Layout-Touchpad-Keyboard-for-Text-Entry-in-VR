@@ -312,6 +312,24 @@
                },
                "mode" : "button",
                "path" : "/user/hand/right/input/application_menu"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/keyboard/in/over"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/left/input/grip"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/keyboard/in/fitting"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/right/input/grip"
             }
          ]
       },
@@ -360,7 +378,7 @@
    "controller_type" : "vive_controller",
    "description" : "Keyboard",
    "interaction_profile" : "",
-   "name" : "vive-pro-Keyboard",
+   "name" : "为 Vive 控制器 保存的 [Testing] Keyboard 配置",
    "options" : {},
    "simulated_actions" : []
 }
